@@ -866,6 +866,22 @@
                     </a>
                 </li>
                 
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.avis.*') ? 'active' : '' }}" 
+                       href="{{ route('admin.avis.index') }}">
+                        <i class="fas fa-star"></i>
+                        Avis
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.commentaires.*') ? 'active' : '' }}" 
+                       href="{{ route('admin.commentaires.index') }}">
+                        <i class="fas fa-comments"></i>
+                        Commentaires
+                    </a>
+                </li>
+                
                 <hr class="my-3" style="border-color: rgba(255,255,255,0.2);">
                 
                 <li class="nav-item">

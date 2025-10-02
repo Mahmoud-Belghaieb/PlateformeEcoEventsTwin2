@@ -120,10 +120,6 @@ php artisan serve
 
 ## 🎮 Utilisation
 
-### Accès Default
-- **Admin** : admin@ecoevent.com / password123
-- **Participant** : participant@ecoevent.com / password123  
-- **Bénévole** : volunteer@ecoevent.com / password123
 
 ### URLs Principales
 - **Accueil** : `http://127.0.0.1:8000/`

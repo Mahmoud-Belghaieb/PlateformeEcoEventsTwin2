@@ -210,4 +210,38 @@ class User extends Authenticatable
     {
         return $query->where('is_active', true);
     }
+
+    // ====== RELATIONS AVEC AVIS ET COMMENTAIRES ======
+
+    /**
+     * Relation avec les avis créés
+     */
+    public function avis()
+    {
+        return $this->hasMany(Avis::class);
+    }
+
+    /**
+     * Relation avec les commentaires créés
+     */
+    public function commentaires()
+    {
+        return $this->hasMany(Commentaire::class);
+    }
+
+    /**
+     * Relation avec les avis approuvés par cet utilisateur (admin)
+     */
+    public function avisApprouves()
+    {
+        return $this->hasMany(Avis::class, 'approved_by');
+    }
+
+    /**
+     * Relation avec les commentaires approuvés par cet utilisateur (admin)
+     */
+    public function commentairesApprouves()
+    {
+        return $this->hasMany(Commentaire::class, 'approved_by');
+    }
 }
