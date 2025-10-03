@@ -63,6 +63,51 @@
             color: var(--accent-orange);
             font-size: 1.5rem;
         }
+
+        /* Rating System Styles */
+        .rating-input {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+        }
+
+        .rating-input input[type="radio"] {
+            display: none;
+        }
+
+        .rating-input .star-label {
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #ddd;
+            transition: color 0.2s;
+            margin-right: 0.2rem;
+        }
+
+        .rating-input input[type="radio"]:checked ~ .star-label,
+        .rating-input .star-label:hover,
+        .rating-input .star-label:hover ~ .star-label {
+            color: var(--accent-orange);
+        }
+
+        .avis-item {
+            transition: all 0.3s ease;
+        }
+
+        .avis-item:hover {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: -1rem;
+            margin-bottom: 1rem;
+        }
+
+        .commentaire-item {
+            border-left: 3px solid var(--primary-green);
+        }
+
+        .reponse-item {
+            border-left: 2px solid var(--accent-orange);
+        }
     </style>
 </head>
 <body>
@@ -165,6 +210,236 @@
                                 </ul>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Avis et Commentaires Section -->
+                <div class="card mt-4">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">
+                            <i class="fas fa-star me-2" style="color: var(--accent-orange);"></i>
+                            Avis des participants
+                        </h4>
+                        
+                        @if($avisStats['total'] > 0)
+                            <div class="d-flex align-items-center">
+                                <div class="text-center me-3">
+                                    <div class="fs-2 fw-bold" style="color: var(--accent-orange);">{{ $avisStats['moyenne'] }}</div>
+                                    <div class="text-muted small">sur 5</div>
+                                </div>
+                                <div>
+                                    <div class="stars mb-1">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            @if($i <= $avisStats['moyenne'])
+                                                <i class="fas fa-star" style="color: var(--accent-orange);"></i>
+                                            @else
+                                                <i class="far fa-star text-muted"></i>
+                                            @endif
+                                        @endfor
+                                    </div>
+                                    <div class="text-muted small">{{ $avisStats['total'] }} avis</div>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                    
+                    <div class="card-body">
+                        @auth
+                            {{-- Temporairement, on permet à tous les utilisateurs connectés d'ajouter un avis pour les tests --}}
+                            @if(true)
+                                <!-- Formulaire pour donner un avis -->
+                                <div class="alert alert-light border-0 mb-4" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);">
+                                    <h6 class="mb-3">
+                                        <i class="fas fa-pencil-alt me-2" style="color: var(--primary-green);"></i>
+                                        Donnez votre avis sur cet événement
+                                    </h6>
+                                    
+                                    <form method="POST" action="{{ route('avis.store', $event) }}">
+                                        @csrf
+                                        <input type="hidden" name="event_id" value="{{ $event->id }}">
+                                        
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="rating" class="form-label">Note <span class="text-danger">*</span></label>
+                                                <div class="rating-input">
+                                                    @for($i = 1; $i <= 5; $i++)
+                                                        <input type="radio" name="rating" value="{{ $i }}" id="star{{ $i }}" required>
+                                                        <label for="star{{ $i }}" class="star-label">
+                                                            <i class="fas fa-star"></i>
+                                                        </label>
+                                                    @endfor
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="title" class="form-label">Titre de l'avis <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="title" name="title" required maxlength="255" placeholder="Résumez votre expérience en quelques mots">
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="content" class="form-label">Votre avis <span class="text-danger">*</span></label>
+                                            <textarea class="form-control" id="content" name="content" rows="4" required maxlength="1000" placeholder="Partagez votre expérience, ce que vous avez aimé ou moins aimé..."></textarea>
+                                        </div>
+                                        
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="fas fa-paper-plane me-2"></i>
+                                            Publier mon avis
+                                        </button>
+                                    </form>
+                                </div>
+                            @else
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Vous devez être inscrit à cet événement pour donner votre avis.
+                                </div>
+                            @endif
+                        @else
+                            <div class="alert alert-warning">
+                                <i class="fas fa-sign-in-alt me-2"></i>
+                                <a href="{{ route('login') }}" class="text-decoration-none">Connectez-vous</a> pour donner votre avis sur cet événement.
+                            </div>
+                        @endauth
+                        
+                        <!-- Liste des avis -->
+                        @if($avis->count() > 0)
+                            <div class="avis-list">
+                                @foreach($avis as $avisItem)
+                                    <div class="avis-item border-bottom pb-4 mb-4">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <div>
+                                                <h6 class="mb-1">{{ $avisItem->title }}</h6>
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <div class="stars me-2">
+                                                        @for($i = 1; $i <= 5; $i++)
+                                                            @if($i <= $avisItem->rating)
+                                                                <i class="fas fa-star" style="color: var(--accent-orange);"></i>
+                                                            @else
+                                                                <i class="far fa-star text-muted"></i>
+                                                            @endif
+                                                        @endfor
+                                                    </div>
+                                                    <small class="text-muted">
+                                                        par {{ $avisItem->user->name }} • {{ $avisItem->created_at->diffForHumans() }}
+                                                    </small>
+                                                </div>
+                                            </div>
+                                            
+                                            @auth
+                                                @if($avisItem->user_id === Auth::id())
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                                            <i class="fas fa-ellipsis-h"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu">
+                                                            <li><a class="dropdown-item" href="{{ route('avis.edit', $avisItem->id) }}">
+                                                                <i class="fas fa-edit me-2"></i>Modifier
+                                                            </a></li>
+                                                            <li><hr class="dropdown-divider"></li>
+                                                            <li>
+                                                                <form method="POST" action="{{ route('avis.destroy', $avisItem->id) }}" class="d-inline">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit" class="dropdown-item text-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet avis ?')">
+                                                                        <i class="fas fa-trash me-2"></i>Supprimer
+                                                                    </button>
+                                                                </form>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                @endif
+                                            @endauth
+                                        </div>
+                                        
+                                        <p class="mb-3">{{ $avisItem->content }}</p>
+                                        
+                                        <!-- Commentaires -->
+                                        @if($avisItem->commentaires->count() > 0)
+                                            <div class="commentaires-section mt-3">
+                                                <h6 class="mb-3">
+                                                    <i class="fas fa-comments me-2" style="color: var(--primary-green);"></i>
+                                                    Commentaires ({{ $avisItem->commentaires->count() }})
+                                                </h6>
+                                                
+                                                @foreach($avisItem->commentaires->where('parent_id', null) as $commentaire)
+                                                    <div class="commentaire-item bg-light rounded p-3 mb-2">
+                                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                                            <small class="text-muted">
+                                                                <strong>{{ $commentaire->user->name }}</strong> • {{ $commentaire->created_at->diffForHumans() }}
+                                                            </small>
+                                                            
+                                                            @auth
+                                                                @if($commentaire->user_id === Auth::id())
+                                                                    <div class="dropdown">
+                                                                        <button class="btn btn-sm btn-link text-muted p-0" type="button" data-bs-toggle="dropdown">
+                                                                            <i class="fas fa-ellipsis-h"></i>
+                                                                        </button>
+                                                                        <ul class="dropdown-menu dropdown-menu-end">
+                                                                            <li>
+                                                                                <form method="POST" action="{{ route('commentaires.destroy', $commentaire->id) }}" class="d-inline">
+                                                                                    @csrf
+                                                                                    @method('DELETE')
+                                                                                    <button type="submit" class="dropdown-item text-danger" onclick="return confirm('Supprimer ce commentaire ?')">
+                                                                                        <i class="fas fa-trash me-2"></i>Supprimer
+                                                                                    </button>
+                                                                                </form>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                @endif
+                                                            @endauth
+                                                        </div>
+                                                        
+                                                        <p class="mb-0">{{ $commentaire->content }}</p>
+                                                        
+                                                        <!-- Réponses au commentaire -->
+                                                        @foreach($avisItem->commentaires->where('parent_id', $commentaire->id) as $reponse)
+                                                            <div class="reponse-item bg-white rounded p-2 mt-2 ms-3">
+                                                                <small class="text-muted">
+                                                                    <strong>{{ $reponse->user->name }}</strong> • {{ $reponse->created_at->diffForHumans() }}
+                                                                </small>
+                                                                <p class="mb-0 mt-1">{{ $reponse->content }}</p>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        @endif
+                                        
+                                        <!-- Formulaire d'ajout de commentaire -->
+                                        @auth
+                                            <div class="add-comment mt-3">
+                                                <form method="POST" action="{{ route('commentaires.store', $avisItem) }}" class="row g-2">
+                                                    @csrf
+                                                    <input type="hidden" name="avis_id" value="{{ $avisItem->id }}">
+                                                    <div class="col-md-10">
+                                                        <textarea name="content" class="form-control form-control-sm" rows="2" placeholder="Ajouter un commentaire..." required maxlength="500"></textarea>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <button type="submit" class="btn btn-sm btn-outline-primary w-100">
+                                                            <i class="fas fa-paper-plane"></i>
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        @endauth
+                                    </div>
+                                @endforeach
+                                
+                                <!-- Pagination -->
+                                @if($avis->hasPages())
+                                    <div class="d-flex justify-content-center">
+                                        {{ $avis->links() }}
+                                    </div>
+                                @endif
+                            </div>
+                        @else
+                            <div class="text-center py-4">
+                                <i class="fas fa-star fa-3x text-muted mb-3"></i>
+                                <h6 class="text-muted">Aucun avis pour le moment</h6>
+                                <p class="text-muted">Soyez le premier à partager votre expérience !</p>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -299,5 +574,78 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Script pour le système d'étoiles -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Gestion du système d'étoiles
+            const starInputs = document.querySelectorAll('.rating-input input[type="radio"]');
+            const starLabels = document.querySelectorAll('.rating-input .star-label');
+            
+            starLabels.forEach((label, index) => {
+                label.addEventListener('click', function() {
+                    const value = this.getAttribute('for').replace('star', '');
+                    console.log('Étoile sélectionnée:', value);
+                });
+                
+                label.addEventListener('mouseover', function() {
+                    const value = parseInt(this.getAttribute('for').replace('star', ''));
+                    highlightStars(value);
+                });
+            });
+            
+            document.querySelector('.rating-input').addEventListener('mouseleave', function() {
+                const checked = document.querySelector('.rating-input input[type="radio"]:checked');
+                if (checked) {
+                    highlightStars(parseInt(checked.value));
+                } else {
+                    highlightStars(0);
+                }
+            });
+            
+            function highlightStars(rating) {
+                starLabels.forEach((label, index) => {
+                    const starValue = parseInt(label.getAttribute('for').replace('star', ''));
+                    if (starValue <= rating) {
+                        label.style.color = '#f97316';
+                    } else {
+                        label.style.color = '#ddd';
+                    }
+                });
+            }
+            
+            // Gestion de la soumission du formulaire d'avis
+            const avisForm = document.querySelector('form[action*="avis"]');
+            if (avisForm) {
+                avisForm.addEventListener('submit', function(e) {
+                    const rating = document.querySelector('.rating-input input[type="radio"]:checked');
+                    const title = document.querySelector('#title');
+                    const content = document.querySelector('#content');
+                    
+                    if (!rating) {
+                        e.preventDefault();
+                        alert('Veuillez sélectionner une note en cliquant sur les étoiles.');
+                        return false;
+                    }
+                    
+                    if (!title.value.trim()) {
+                        e.preventDefault();
+                        alert('Veuillez saisir un titre pour votre avis.');
+                        title.focus();
+                        return false;
+                    }
+                    
+                    if (!content.value.trim() || content.value.trim().length < 10) {
+                        e.preventDefault();
+                        alert('Veuillez saisir un avis d\'au moins 10 caractères.');
+                        content.focus();
+                        return false;
+                    }
+                    
+                    console.log('Formulaire soumis avec succès');
+                });
+            }
+        });
+    </script>
 </body>
 </html>

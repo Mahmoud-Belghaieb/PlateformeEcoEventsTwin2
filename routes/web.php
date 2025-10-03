@@ -59,6 +59,10 @@ Route::middleware('auth')->group(function () {
 Route::get('/events', [EventController::class, 'index'])->name('events.index');
 Route::get('/events/{event:slug}', [EventController::class, 'show'])->name('events.show');
 
+// Public avis routes (standalone)
+Route::get('/avis', [AvisController::class, 'indexAll'])->name('avis.index.all');
+Route::get('/avis/{avis}', [AvisController::class, 'show'])->name('avis.show');
+
 // Test route for relations
 Route::get('/test-relations', [EventController::class, 'testRelations'])->name('test.relations');
 

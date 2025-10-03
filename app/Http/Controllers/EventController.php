@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Event;
 use App\Models\Category;
 use App\Models\Registration;
+use App\Models\Avis;
 
 class EventController extends Controller
 {
@@ -27,7 +28,7 @@ class EventController extends Controller
     public function show($slug)
     {
         // Trouver l'événement par son slug avec toutes ses relations
-        $event = Event::with(['category', 'venue', 'positions', 'registrations.user'])
+        $event = Event::with(['category', 'venue', 'positions', 'registrations.user', 'avisApprouves.user', 'avisApprouves.commentaires.user'])
             ->where('slug', $slug)
             ->where('status', 'published')
             ->firstOrFail();
@@ -37,7 +38,22 @@ class EventController extends Controller
             $isRegistered = $event->isUserRegistered(Auth::id());
         }
         
-        return view('events.show', compact('event', 'isRegistered'));
+        // Récupérer les avis approuvés avec pagination
+        $avis = $event->avisApprouves()
+            ->with(['user', 'commentaires' => function($query) {
+                $query->where('is_approved', true)->with('user');
+            }])
+            ->orderBy('created_at', 'desc')
+            ->paginate(5);
+        
+        // Calculer les statistiques des avis
+        $avisStats = [
+            'total' => $event->nombreAvis(),
+            'moyenne' => round($event->noteMoyenne(), 1),
+            'repartition' => $event->repartitionNotes()
+        ];
+        
+        return view('events.show', compact('event', 'isRegistered', 'avis', 'avisStats'));
     }
 
     public function myEvents()

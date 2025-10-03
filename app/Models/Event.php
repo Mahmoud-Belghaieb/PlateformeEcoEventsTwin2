@@ -155,6 +155,14 @@ class Event extends Model
         return $this->avisApprouves()->count();
     }
 
+    /**
+     * Obtenir la répartition des notes (1-5 étoiles)
+     */
+    public function repartitionNotes()
+    {
+        return \App\Models\Avis::repartitionNotesEvent($this->id);
+    }
+
     // ====== SCOPES ======
 
     public function scopePublished($query)
@@ -180,48 +188,6 @@ class Event extends Model
     public function scopeRejected($query)
     {
         return $query->where('status', 'rejected');
-    }
-
-    // ====== RELATIONS AVEC LES AVIS ======
-    
-    /**
-     * Relation avec les avis
-     */
-    public function avis()
-    {
-        return $this->hasMany(Avis::class);
-    }
-
-    /**
-     * Avis approuvés seulement
-     */
-    public function avisApprouves()
-    {
-        return $this->hasMany(Avis::class)->where('is_approved', true);
-    }
-
-    /**
-     * Calcul de la note moyenne
-     */
-    public function noteMoyenne()
-    {
-        return $this->avisApprouves()->avg('rating') ?? 0;
-    }
-
-    /**
-     * Nombre total d'avis approuvés
-     */
-    public function nombreAvis()
-    {
-        return $this->avisApprouves()->count();
-    }
-
-    /**
-     * Obtenir la répartition des notes (1-5 étoiles)
-     */
-    public function repartitionNotes()
-    {
-        return Avis::repartitionNotesEvent($this->id);
     }
 
     // ====== AUTO-GÉNÉRATION DU SLUG ======
