@@ -44,20 +44,44 @@
             bottom: 0;
             background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><radialGradient id="c" cx="50%" r="20%"><stop offset="0%" stop-color="%2310b981" stop-opacity="0.1"/><stop offset="100%" stop-color="%2310b981" stop-opacity="0"/></radialGradient></defs><rect fill="url(%23c)" width="100%" height="100%"/></svg>');
             opacity: 0.6;
+            z-index: 0;
+            pointer-events: none;
         }
 
         .signup-container {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
             padding: 48px 40px;
             width: 100%;
             max-width: 400px;
             text-align: center;
+            position: relative;
+            z-index: 1;
+            border: 1px solid rgba(16, 185, 129, 0.1);
         }
 
         .header {
             margin-bottom: 32px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: var(--accent-orange);
+        }
+
+        .logo span {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary-green);
         }
 
         .header h1 {
@@ -69,22 +93,24 @@
 
         .header h2 {
             font-size: 32px;
-            font-weight: 600;
-            color: #1a1a1a;
+            font-weight: 700;
+            color: var(--dark-text);
             margin-bottom: 16px;
         }
 
         .signin-link {
             font-size: 14px;
-            color: #666;
+            color: var(--light-text);
         }
 
         .signin-link a {
-            color: #ff8c00;
+            color: var(--accent-orange);
             text-decoration: none;
+            font-weight: 600;
         }
 
         .signin-link a:hover {
+            color: #ea580c;
             text-decoration: underline;
         }
 
@@ -96,9 +122,9 @@
         label {
             display: block;
             font-size: 14px;
-            font-weight: 500;
-            color: #374151;
-            margin-bottom: 6px;
+            font-weight: 600;
+            color: var(--dark-text);
+            margin-bottom: 8px;
         }
 
         .required {
@@ -114,49 +140,73 @@
         input[type="password"],
         select {
             width: 100%;
-            padding: 12px 16px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
+            padding: 14px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
             font-size: 16px;
-            background-color: #fff;
-            transition: border-color 0.2s ease;
+            background-color: var(--white);
+            transition: all 0.3s ease;
+            font-family: inherit;
+            position: relative;
+            z-index: 1;
         }
 
         input:focus,
         select:focus {
             outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+            transform: translateY(-2px);
+        }
+
+        input::placeholder {
+            color: #9ca3af;
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 48px;
         }
 
         .password-toggle {
             position: absolute;
-            right: 12px;
+            right: 16px;
             top: 50%;
             transform: translateY(-50%);
             cursor: pointer;
-            color: #9ca3af;
+            color: var(--light-text);
             padding: 4px;
+            transition: color 0.3s ease;
+            z-index: 10;
+        }
+
+        .password-toggle:hover {
+            color: var(--primary-green);
         }
 
         .signup-btn {
             width: 100%;
-            padding: 14px 16px;
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             margin-top: 8px;
+            box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
         }
 
         .signup-btn:hover {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+            background: linear-gradient(135deg, #047857 0%, #059669 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(5, 150, 105, 0.4);
         }
 
         .signup-btn:active {
@@ -209,7 +259,10 @@
 <body>
     <div class="signup-container">
         <div class="header">
-            <h1>EcoEvents</h1>
+            <div class="logo">
+                <i class="fas fa-leaf"></i>
+                <span>EcoEvents</span>
+            </div>
             <h2>Sign up</h2>
             <div class="signin-link">
                 or <a href="{{ route('login') }}">sign in to your account</a>
@@ -234,8 +287,10 @@
                 <input type="text" 
                        id="name" 
                        name="name" 
-                       value="{{ old('name') }}" 
-                       required>
+                       value="{{ old('name') }}"
+                       placeholder="Votre nom complet"
+                       required
+                       autofocus>
             </div>
 
             <div class="form-group">
@@ -243,7 +298,8 @@
                 <input type="email" 
                        id="email" 
                        name="email" 
-                       value="{{ old('email') }}" 
+                       value="{{ old('email') }}"
+                       placeholder="votre@email.com"
                        required>
             </div>
 
@@ -252,7 +308,8 @@
                 <div class="input-wrapper">
                     <input type="password" 
                            id="password" 
-                           name="password" 
+                           name="password"
+                           placeholder="••••••••"
                            required>
                     <span class="password-toggle" onclick="togglePassword('password')">
                         <svg class="eye-icon" viewBox="0 0 24 24">
@@ -267,7 +324,8 @@
                 <div class="input-wrapper">
                     <input type="password" 
                            id="password_confirmation" 
-                           name="password_confirmation" 
+                           name="password_confirmation"
+                           placeholder="••••••••"
                            required>
                     <span class="password-toggle" onclick="togglePassword('password_confirmation')">
                         <svg class="eye-icon" viewBox="0 0 24 24">

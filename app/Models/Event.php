@@ -97,14 +97,6 @@ class Event extends Model
         return $this->belongsTo(User::class, 'approved_by');
     }
 
-    public function positions()
-    {
-        return $this->belongsToMany(Position::class, 'event_positions')
-                    ->withPivot('required_count', 'filled_count', 'event_specific_rate',
-                               'additional_requirements', 'application_deadline', 'is_active')
-                    ->withTimestamps();
-    }
-
     /**
      * Relation avec les avis
      */
@@ -119,6 +111,14 @@ class Event extends Model
     public function avisApprouves()
     {
         return $this->hasMany(Avis::class)->where('is_approved', true);
+    }
+
+    /**
+     * Relation avec les matériels
+     */
+    public function materiels()
+    {
+        return $this->hasMany(Materiel::class);
     }
 
     // ====== MÉTHODES UTILES ======

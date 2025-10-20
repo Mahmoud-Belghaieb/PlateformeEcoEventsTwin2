@@ -140,6 +140,22 @@ class User extends Authenticatable
         return $this->hasMany(Commentaire::class, 'approved_by');
     }
 
+    /**
+     * Relation avec le panier (shopping cart)
+     */
+    public function paniers()
+    {
+        return $this->hasMany(Panier::class);
+    }
+
+    /**
+     * Get active cart items
+     */
+    public function activePaniers()
+    {
+        return $this->hasMany(Panier::class)->where('status', 'pending');
+    }
+
     // ====== MÉTHODES UTILES ======
 
     /**

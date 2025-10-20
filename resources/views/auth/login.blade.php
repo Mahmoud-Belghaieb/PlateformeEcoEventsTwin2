@@ -112,6 +112,11 @@
             text-decoration: underline;
         }
 
+        .forgot-password-link a:hover {
+            color: #ea580c;
+            text-decoration: underline;
+        }
+
         .form-group {
             margin-bottom: 24px;
             text-align: left;
@@ -284,6 +289,13 @@
                         </svg>
                     </span>
                 </div>
+            </div>
+
+            <div class="forgot-password-link" style="text-align: right; margin-bottom: 20px;">
+                <a href="{{ route('password.request') }}" style="color: var(--accent-orange); text-decoration: none; font-size: 14px; font-weight: 500;">
+                    <i class="fas fa-key" style="margin-right: 4px;"></i>
+                    Forgot password?
+                </a>
             </div>
 
             <button type="submit" class="signin-btn">Sign in</button>

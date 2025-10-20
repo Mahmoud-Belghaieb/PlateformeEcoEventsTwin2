@@ -21,14 +21,6 @@ class Position extends Model
     ];
 
     // Relations
-    public function events()
-    {
-        return $this->belongsToMany(Event::class, 'event_positions')
-                    ->withPivot('required_count', 'filled_count', 'event_specific_rate',
-                               'additional_requirements', 'application_deadline', 'is_active')
-                    ->withTimestamps();
-    }
-
     public function registrations()
     {
         return $this->hasMany(Registration::class);

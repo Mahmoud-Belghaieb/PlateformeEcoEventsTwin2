@@ -102,20 +102,20 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-info text-uppercase mb-2">
-                                <i class="fas fa-clipboard-list me-1"></i>
-                                Total Registrations
+                                <i class="fas fa-box me-1"></i>
+                                Total Products
                             </div>
                             <div class="h4 mb-0 font-weight-bold text-gray-800">
-                                {{ \App\Models\Registration::count() }}
+                                {{ \App\Models\Produit::count() }}
                             </div>
                             <div class="text-muted small mt-1">
-                                <i class="fas fa-chart-line text-info me-1"></i>
-                                Engagement high
+                                <i class="fas fa-check-circle text-success me-1"></i>
+                                {{ \App\Models\Produit::where('is_available', true)->count() }} available
                             </div>
                         </div>
                         <div class="col-auto">
                             <div class="icon-circle bg-info">
-                                <i class="fas fa-clipboard-list fa-lg text-white"></i>
+                                <i class="fas fa-box fa-lg text-white"></i>
                             </div>
                         </div>
                     </div>
@@ -129,20 +129,20 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-2">
-                                <i class="fas fa-clock me-1"></i>
-                                Pending Registrations
+                                <i class="fas fa-shopping-cart me-1"></i>
+                                Cart Orders
                             </div>
                             <div class="h4 mb-0 font-weight-bold text-gray-800">
-                                {{ \App\Models\Registration::where('status', 'pending')->count() }}
+                                {{ \App\Models\Panier::where('status', 'ordered')->count() }}
                             </div>
                             <div class="text-muted small mt-1">
-                                <i class="fas fa-exclamation-triangle text-warning me-1"></i>
-                                Needs attention
+                                <i class="fas fa-clock text-warning me-1"></i>
+                                {{ \App\Models\Panier::where('status', 'pending')->count() }} pending
                             </div>
                         </div>
                         <div class="col-auto">
                             <div class="icon-circle bg-warning">
-                                <i class="fas fa-clock fa-lg text-white"></i>
+                                <i class="fas fa-shopping-cart fa-lg text-white"></i>
                             </div>
                         </div>
                     </div>
@@ -164,32 +164,46 @@
                 </div>
                 <div class="card-body">
                     <div class="row g-3">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <a href="{{ route('admin.events.create') }}" class="btn btn-primary-green btn-block w-100 h-100 d-flex flex-column align-items-center justify-content-center py-3">
                                 <i class="fas fa-plus fa-2x mb-2"></i>
                                 <span class="font-weight-bold">Create Event</span>
                                 <small class="text-light">Start organizing</small>
                             </a>
                         </div>
-                        <div class="col-md-6">
-                            <a href="{{ route('admin.categories.create') }}" class="btn btn-outline-primary w-100 h-100 d-flex flex-column align-items-center justify-content-center py-3">
+                        <div class="col-md-4">
+                            <a href="{{ route('admin.sponsors.create') }}" class="btn btn-outline-primary w-100 h-100 d-flex flex-column align-items-center justify-content-center py-3">
+                                <i class="fas fa-handshake fa-2x mb-2"></i>
+                                <span class="font-weight-bold">Add Sponsor</span>
+                                <small class="text-muted">New partner</small>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{{ route('admin.produits.create') }}" class="btn btn-outline-success w-100 h-100 d-flex flex-column align-items-center justify-content-center py-3">
+                                <i class="fas fa-box fa-2x mb-2"></i>
+                                <span class="font-weight-bold">Add Product</span>
+                                <small class="text-muted">Shop item</small>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{{ route('admin.materiels.create') }}" class="btn btn-outline-info w-100 h-100 d-flex flex-column align-items-center justify-content-center py-3">
+                                <i class="fas fa-tools fa-2x mb-2"></i>
+                                <span class="font-weight-bold">Add Material</span>
+                                <small class="text-muted">Equipment</small>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{{ route('admin.categories.create') }}" class="btn btn-outline-warning w-100 h-100 d-flex flex-column align-items-center justify-content-center py-3">
                                 <i class="fas fa-tags fa-2x mb-2"></i>
                                 <span class="font-weight-bold">Add Category</span>
-                                <small class="text-muted">Organize events</small>
+                                <small class="text-muted">Event type</small>
                             </a>
                         </div>
-                        <div class="col-md-6">
-                            <a href="{{ route('admin.venues.create') }}" class="btn btn-outline-success w-100 h-100 d-flex flex-column align-items-center justify-content-center py-3">
+                        <div class="col-md-4">
+                            <a href="{{ route('admin.venues.create') }}" class="btn btn-outline-secondary w-100 h-100 d-flex flex-column align-items-center justify-content-center py-3">
                                 <i class="fas fa-map-marker-alt fa-2x mb-2"></i>
                                 <span class="font-weight-bold">Add Venue</span>
-                                <small class="text-muted">Event locations</small>
-                            </a>
-                        </div>
-                        <div class="col-md-6">
-                            <a href="{{ route('admin.positions.create') }}" class="btn btn-outline-warning w-100 h-100 d-flex flex-column align-items-center justify-content-center py-3">
-                                <i class="fas fa-user-plus fa-2x mb-2"></i>
-                                <span class="font-weight-bold">Add Position</span>
-                                <small class="text-muted">Team roles</small>
+                                <small class="text-muted">Location</small>
                             </a>
                         </div>
                     </div>
@@ -303,14 +317,14 @@
                         </div>
 
                         <div class="col-md-2">
-                            <a href="{{ route('admin.categories.index') }}" class="text-decoration-none">
+                            <a href="{{ route('admin.users.index') }}" class="text-decoration-none">
                                 <div class="card border-0 bg-gradient-success text-white h-100 transform-hover">
                                     <div class="card-body text-center py-4">
-                                        <i class="fas fa-tags fa-3x mb-3"></i>
-                                        <h6 class="card-title font-weight-bold">Categories</h6>
+                                        <i class="fas fa-users fa-3x mb-3"></i>
+                                        <h6 class="card-title font-weight-bold">Users</h6>
                                         <p class="card-text">
-                                            <span class="badge bg-light text-dark">{{ \App\Models\Category::count() }}</span>
-                                            <br><small>Event types</small>
+                                            <span class="badge bg-light text-dark">{{ \App\Models\User::count() }}</span>
+                                            <br><small>Total users</small>
                                         </p>
                                     </div>
                                 </div>
@@ -318,14 +332,14 @@
                         </div>
 
                         <div class="col-md-2">
-                            <a href="{{ route('admin.venues.index') }}" class="text-decoration-none">
+                            <a href="{{ route('admin.sponsors.index') }}" class="text-decoration-none">
                                 <div class="card border-0 bg-gradient-info text-white h-100 transform-hover">
                                     <div class="card-body text-center py-4">
-                                        <i class="fas fa-map-marker-alt fa-3x mb-3"></i>
-                                        <h6 class="card-title font-weight-bold">Venues</h6>
+                                        <i class="fas fa-handshake fa-3x mb-3"></i>
+                                        <h6 class="card-title font-weight-bold">Sponsors</h6>
                                         <p class="card-text">
-                                            <span class="badge bg-light text-dark">{{ \App\Models\Venue::count() }}</span>
-                                            <br><small>Locations</small>
+                                            <span class="badge bg-light text-dark">{{ \App\Models\Sponsor::count() }}</span>
+                                            <br><small>Partners</small>
                                         </p>
                                     </div>
                                 </div>
@@ -333,14 +347,29 @@
                         </div>
 
                         <div class="col-md-2">
-                            <a href="{{ route('admin.positions.index') }}" class="text-decoration-none">
+                            <a href="{{ route('admin.produits.index') }}" class="text-decoration-none">
                                 <div class="card border-0 bg-gradient-warning text-white h-100 transform-hover">
                                     <div class="card-body text-center py-4">
-                                        <i class="fas fa-users fa-3x mb-3"></i>
-                                        <h6 class="card-title font-weight-bold">Positions</h6>
+                                        <i class="fas fa-box fa-3x mb-3"></i>
+                                        <h6 class="card-title font-weight-bold">Products</h6>
                                         <p class="card-text">
-                                            <span class="badge bg-light text-dark">{{ \App\Models\Position::count() }}</span>
-                                            <br><small>Team roles</small>
+                                            <span class="badge bg-light text-dark">{{ \App\Models\Produit::count() }}</span>
+                                            <br><small>Shop items</small>
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="col-md-2">
+                            <a href="{{ route('admin.materiels.index') }}" class="text-decoration-none">
+                                <div class="card border-0 bg-gradient-secondary text-white h-100 transform-hover">
+                                    <div class="card-body text-center py-4">
+                                        <i class="fas fa-tools fa-3x mb-3"></i>
+                                        <h6 class="card-title font-weight-bold">Materials</h6>
+                                        <p class="card-text">
+                                            <span class="badge bg-light text-dark">{{ \App\Models\Materiel::count() }}</span>
+                                            <br><small>Equipment</small>
                                         </p>
                                     </div>
                                 </div>
@@ -349,28 +378,13 @@
 
                         <div class="col-md-2">
                             <a href="{{ route('admin.registrations.index') }}" class="text-decoration-none">
-                                <div class="card border-0 bg-gradient-secondary text-white h-100 transform-hover">
+                                <div class="card border-0 bg-gradient-dark text-white h-100 transform-hover">
                                     <div class="card-body text-center py-4">
                                         <i class="fas fa-clipboard-list fa-3x mb-3"></i>
                                         <h6 class="card-title font-weight-bold">Registrations</h6>
                                         <p class="card-text">
                                             <span class="badge bg-light text-dark">{{ \App\Models\Registration::count() }}</span>
                                             <br><small>Sign-ups</small>
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-
-                        <div class="col-md-2">
-                            <a href="{{ route('admin.dashboard') }}" class="text-decoration-none">
-                                <div class="card border-0 bg-gradient-dark text-white h-100 transform-hover">
-                                    <div class="card-body text-center py-4">
-                                        <i class="fas fa-chart-bar fa-3x mb-3"></i>
-                                        <h6 class="card-title font-weight-bold">Analytics</h6>
-                                        <p class="card-text">
-                                            <span class="badge bg-light text-dark">Live</span>
-                                            <br><small>Reports</small>
                                         </p>
                                     </div>
                                 </div>

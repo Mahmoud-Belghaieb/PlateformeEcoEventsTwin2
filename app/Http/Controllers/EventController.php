@@ -158,7 +158,6 @@ class EventController extends Controller
                 'venues' => 'Active', 
                 'positions' => 'Active',
                 'events' => 'Active',
-                'event_positions' => 'Active',
                 'registrations' => 'Active - Many-to-Many principale'
             ]
         ]);

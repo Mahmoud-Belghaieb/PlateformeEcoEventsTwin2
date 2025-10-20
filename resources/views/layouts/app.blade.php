@@ -88,6 +88,74 @@
             color: #ddd;
         }
 
+        /* Enhanced Navbar Dropdown Styles */
+        .navbar .dropdown-menu {
+            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            padding: 0.5rem 0;
+            margin-top: 0.5rem;
+            min-width: 250px;
+        }
+
+        .navbar .dropdown-item {
+            padding: 0.75rem 1.5rem;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .navbar .dropdown-item:hover {
+            background: linear-gradient(90deg, rgba(5, 150, 105, 0.1), transparent);
+            border-left-color: var(--primary-green);
+            transform: translateX(5px);
+        }
+
+        .navbar .dropdown-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .navbar .dropdown-divider {
+            margin: 0.5rem 1rem;
+            opacity: 0.1;
+        }
+
+        /* Cart Badge Animation */
+        .navbar .badge {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Nav Link Hover Effect */
+        .navbar .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .navbar .nav-link:hover {
+            color: var(--primary-green) !important;
+        }
+
+        .navbar .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--primary-green);
+            transition: width 0.3s ease;
+        }
+
+        .navbar .nav-link:hover::after {
+            width: 80%;
+        }
+
         @yield('styles')
     </style>
 </head>
@@ -109,6 +177,56 @@
                     <a class="nav-link" href="{{ route('events.index') }}">
                         <i class="fas fa-calendar me-1"></i>Événements
                     </a>
+                    <a class="nav-link" href="{{ route('sponsors.index') }}">
+                        <i class="fas fa-handshake me-1"></i>Sponsors
+                    </a>
+                    
+                    <!-- Shop Dropdown -->
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-store me-1"></i>Boutique
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item" href="{{ route('produits.index') }}">
+                                    <i class="fas fa-shopping-bag me-2 text-primary"></i>Produits Écologiques
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('materiels.index') }}">
+                                    <i class="fas fa-tools me-2 text-success"></i>Matériel à Louer
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            @auth
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('panier.index') }}">
+                                        <i class="fas fa-shopping-cart me-2 text-warning"></i>Mon Panier
+                                        @php
+                                            $cartCount = \App\Models\Panier::where('user_id', Auth::id())
+                                                ->where('status', 'pending')
+                                                ->count();
+                                        @endphp
+                                        @if($cartCount > 0)
+                                            <span class="badge bg-danger ms-1">{{ $cartCount }}</span>
+                                        @endif
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('panier.orders') }}">
+                                        <i class="fas fa-receipt me-2 text-info"></i>Mes Commandes
+                                    </a>
+                                </li>
+                            @else
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('login') }}">
+                                        <i class="fas fa-sign-in-alt me-2 text-secondary"></i>Connexion pour commander
+                                    </a>
+                                </li>
+                            @endauth
+                        </ul>
+                    </div>
+                    
                     <a class="nav-link" href="{{ route('avis.index.all') }}">
                         <i class="fas fa-star me-1"></i>Avis
                     </a>
@@ -116,27 +234,73 @@
                 
                 <div class="navbar-nav ms-auto">
                     @auth
-                        <a class="nav-link" href="{{ route('home') }}">
-                            <i class="fas fa-home me-1"></i>Accueil
+                        <!-- Cart Icon with Badge (Quick Access) -->
+                        <a class="nav-link position-relative" href="{{ route('panier.index') }}" title="Mon Panier">
+                            <i class="fas fa-shopping-cart fs-5"></i>
+                            @php
+                                $cartCount = \App\Models\Panier::where('user_id', Auth::id())
+                                    ->where('status', 'pending')
+                                    ->count();
+                            @endphp
+                            @if($cartCount > 0)
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">
+                                    {{ $cartCount }}
+                                    <span class="visually-hidden">items dans le panier</span>
+                                </span>
+                            @endif
                         </a>
-                        <a class="nav-link" href="{{ route('my-events') }}">
-                            <i class="fas fa-user-calendar me-1"></i>Mes événements
-                        </a>
-                        @if(Auth::user()->isAdmin())
-                            <a class="nav-link" href="{{ route('admin.dashboard') }}">
-                                <i class="fas fa-cogs me-1"></i>Admin
-                            </a>
-                        @endif
+                        
                         <div class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                                 <i class="fas fa-user me-1"></i>{{ Auth::user()->name }}
                             </a>
-                            <ul class="dropdown-menu">
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li class="dropdown-header">
+                                    <i class="fas fa-user-circle me-2"></i>Mon Compte
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('home') }}">
+                                        <i class="fas fa-home me-2 text-primary"></i>Accueil
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('my-events') }}">
+                                        <i class="fas fa-calendar-check me-2 text-success"></i>Mes Événements
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('panier.index') }}">
+                                        <i class="fas fa-shopping-cart me-2 text-warning"></i>Mon Panier
+                                        @php
+                                            $userCartCount = \App\Models\Panier::where('user_id', Auth::id())
+                                                ->where('status', 'pending')
+                                                ->count();
+                                        @endphp
+                                        @if($userCartCount > 0)
+                                            <span class="badge bg-danger ms-1">{{ $userCartCount }}</span>
+                                        @endif
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('panier.orders') }}">
+                                        <i class="fas fa-receipt me-2 text-info"></i>Mes Commandes
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                @if(Auth::user()->isAdmin())
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('admin.dashboard') }}">
+                                            <i class="fas fa-cogs me-2 text-danger"></i>Administration
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                @endif
                                 <li>
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
-                                        <button type="submit" class="dropdown-item">
-                                            <i class="fas fa-sign-out-alt me-1"></i>Déconnexion
+                                        <button type="submit" class="dropdown-item text-danger">
+                                            <i class="fas fa-sign-out-alt me-2"></i>Déconnexion
                                         </button>
                                     </form>
                                 </li>

@@ -2,9 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+use App\Http\Controllers\HomeController as PublicHomeController;
+
+// Public homepage route (shared for guests and authenticated users)
+Route::get('/', [PublicHomeController::class, 'index'])->name('home');
 
 // Authentication routes
 use App\Http\Controllers\AuthController;
@@ -19,6 +20,10 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\AvisController;
 use App\Http\Controllers\CommentaireController;
+use App\Http\Controllers\SponsorController;
+use App\Http\Controllers\ProduitController;
+use App\Http\Controllers\MaterielController;
+use App\Http\Controllers\PanierController;
 
 // Guest routes (only accessible when not logged in)
 Route::middleware('guest')->group(function () {
@@ -26,11 +31,18 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
+    
+    // Password reset routes
+    Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('password.request');
+    Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
+    Route::get('/reset-password/{token}', [AuthController::class, 'showResetPassword'])->name('password.reset');
+    Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 });
 
 // Authenticated routes
 Route::middleware('auth')->group(function () {
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    // Note: '/home' route intentionally removed to keep homepage at '/'
+    // Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     
     // My events
@@ -53,6 +65,15 @@ Route::middleware('auth')->group(function () {
     Route::put('/commentaires/{commentaire}', [CommentaireController::class, 'update'])->name('commentaires.update');
     Route::delete('/commentaires/{commentaire}', [CommentaireController::class, 'destroy'])->name('commentaires.destroy');
     Route::post('/commentaires/{commentaire}/reply', [CommentaireController::class, 'reply'])->name('commentaires.reply');
+    
+    // Panier routes (authenticated users only)
+    Route::get('/panier', [PanierController::class, 'index'])->name('panier.index');
+    Route::post('/panier', [PanierController::class, 'store'])->name('panier.store');
+    Route::put('/panier/{panier}', [PanierController::class, 'update'])->name('panier.update');
+    Route::delete('/panier/{panier}', [PanierController::class, 'destroy'])->name('panier.destroy');
+    Route::post('/panier/clear', [PanierController::class, 'clear'])->name('panier.clear');
+    Route::post('/panier/checkout', [PanierController::class, 'checkout'])->name('panier.checkout');
+    Route::get('/mes-commandes', [PanierController::class, 'orders'])->name('panier.orders');
 });
 
 // Public event routes
@@ -62,6 +83,16 @@ Route::get('/events/{event:slug}', [EventController::class, 'show'])->name('even
 // Public avis routes (standalone)
 Route::get('/avis', [AvisController::class, 'indexAll'])->name('avis.index.all');
 Route::get('/avis/{avis}', [AvisController::class, 'show'])->name('avis.show');
+
+// Public product routes
+Route::get('/produits', [ProduitController::class, 'publicIndex'])->name('produits.index');
+Route::get('/produits/{produit}', [ProduitController::class, 'publicShow'])->name('produits.show');
+
+// Public sponsors route
+Route::get('/sponsors', [SponsorController::class, 'publicIndex'])->name('sponsors.index');
+
+// Public materials route
+Route::get('/materiels', [MaterielController::class, 'publicIndex'])->name('materiels.index');
 
 // Test route for relations
 Route::get('/test-relations', [EventController::class, 'testRelations'])->name('test.relations');
@@ -110,4 +141,23 @@ Route::middleware(['auth', App\Http\Middleware\RoleMiddleware::class.':admin'])-
     Route::delete('commentaires/{commentaire}/reject', [\App\Http\Controllers\Admin\CommentaireController::class, 'reject'])->name('commentaires.reject');
     Route::post('commentaires/bulk-approve', [\App\Http\Controllers\Admin\CommentaireController::class, 'bulkApprove'])->name('commentaires.bulk-approve');
     Route::post('commentaires/bulk-delete', [\App\Http\Controllers\Admin\CommentaireController::class, 'bulkDelete'])->name('commentaires.bulk-delete');
+    
+    // Email Logs Management
+    Route::get('email-logs', [\App\Http\Controllers\Admin\EmailLogController::class, 'index'])->name('email-logs');
+    Route::post('email-logs/clear', [\App\Http\Controllers\Admin\EmailLogController::class, 'clear'])->name('email-logs.clear');
+    
+    // Sponsors Management
+    Route::resource('sponsors', SponsorController::class);
+    
+    // Produits Management
+    Route::resource('produits', ProduitController::class);
+    
+    // Materiels Management
+    Route::resource('materiels', MaterielController::class);
+    
+    // Panier (Cart Orders) Management
+    Route::get('panier', [PanierController::class, 'adminIndex'])->name('panier.index');
+    Route::get('panier/{panier}', [PanierController::class, 'adminShow'])->name('panier.show');
+    Route::patch('panier/{panier}/status', [PanierController::class, 'updateStatus'])->name('panier.update-status');
+    Route::delete('panier/{panier}', [PanierController::class, 'adminDestroy'])->name('panier.destroy');
 });

@@ -886,8 +886,8 @@
                                         </div>
                                         @if($event->price > 0)
                                             <div class="event-price">
-                                                <i class="fas fa-euro-sign"></i>
-                                                {{ number_format($event->price, 2) }}€
+                                                <i class="fas fa-lira-sign"></i>
+                                                {{ number_format($event->price, 2) }} TND
                                             </div>
                                         @else
                                             <div class="event-price free">

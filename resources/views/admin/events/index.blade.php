@@ -40,12 +40,12 @@
         <div class="col-xl-3 col-md-6 mb-3">
             <div class="stats-card">
                 <div class="card-body">
-                    <div class="d-flex align-items-center">
+                            <div class="d-flex align-items-center">
                         <div class="icon-circle bg-primary me-3" style="width: 50px; height: 50px;">
                             <i class="fas fa-calendar fa-lg text-white"></i>
                         </div>
                         <div>
-                            <h4 class="mb-0 text-primary">{{ $events->total() }}</h4>
+                            <h4 class="mb-0 text-primary">{{ $totals['total_events'] ?? $events->total() }}</h4>
                             <small class="text-muted">Total Events</small>
                         </div>
                     </div>
@@ -55,12 +55,12 @@
         <div class="col-xl-3 col-md-6 mb-3">
             <div class="stats-card warning">
                 <div class="card-body">
-                    <div class="d-flex align-items-center">
+                            <div class="d-flex align-items-center">
                         <div class="icon-circle bg-warning me-3" style="width: 50px; height: 50px;">
                             <i class="fas fa-clock fa-lg text-white"></i>
                         </div>
                         <div>
-                            <h4 class="mb-0 text-warning">{{ \App\Models\Event::where('status', 'pending')->count() }}</h4>
+                            <h4 class="mb-0 text-warning">{{ $totals['pending'] ?? \App\Models\Event::where('status', 'pending')->count() }}</h4>
                             <small class="text-muted">Pending Approval</small>
                         </div>
                     </div>
@@ -70,12 +70,12 @@
         <div class="col-xl-3 col-md-6 mb-3">
             <div class="stats-card success">
                 <div class="card-body">
-                    <div class="d-flex align-items-center">
+                            <div class="d-flex align-items-center">
                         <div class="icon-circle bg-success me-3" style="width: 50px; height: 50px;">
                             <i class="fas fa-check-circle fa-lg text-white"></i>
                         </div>
                         <div>
-                            <h4 class="mb-0 text-success">{{ \App\Models\Event::where('status', 'published')->count() }}</h4>
+                            <h4 class="mb-0 text-success">{{ $totals['published'] ?? \App\Models\Event::where('status', 'published')->count() }}</h4>
                             <small class="text-muted">Published Events</small>
                         </div>
                     </div>
@@ -85,12 +85,12 @@
         <div class="col-xl-3 col-md-6 mb-3">
             <div class="stats-card info">
                 <div class="card-body">
-                    <div class="d-flex align-items-center">
+                            <div class="d-flex align-items-center">
                         <div class="icon-circle bg-info me-3" style="width: 50px; height: 50px;">
                             <i class="fas fa-users fa-lg text-white"></i>
                         </div>
                         <div>
-                            <h4 class="mb-0 text-info">{{ \App\Models\Registration::count() }}</h4>
+                            <h4 class="mb-0 text-info">{{ $totals['registrations'] ?? \App\Models\Registration::count() }}</h4>
                             <small class="text-muted">Total Registrations</small>
                         </div>
                     </div>
@@ -212,21 +212,21 @@
                                     </small>
                                 </td>
                                 <td>
-                                    <div class="d-flex align-items-center">
-                                        <span class="badge bg-secondary me-2">
-                                            {{ $event->registrations->count() }}
-                                        </span>
-                                        @if($event->capacity)
-                                            <small class="text-muted">/ {{ $event->capacity }}</small>
-                                            <div class="progress ms-2" style="width: 50px; height: 4px;">
-                                                <div class="progress-bar bg-success" 
-                                                     style="width: {{ min(($event->registrations->count() / $event->capacity) * 100, 100) }}%">
-                                                </div>
+                                            <div class="d-flex align-items-center">
+                                                <span class="badge bg-secondary me-2">
+                                                    {{ $event->registrations_count ?? 0 }}
+                                                </span>
+                                                @if($event->capacity)
+                                                    <small class="text-muted">/ {{ $event->capacity }}</small>
+                                                    <div class="progress ms-2" style="width: 50px; height: 4px;">
+                                                        <div class="progress-bar bg-success" 
+                                                             style="width: {{ min((($event->registrations_count ?? 0) / $event->capacity) * 100, 100) }}%">
+                                                        </div>
+                                                    </div>
+                                                @else
+                                                    <small class="text-muted">/ ∞</small>
+                                                @endif
                                             </div>
-                                        @else
-                                            <small class="text-muted">/ ∞</small>
-                                        @endif
-                                    </div>
                                 </td>
                                 <td>
                                     @if($event->price > 0)
@@ -353,6 +353,18 @@
                         </tbody>
                     </table>
                 </div>
+            @else
+                <div class="text-center py-5">
+                    <div class="text-muted">
+                        <i class="fas fa-calendar-alt fa-3x mb-3"></i>
+                        <p>No events found.</p>
+                        <a href="{{ route('admin.events.create') }}" class="btn btn-primary-green">
+                            <i class="fas fa-plus me-1"></i>
+                            Create First Event
+                        </a>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 

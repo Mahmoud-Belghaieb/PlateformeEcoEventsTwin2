@@ -9,6 +9,10 @@ use App\Models\Registration;
 use App\Models\Category;
 use App\Models\Venue;
 use App\Models\Position;
+use App\Models\Sponsor;
+use App\Models\Produit;
+use App\Models\Materiel;
+use App\Models\Panier;
 
 class DashboardController extends Controller
 {
@@ -24,6 +28,15 @@ class DashboardController extends Controller
             'total_categories' => Category::count(),
             'total_venues' => Venue::count(),
             'total_positions' => Position::count(),
+            // New modules stats
+            'total_sponsors' => Sponsor::count(),
+            'active_sponsors' => Sponsor::where('is_active', true)->count(),
+            'total_products' => Produit::count(),
+            'available_products' => Produit::where('is_available', true)->where('stock', '>', 0)->count(),
+            'total_materials' => Materiel::count(),
+            'available_materials' => Materiel::where('is_available', true)->count(),
+            'pending_carts' => Panier::where('status', 'pending')->count(),
+            'total_orders' => Panier::where('status', 'ordered')->count(),
         ];
 
         $recent_events = Event::with(['category', 'venue'])

@@ -186,6 +186,47 @@
             padding-top: 0;
             overflow-x: hidden;
             overflow-y: auto;
+            /* Add padding to prevent content from touching scrollbar */
+            padding-right: 5px;
+        }
+
+        /* Enhanced Custom Scrollbar for Sidebar */
+        .sidebar-sticky::-webkit-scrollbar {
+            width: 12px;
+            background: transparent;
+        }
+
+        .sidebar-sticky::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 10px;
+            margin: 10px 0;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+        }
+
+        .sidebar-sticky::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.3) 100%);
+            border-radius: 10px;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-sticky::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.5) 100%);
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.3);
+            transform: scaleY(1.05);
+        }
+
+        .sidebar-sticky::-webkit-scrollbar-thumb:active {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
+        }
+
+        /* Firefox Scrollbar - Enhanced */
+        .sidebar-sticky {
+            scrollbar-width: auto;
+            scrollbar-color: rgba(255, 255, 255, 0.4) rgba(0, 0, 0, 0.15);
         }
 
         .sidebar .nav-link {
@@ -841,6 +882,46 @@
                 </li>
                 
                 <hr class="my-3" style="border-color: rgba(255,255,255,0.2);">
+                <li class="nav-item">
+                    <small class="text-white-50 px-3 d-block mb-2 mt-2" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">E-Commerce</small>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.sponsors.*') ? 'active' : '' }}" 
+                       href="{{ route('admin.sponsors.index') }}">
+                        <i class="fas fa-handshake"></i>
+                        Sponsors
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.produits.*') ? 'active' : '' }}" 
+                       href="{{ route('admin.produits.index') }}">
+                        <i class="fas fa-box"></i>
+                        Products
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.materiels.*') ? 'active' : '' }}" 
+                       href="{{ route('admin.materiels.index') }}">
+                        <i class="fas fa-tools"></i>
+                        Materials
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.panier.*') ? 'active' : '' }}" 
+                       href="{{ route('admin.panier.index') }}">
+                        <i class="fas fa-shopping-cart"></i>
+                        Cart Orders
+                    </a>
+                </li>
+                
+                <hr class="my-3" style="border-color: rgba(255,255,255,0.2);">
+                <li class="nav-item">
+                    <small class="text-white-50 px-3 d-block mb-2 mt-2" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">Configuration</small>
+                </li>
                 
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}" 

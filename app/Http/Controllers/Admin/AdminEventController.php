@@ -17,10 +17,26 @@ class AdminEventController extends Controller
      */
     public function index()
     {
-        $events = Event::with(['category', 'venue', 'registrations'])
+        // Eager load relations and precompute approved registrations count per event
+        $events = Event::with(['category', 'venue'])
+            ->withCount([
+                'registrations',
+                'registrations as approved_registrations_count' => function ($query) {
+                    $query->where('status', 'approved');
+                }
+            ])
             ->latest('start_date')
             ->paginate(15);
-        return view('admin.events.index', compact('events'));
+
+        // Summary totals for dashboard cards (computed here to avoid queries in the blade)
+        $totals = [
+            'total_events' => Event::count(),
+            'pending' => Event::where('status', 'pending')->count(),
+            'published' => Event::where('status', 'published')->count(),
+            'registrations' => \App\Models\Registration::count(),
+        ];
+
+        return view('admin.events.index', compact('events', 'totals'));
     }
 
     /**
