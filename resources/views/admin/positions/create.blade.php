@@ -32,14 +32,14 @@
                         <div class="row">
                             <div class="col-md-8">
                                 <div class="mb-3">
-                                    <label for="name" class="form-label">Position Name *</label>
+                                    <label for="title" class="form-label">Position Title *</label>
                                     <input type="text" 
-                                           class="form-control @error('name') is-invalid @enderror" 
-                                           id="name" 
-                                           name="name" 
-                                           value="{{ old('name') }}" 
+                                           class="form-control @error('title') is-invalid @enderror" 
+                                           id="title" 
+                                           name="title" 
+                                           value="{{ old('title') }}" 
                                            required>
-                                    @error('name')
+                                    @error('title')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -53,6 +53,19 @@
                                               placeholder="Describe the responsibilities and tasks for this position..."
                                               required>{{ old('description') }}</textarea>
                                     @error('description')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="responsibilities" class="form-label">Responsibilities *</label>
+                                    <textarea class="form-control @error('responsibilities') is-invalid @enderror" 
+                                              id="responsibilities" 
+                                              name="responsibilities" 
+                                              rows="4"
+                                              placeholder="Describe the main tasks and responsibilities for this position..."
+                                              required>{{ old('responsibilities') }}</textarea>
+                                    @error('responsibilities')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -72,38 +85,89 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="is_leadership" class="form-label">Position Type</label>
-                                            <select class="form-select @error('is_leadership') is-invalid @enderror" 
-                                                    id="is_leadership" 
-                                                    name="is_leadership">
-                                                <option value="0" {{ old('is_leadership') == '0' ? 'selected' : '' }}>
-                                                    Volunteer Position
+                                            <label for="type" class="form-label">Position Type *</label>
+                                            <select class="form-select @error('type') is-invalid @enderror" 
+                                                    id="type" 
+                                                    name="type"
+                                                    required>
+                                                <option value="">Select position type...</option>
+                                                <option value="volunteer" {{ old('type') == 'volunteer' ? 'selected' : '' }}>
+                                                    Volunteer
                                                 </option>
-                                                <option value="1" {{ old('is_leadership') == '1' ? 'selected' : '' }}>
-                                                    Leadership Position
+                                                <option value="staff" {{ old('type') == 'staff' ? 'selected' : '' }}>
+                                                    Staff
+                                                </option>
+                                                <option value="coordinator" {{ old('type') == 'coordinator' ? 'selected' : '' }}>
+                                                    Coordinator
+                                                </option>
+                                                <option value="manager" {{ old('type') == 'manager' ? 'selected' : '' }}>
+                                                    Manager
                                                 </option>
                                             </select>
-                                            @error('is_leadership')
+                                            @error('type')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="time_commitment" class="form-label">Time Commitment (hours)</label>
+                                            <label for="required_count" class="form-label">Required Count *</label>
                                             <input type="number" 
-                                                   class="form-control @error('time_commitment') is-invalid @enderror" 
-                                                   id="time_commitment" 
-                                                   name="time_commitment" 
-                                                   value="{{ old('time_commitment') }}"
+                                                   class="form-control @error('required_count') is-invalid @enderror" 
+                                                   id="required_count" 
+                                                   name="required_count" 
+                                                   value="{{ old('required_count', 1) }}"
                                                    min="1"
-                                                   step="0.5"
+                                                   required
                                                    placeholder="e.g., 4">
-                                            @error('time_commitment')
+                                            @error('required_count')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="hourly_rate" class="form-label">Hourly Rate (TND)</label>
+                                            <input type="number" 
+                                                   class="form-control @error('hourly_rate') is-invalid @enderror" 
+                                                   id="hourly_rate" 
+                                                   name="hourly_rate" 
+                                                   value="{{ old('hourly_rate') }}"
+                                                   min="0"
+                                                   step="0.01"
+                                                   placeholder="0.00">
+                                            <small class="form-text text-muted">Leave empty for volunteer positions</small>
+                                            @error('hourly_rate')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="requires_training" value="1" id="requires_training">
+                                                <label class="form-check-label" for="requires_training">
+                                                    <i class="fas fa-graduation-cap me-1"></i>
+                                                    Requires Training
+                                                </label>
+                                            </div>
+                                            <small class="form-text text-muted">Check if this position requires special training</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="is_active" value="1" id="is_active" checked>
+                                        <label class="form-check-label" for="is_active">
+                                            <i class="fas fa-check-circle me-1"></i>
+                                            Position is Active
+                                        </label>
+                                    </div>
+                                    <small class="form-text text-muted">Uncheck to make this position unavailable for applications</small>
                                 </div>
                             </div>
 

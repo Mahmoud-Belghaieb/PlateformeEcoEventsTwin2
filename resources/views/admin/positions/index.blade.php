@@ -44,7 +44,7 @@
                                 <tr>
                                     <td>{{ $position->id }}</td>
                                     <td>
-                                        <strong class="text-primary-green">{{ $position->name }}</strong>
+                                        <strong class="text-primary-green">{{ $position->title }}</strong>
                                     </td>
                                     <td>
                                         <span class="text-muted">

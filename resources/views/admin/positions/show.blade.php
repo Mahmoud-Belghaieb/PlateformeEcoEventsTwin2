@@ -14,7 +14,7 @@
                     <li class="breadcrumb-item">
                         <a href="{{ route('admin.positions.index') }}">Positions</a>
                     </li>
-                    <li class="breadcrumb-item active">{{ $position->name }}</li>
+                    <li class="breadcrumb-item active">{{ $position->title }}</li>
                 </ol>
             </nav>
 
@@ -24,12 +24,18 @@
                         <div class="card-header bg-primary-green text-white">
                             <h5 class="mb-0">
                                 <i class="fas fa-user-cog me-2"></i>
-                                {{ $position->name }}
-                                @if($position->is_leadership)
-                                    <span class="badge bg-warning text-dark ms-2">Leadership</span>
-                                @else
-                                    <span class="badge bg-light text-dark ms-2">Volunteer</span>
-                                @endif
+                                {{ $position->title }}
+                                @php
+                                    $typeColors = [
+                                        'volunteer' => 'bg-success',
+                                        'staff' => 'bg-primary', 
+                                        'coordinator' => 'bg-warning text-dark',
+                                        'manager' => 'bg-danger'
+                                    ];
+                                @endphp
+                                <span class="badge {{ $typeColors[$position->type] ?? 'bg-secondary' }} ms-2">
+                                    {{ ucfirst($position->type) }}
+                                </span>
                             </h5>
                         </div>
                         <div class="card-body">
@@ -39,6 +45,16 @@
                                     <p class="card-text">{{ $position->description }}</p>
                                 </div>
                             </div>
+
+                            @if($position->responsibilities)
+                            <hr>
+                            <div class="row">
+                                <div class="col-12">
+                                    <h6>Responsibilities</h6>
+                                    <p class="card-text">{{ $position->responsibilities }}</p>
+                                </div>
+                            </div>
+                            @endif
 
                             @if($position->requirements)
                             <hr>
@@ -58,21 +74,56 @@
                                         <tr>
                                             <td><strong>Position Type:</strong></td>
                                             <td>
-                                                @if($position->is_leadership)
-                                                    <span class="badge bg-warning text-dark">Leadership Position</span>
-                                                @else
-                                                    <span class="badge bg-light text-dark">Volunteer Position</span>
-                                                @endif
+                                                @php
+                                                    $typeColors = [
+                                                        'volunteer' => 'bg-success',
+                                                        'staff' => 'bg-primary', 
+                                                        'coordinator' => 'bg-warning text-dark',
+                                                        'manager' => 'bg-danger'
+                                                    ];
+                                                @endphp
+                                                <span class="badge {{ $typeColors[$position->type] ?? 'bg-secondary' }}">
+                                                    {{ ucfirst($position->type) }}</span>
                                             </td>
                                         </tr>
-                                        @if($position->time_commitment)
                                         <tr>
-                                            <td><strong>Time Commitment:</strong></td>
+                                            <td><strong>Required Count:</strong></td>
+                                            <td>{{ $position->required_count }} person(s)</td>
+                                        </tr>
+                                        @if($position->hourly_rate)
+                                        <tr>
+                                            <td><strong>Hourly Rate:</strong></td>
                                             <td>
-                                                <span class="badge bg-info">{{ $position->time_commitment }} hours</span>
+                                                <span class="badge bg-success">{{ number_format($position->hourly_rate, 2) }} TND</span>
                                             </td>
                                         </tr>
                                         @endif
+                                        <tr>
+                                            <td><strong>Training Required:</strong></td>
+                                            <td>
+                                                @if($position->requires_training)
+                                                    <span class="badge bg-warning text-dark">
+                                                        <i class="fas fa-graduation-cap me-1"></i>Yes
+                                                    </span>
+                                                @else
+                                                    <span class="badge bg-light text-dark">No</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Status:</strong></td>
+                                            <td>
+                                                @if($position->is_active)
+                                                    <span class="badge bg-success">
+                                                        <i class="fas fa-check-circle me-1"></i>Active
+                                                    </span>
+                                                @else
+                                                    <span class="badge bg-danger">
+                                                        <i class="fas fa-times-circle me-1"></i>Inactive
+                                                    </span>
+                                                @endif
+                                            </td>
+                                        </tr>
                                         <tr>
                                             <td><strong>Created:</strong></td>
                                             <td>{{ $position->created_at->format('M d, Y H:i') }}</td>
@@ -82,9 +133,9 @@
                                             <td>{{ $position->updated_at->format('M d, Y H:i') }}</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>Total Events:</strong></td>
+                                            <td><strong>Applications:</strong></td>
                                             <td>
-                                                <span class="badge bg-primary">{{ $position->events()->count() }}</span>
+                                                <span class="badge bg-primary">{{ $position->registrations()->count() }}</span>
                                             </td>
                                         </tr>
                                     </table>
@@ -129,27 +180,46 @@
                         <div class="card-body">
                             <div class="row text-center">
                                 <div class="col-12 mb-3">
-                                    <h3 class="text-primary-green mb-0">{{ $position->events()->count() }}</h3>
-                                    <small class="text-muted">Total Events</small>
+                                    <h3 class="text-primary-green mb-0">{{ $position->registrations()->count() }}</h3>
+                                    <small class="text-muted">Applications</small>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <h4 class="text-success mb-0">{{ $position->required_count }}</h4>
+                                    <small class="text-muted">Required</small>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    @if($position->hourly_rate)
+                                        <h4 class="text-warning mb-0">{{ number_format($position->hourly_rate, 2) }} TND</h4>
+                                        <small class="text-muted">Per Hour</small>
+                                    @else
+                                        <h4 class="text-info mb-0">FREE</h4>
+                                        <small class="text-muted">Volunteer</small>
+                                    @endif
                                 </div>
                                 <div class="col-6">
-                                    <h4 class="text-success mb-0">{{ $position->events()->where('start_date', '>=', now())->count() }}</h4>
-                                    <small class="text-muted">Upcoming</small>
+                                    @php
+                                        $activeRegistrations = $position->registrations()->where('status', 'approved')->count();
+                                    @endphp
+                                    <h4 class="text-success mb-0">{{ $activeRegistrations }}</h4>
+                                    <small class="text-muted">Active</small>
                                 </div>
                                 <div class="col-6">
-                                    <h4 class="text-secondary mb-0">{{ $position->events()->where('start_date', '<', now())->count() }}</h4>
-                                    <small class="text-muted">Past</small>
+                                    @php
+                                        $pendingRegistrations = $position->registrations()->where('status', 'pending')->count();
+                                    @endphp
+                                    <h4 class="text-warning mb-0">{{ $pendingRegistrations }}</h4>
+                                    <small class="text-muted">Pending</small>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    @if($position->events()->count() > 0)
+                    @if($position->registrations()->count() > 0)
                     <div class="card shadow-sm mt-3">
                         <div class="card-header bg-light">
                             <h6 class="mb-0">
-                                <i class="fas fa-calendar-alt me-2"></i>
-                                Recent Events
+                                <i class="fas fa-users me-2"></i>
+                                Recent Applications
                             </h6>
                         </div>
                         <div class="card-body p-0">

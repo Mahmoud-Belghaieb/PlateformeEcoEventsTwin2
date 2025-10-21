@@ -10,7 +10,7 @@
                 <div class="card-header bg-warning text-dark">
                     <h5 class="mb-0">
                         <i class="fas fa-edit me-2"></i>
-                        Edit Position: {{ $position->name }}
+                        Edit Position: {{ $position->title }}
                     </h5>
                 </div>
                 <div class="card-body">
@@ -23,7 +23,7 @@
                                 <a href="{{ route('admin.positions.index') }}">Positions</a>
                             </li>
                             <li class="breadcrumb-item">
-                                <a href="{{ route('admin.positions.show', $position) }}">{{ $position->name }}</a>
+                                <a href="{{ route('admin.positions.show', $position) }}">{{ $position->title }}</a>
                             </li>
                             <li class="breadcrumb-item active">Edit</li>
                         </ol>
@@ -36,14 +36,14 @@
                         <div class="row">
                             <div class="col-md-8">
                                 <div class="mb-3">
-                                    <label for="name" class="form-label">Position Name *</label>
+                                    <label for="title" class="form-label">Position Title *</label>
                                     <input type="text" 
-                                           class="form-control @error('name') is-invalid @enderror" 
-                                           id="name" 
-                                           name="name" 
-                                           value="{{ old('name', $position->name) }}" 
+                                           class="form-control @error('title') is-invalid @enderror" 
+                                           id="title" 
+                                           name="title" 
+                                           value="{{ old('title', $position->title) }}" 
                                            required>
-                                    @error('name')
+                                    @error('title')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -57,6 +57,19 @@
                                               placeholder="Describe the responsibilities and tasks for this position..."
                                               required>{{ old('description', $position->description) }}</textarea>
                                     @error('description')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="responsibilities" class="form-label">Responsibilities *</label>
+                                    <textarea class="form-control @error('responsibilities') is-invalid @enderror" 
+                                              id="responsibilities" 
+                                              name="responsibilities" 
+                                              rows="4"
+                                              placeholder="Describe the main tasks and responsibilities for this position..."
+                                              required>{{ old('responsibilities', $position->responsibilities) }}</textarea>
+                                    @error('responsibilities')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -76,38 +89,91 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="is_leadership" class="form-label">Position Type</label>
-                                            <select class="form-select @error('is_leadership') is-invalid @enderror" 
-                                                    id="is_leadership" 
-                                                    name="is_leadership">
-                                                <option value="0" {{ old('is_leadership', $position->is_leadership) == '0' ? 'selected' : '' }}>
-                                                    Volunteer Position
+                                            <label for="type" class="form-label">Position Type *</label>
+                                            <select class="form-select @error('type') is-invalid @enderror" 
+                                                    id="type" 
+                                                    name="type"
+                                                    required>
+                                                <option value="">Select position type...</option>
+                                                <option value="volunteer" {{ old('type', $position->type) == 'volunteer' ? 'selected' : '' }}>
+                                                    Volunteer
                                                 </option>
-                                                <option value="1" {{ old('is_leadership', $position->is_leadership) == '1' ? 'selected' : '' }}>
-                                                    Leadership Position
+                                                <option value="staff" {{ old('type', $position->type) == 'staff' ? 'selected' : '' }}>
+                                                    Staff
+                                                </option>
+                                                <option value="coordinator" {{ old('type', $position->type) == 'coordinator' ? 'selected' : '' }}>
+                                                    Coordinator
+                                                </option>
+                                                <option value="manager" {{ old('type', $position->type) == 'manager' ? 'selected' : '' }}>
+                                                    Manager
                                                 </option>
                                             </select>
-                                            @error('is_leadership')
+                                            @error('type')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="time_commitment" class="form-label">Time Commitment (hours)</label>
+                                            <label for="required_count" class="form-label">Required Count *</label>
                                             <input type="number" 
-                                                   class="form-control @error('time_commitment') is-invalid @enderror" 
-                                                   id="time_commitment" 
-                                                   name="time_commitment" 
-                                                   value="{{ old('time_commitment', $position->time_commitment) }}"
+                                                   class="form-control @error('required_count') is-invalid @enderror" 
+                                                   id="required_count" 
+                                                   name="required_count" 
+                                                   value="{{ old('required_count', $position->required_count) }}"
                                                    min="1"
-                                                   step="0.5"
+                                                   required
                                                    placeholder="e.g., 4">
-                                            @error('time_commitment')
+                                            @error('required_count')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="hourly_rate" class="form-label">Hourly Rate (TND)</label>
+                                            <input type="number" 
+                                                   class="form-control @error('hourly_rate') is-invalid @enderror" 
+                                                   id="hourly_rate" 
+                                                   name="hourly_rate" 
+                                                   value="{{ old('hourly_rate', $position->hourly_rate) }}"
+                                                   min="0"
+                                                   step="0.01"
+                                                   placeholder="0.00">
+                                            <small class="form-text text-muted">Leave empty for volunteer positions</small>
+                                            @error('hourly_rate')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="requires_training" value="1" id="requires_training"
+                                                       {{ old('requires_training', $position->requires_training) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="requires_training">
+                                                    <i class="fas fa-graduation-cap me-1"></i>
+                                                    Requires Training
+                                                </label>
+                                            </div>
+                                            <small class="form-text text-muted">Check if this position requires special training</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="is_active" value="1" id="is_active"
+                                               {{ old('is_active', $position->is_active) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="is_active">
+                                            <i class="fas fa-check-circle me-1"></i>
+                                            Position is Active
+                                        </label>
+                                    </div>
+                                    <small class="form-text text-muted">Uncheck to make this position unavailable for applications</small>
                                 </div>
                             </div>
 
@@ -121,12 +187,12 @@
                                         <div class="row text-center">
                                             <div class="col-6">
                                                 <div class="border-end">
-                                                    <h4 class="text-primary-green mb-0">{{ $position->events()->count() }}</h4>
-                                                    <small class="text-muted">Events</small>
+                                                    <h4 class="text-primary-green mb-0">{{ $position->registrations()->count() }}</h4>
+                                                    <small class="text-muted">Applications</small>
                                                 </div>
                                             </div>
                                             <div class="col-6">
-                                                <h4 class="text-accent-orange mb-0">{{ $position->is_leadership ? 'Leader' : 'Volunteer' }}</h4>
+                                                <h4 class="text-accent-orange mb-0">{{ ucfirst($position->type) }}</h4>
                                                 <small class="text-muted">Type</small>
                                             </div>
                                         </div>
@@ -140,7 +206,7 @@
                                     </div>
                                 </div>
 
-                                @if($position->events()->count() > 0)
+                                @if($position->registrations()->count() > 0)
                                 <div class="card bg-info bg-opacity-10 mt-3">
                                     <div class="card-body">
                                         <h6 class="card-title text-info">
@@ -148,22 +214,36 @@
                                             Notice
                                         </h6>
                                         <p class="card-text small mb-0">
-                                            This position is used in {{ $position->events()->count() }} events. 
-                                            Changes will affect all related events.
+                                            This position has {{ $position->registrations()->count() }} applications. 
+                                            Changes may affect existing applications.
                                         </p>
                                     </div>
                                 </div>
                                 @endif
 
-                                @if($position->time_commitment)
+                                @if($position->hourly_rate && $position->hourly_rate > 0)
                                 <div class="card bg-success bg-opacity-10 mt-3">
                                     <div class="card-body">
                                         <h6 class="card-title text-success">
-                                            <i class="fas fa-clock me-1"></i>
-                                            Time Commitment
+                                            <i class="fas fa-money-bill me-1"></i>
+                                            Compensation
                                         </h6>
                                         <p class="card-text small mb-0">
-                                            <strong>{{ $position->time_commitment }} hours</strong> required for this position.
+                                            <strong>{{ number_format($position->hourly_rate, 2) }} TND per hour</strong> for this position.
+                                        </p>
+                                    </div>
+                                </div>
+                                @endif
+
+                                @if($position->requires_training)
+                                <div class="card bg-warning bg-opacity-10 mt-3">
+                                    <div class="card-body">
+                                        <h6 class="card-title text-warning">
+                                            <i class="fas fa-graduation-cap me-1"></i>
+                                            Training Required
+                                        </h6>
+                                        <p class="card-text small mb-0">
+                                            This position requires special training before starting.
                                         </p>
                                     </div>
                                 </div>

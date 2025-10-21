@@ -34,12 +34,22 @@ class PositionController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string|max:1000',
+            'responsibilities' => 'required|string|max:1000',
             'requirements' => 'nullable|string|max:1000',
-            'is_leadership' => 'required|boolean',
-            'time_commitment' => 'nullable|numeric|min:0.5|max:24',
+            'type' => 'required|in:volunteer,staff,coordinator,manager',
+            'required_count' => 'required|integer|min:1',
+            'hourly_rate' => 'nullable|numeric|min:0',
+            'requires_training' => 'boolean',
+            'is_active' => 'boolean',
         ]);
 
-        Position::create($request->all());
+        $data = $request->all();
+        
+        // Convert checkboxes to boolean
+        $data['requires_training'] = $request->has('requires_training') ? true : false;
+        $data['is_active'] = $request->has('is_active') ? true : false;
+
+        Position::create($data);
 
         return redirect()->route('admin.positions.index')
             ->with('success', 'Position created successfully.');
@@ -67,14 +77,24 @@ class PositionController extends Controller
     public function update(Request $request, Position $position)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
             'description' => 'required|string|max:1000',
+            'responsibilities' => 'required|string|max:1000',
             'requirements' => 'nullable|string|max:1000',
-            'is_leadership' => 'required|boolean',
-            'time_commitment' => 'nullable|numeric|min:0.5|max:24',
+            'type' => 'required|in:volunteer,staff,coordinator,manager',
+            'required_count' => 'required|integer|min:1',
+            'hourly_rate' => 'nullable|numeric|min:0',
+            'requires_training' => 'boolean',
+            'is_active' => 'boolean',
         ]);
 
-        $position->update($request->all());
+        $data = $request->all();
+        
+        // Convert checkboxes to boolean
+        $data['requires_training'] = $request->has('requires_training') ? true : false;
+        $data['is_active'] = $request->has('is_active') ? true : false;
+
+        $position->update($data);
 
         return redirect()->route('admin.positions.index')
             ->with('success', 'Position updated successfully.');
