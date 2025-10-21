@@ -66,6 +66,30 @@ class UserManagementController extends Controller
     }
 
     /**
+     * Display the specified user
+     */
+    public function show(User $user)
+    {
+        // Load user with related data
+        $user->load(['registrations.event.category', 'registrations.event.venue']);
+        
+        // Get user statistics
+        $stats = [
+            'total_registrations' => $user->registrations()->count(),
+            'upcoming_events' => $user->registrations()
+                ->whereHas('event', function($query) {
+                    $query->where('start_date', '>', now());
+                })->count(),
+            'attended_events' => $user->registrations()
+                ->whereHas('event', function($query) {
+                    $query->where('end_date', '<', now());
+                })->count(),
+        ];
+
+        return view('admin.users.show', compact('user', 'stats'));
+    }
+
+    /**
      * Show the form for editing a user
      */
     public function edit(User $user)
