@@ -121,6 +121,17 @@ class Event extends Model
         return $this->hasMany(Materiel::class);
     }
 
+    /**
+     * Relation avec les positions via les registrations
+     * Récupère les positions uniques utilisées dans cet événement
+     */
+    public function positions()
+    {
+        return $this->belongsToMany(Position::class, 'registrations')
+                   ->distinct()
+                   ->whereNotNull('position_id');
+    }
+
     // ====== MÉTHODES UTILES ======
 
     /**

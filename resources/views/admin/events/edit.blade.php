@@ -174,14 +174,14 @@
                             </div>
 
                             <!-- Current Image -->
-                            @if($event->image)
+                            @if($event->featured_image)
                             <div class="col-md-12 mb-3">
                                 <label class="form-label font-weight-bold">
                                     <i class="fas fa-image me-1"></i>
                                     Current Image
                                 </label>
                                 <div class="mb-2">
-                                    <img src="{{ asset('storage/' . $event->image) }}" 
+                                    <img src="{{ asset('storage/' . $event->featured_image) }}" 
                                          alt="Event Image" class="img-thumbnail" style="max-height: 150px;">
                                 </div>
                             </div>
@@ -191,7 +191,7 @@
                             <div class="col-md-12 mb-3">
                                 <label for="image" class="form-label font-weight-bold">
                                     <i class="fas fa-image me-1"></i>
-                                    {{ $event->image ? 'Replace Image' : 'Event Image' }}
+                                    {{ $event->featured_image ? 'Replace Image' : 'Event Image' }}
                                 </label>
                                 <input type="file" class="form-control @error('image') is-invalid @enderror" 
                                        id="image" name="image" accept="image/*">

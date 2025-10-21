@@ -37,9 +37,9 @@
                     </h5>
                 </div>
                 <div class="card-body">
-                    @if($event->image)
+                    @if($event->featured_image)
                         <div class="mb-4">
-                            <img src="{{ asset('storage/' . $event->image) }}" 
+                            <img src="{{ asset('storage/' . $event->featured_image) }}" 
                                  alt="{{ $event->title }}" 
                                  class="img-fluid rounded" 
                                  style="max-height: 300px; width: 100%; object-fit: cover;">
@@ -89,7 +89,7 @@
                                 Venue
                             </h6>
                             <p class="mb-0">{{ $event->venue->name }}</p>
-                            <p class="text-muted">{{ $event->venue->location }}</p>
+                            <p class="text-muted">{{ $event->venue->address }}</p>
                         </div>
 
                         <div class="col-md-6 mb-3">
@@ -98,8 +98,8 @@
                                 Capacity
                             </h6>
                             <p class="mb-0">
-                                @if($event->capacity)
-                                    {{ $event->capacity }} participants
+                                @if($event->max_participants)
+                                    {{ $event->max_participants }} participants
                                 @else
                                     Unlimited
                                 @endif
