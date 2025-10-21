@@ -34,14 +34,30 @@ class VenueController extends Controller
             'name' => 'required|string|max:255',
             'address' => 'required|string|max:500',
             'city' => 'required|string|max:255',
-            'phone' => 'nullable|string|max:20',
-            'email' => 'nullable|email|max:255',
-            'website' => 'nullable|url|max:255',
-            'capacity' => 'nullable|integer|min:1',
+            'postal_code' => 'required|string|max:20',
+            'country' => 'nullable|string|max:100',
+            'contact_phone' => 'nullable|string|max:20',
+            'contact_email' => 'nullable|email|max:255',
+            'capacity' => 'required|integer|min:1',
+            'price_per_hour' => 'nullable|numeric|min:0',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
+            'facilities' => 'nullable|array',
             'description' => 'nullable|string|max:1000',
+            'is_active' => 'boolean',
         ]);
 
-        Venue::create($request->all());
+        $data = $request->all();
+        
+        // Convert is_active to boolean
+        $data['is_active'] = $request->has('is_active') ? true : false;
+        
+        // Handle facilities array
+        if ($request->has('facilities')) {
+            $data['facilities'] = $request->facilities;
+        }
+
+        Venue::create($data);
 
         return redirect()->route('admin.venues.index')
             ->with('success', 'Venue created successfully.');
@@ -72,14 +88,30 @@ class VenueController extends Controller
             'name' => 'required|string|max:255',
             'address' => 'required|string|max:500',
             'city' => 'required|string|max:255',
-            'phone' => 'nullable|string|max:20',
-            'email' => 'nullable|email|max:255',
-            'website' => 'nullable|url|max:255',
-            'capacity' => 'nullable|integer|min:1',
+            'postal_code' => 'required|string|max:20',
+            'country' => 'nullable|string|max:100',
+            'contact_phone' => 'nullable|string|max:20',
+            'contact_email' => 'nullable|email|max:255',
+            'capacity' => 'required|integer|min:1',
+            'price_per_hour' => 'nullable|numeric|min:0',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
+            'facilities' => 'nullable|array',
             'description' => 'nullable|string|max:1000',
+            'is_active' => 'boolean',
         ]);
 
-        $venue->update($request->all());
+        $data = $request->all();
+        
+        // Convert is_active to boolean
+        $data['is_active'] = $request->has('is_active') ? true : false;
+        
+        // Handle facilities array
+        if ($request->has('facilities')) {
+            $data['facilities'] = $request->facilities;
+        }
+
+        $venue->update($data);
 
         return redirect()->route('admin.venues.index')
             ->with('success', 'Venue updated successfully.');

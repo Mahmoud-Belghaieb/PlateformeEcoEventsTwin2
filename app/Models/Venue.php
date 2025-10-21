@@ -11,8 +11,8 @@ class Venue extends Model
 
     protected $fillable = [
         'name', 'description', 'address', 'city', 'postal_code', 'country',
-        'latitude', 'longitude', 'capacity', 'facilities', 'contact_email',
-        'contact_phone', 'website', 'is_active'
+        'latitude', 'longitude', 'capacity', 'facilities', 'price_per_hour',
+        'contact_email', 'contact_phone', 'is_active'
     ];
 
     protected $casts = [

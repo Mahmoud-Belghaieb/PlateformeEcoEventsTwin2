@@ -51,39 +51,47 @@
                                     </table>
                                 </div>
                                 <div class="col-md-6">
-                                    <h6>Contact Information</h6>
+                                    <h6>Contact & Details</h6>
                                     <table class="table table-sm">
-                                        @if($venue->phone)
+                                        @if($venue->postal_code)
+                                        <tr>
+                                            <td><strong>Postal Code:</strong></td>
+                                            <td>{{ $venue->postal_code }}</td>
+                                        </tr>
+                                        @endif
+                                        @if($venue->country)
+                                        <tr>
+                                            <td><strong>Country:</strong></td>
+                                            <td>{{ $venue->country }}</td>
+                                        </tr>
+                                        @endif
+                                        @if($venue->contact_phone)
                                         <tr>
                                             <td><strong>Phone:</strong></td>
                                             <td>
-                                                <a href="tel:{{ $venue->phone }}" class="text-decoration-none">
+                                                <a href="tel:{{ $venue->contact_phone }}" class="text-decoration-none">
                                                     <i class="fas fa-phone text-muted"></i>
-                                                    {{ $venue->phone }}
+                                                    {{ $venue->contact_phone }}
                                                 </a>
                                             </td>
                                         </tr>
                                         @endif
-                                        @if($venue->email)
+                                        @if($venue->contact_email)
                                         <tr>
                                             <td><strong>Email:</strong></td>
                                             <td>
-                                                <a href="mailto:{{ $venue->email }}" class="text-decoration-none">
+                                                <a href="mailto:{{ $venue->contact_email }}" class="text-decoration-none">
                                                     <i class="fas fa-envelope text-muted"></i>
-                                                    {{ $venue->email }}
+                                                    {{ $venue->contact_email }}
                                                 </a>
                                             </td>
                                         </tr>
                                         @endif
-                                        @if($venue->website)
+                                        @if($venue->price_per_hour)
                                         <tr>
-                                            <td><strong>Website:</strong></td>
+                                            <td><strong>Price/Hour:</strong></td>
                                             <td>
-                                                <a href="{{ $venue->website }}" target="_blank" class="text-decoration-none">
-                                                    <i class="fas fa-globe text-muted"></i>
-                                                    {{ $venue->website }}
-                                                    <i class="fas fa-external-link-alt ms-1"></i>
-                                                </a>
+                                                <span class="badge bg-success">{{ number_format($venue->price_per_hour, 2) }} TND</span>
                                             </td>
                                         </tr>
                                         @endif
@@ -97,19 +105,67 @@
                             <p class="card-text">{{ $venue->description }}</p>
                             @endif
 
+                            @if($venue->facilities && count($venue->facilities) > 0)
+                            <hr>
+                            <h6>Facilities</h6>
+                            <div class="row">
+                                @foreach($venue->facilities as $facility)
+                                    <div class="col-md-4 mb-2">
+                                        <span class="badge bg-light text-dark">
+                                            @switch($facility)
+                                                @case('parking')
+                                                    <i class="fas fa-car me-1"></i> Parking
+                                                    @break
+                                                @case('wifi')
+                                                    <i class="fas fa-wifi me-1"></i> WiFi
+                                                    @break
+                                                @case('air_conditioning')
+                                                    <i class="fas fa-snowflake me-1"></i> Air Conditioning
+                                                    @break
+                                                @case('sound_system')
+                                                    <i class="fas fa-volume-up me-1"></i> Sound System
+                                                    @break
+                                                @case('catering')
+                                                    <i class="fas fa-utensils me-1"></i> Catering
+                                                    @break
+                                                @case('accessibility')
+                                                    <i class="fas fa-wheelchair me-1"></i> Accessibility
+                                                    @break
+                                                @default
+                                                    <i class="fas fa-check me-1"></i> {{ ucfirst(str_replace('_', ' ', $facility)) }}
+                                            @endswitch
+                                        </span>
+                                    </div>
+                                @endforeach
+                            </div>
+                            @endif
+
+                            @if($venue->latitude && $venue->longitude)
+                            <hr>
+                            <h6>Geographic Coordinates</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p class="mb-1"><strong>Latitude:</strong> {{ $venue->latitude }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="mb-1"><strong>Longitude:</strong> {{ $venue->longitude }}</p>
+                                </div>
+                            </div>
+                            <a href="https://www.google.com/maps?q={{ $venue->latitude }},{{ $venue->longitude }}" 
+                               target="_blank" 
+                               class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-map-marked-alt me-1"></i>
+                                View on Google Maps
+                            </a>
+                            @endif
+
                             <hr>
                             <div class="row">
                                 <div class="col-md-6">
                                     <h6>Venue Information</h6>
                                     <table class="table table-sm">
-                                        <tr>
-                                            <td><strong>Created:</strong></td>
-                                            <td>{{ $venue->created_at->format('M d, Y H:i') }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Last Updated:</strong></td>
-                                            <td>{{ $venue->updated_at->format('M d, Y H:i') }}</td>
-                                        </tr>
+                                    
+                                      
                                         <tr>
                                             <td><strong>Total Events:</strong></td>
                                             <td>

@@ -54,16 +54,16 @@
                                         </span>
                                     </td>
                                     <td>
-                                        @if($venue->phone)
+                                        @if($venue->contact_phone)
                                             <small class="d-block">
                                                 <i class="fas fa-phone text-muted"></i>
-                                                {{ $venue->phone }}
+                                                {{ $venue->contact_phone }}
                                             </small>
                                         @endif
-                                        @if($venue->email)
+                                        @if($venue->contact_email)
                                             <small class="d-block">
                                                 <i class="fas fa-envelope text-muted"></i>
-                                                {{ $venue->email }}
+                                                {{ $venue->contact_email }}
                                             </small>
                                         @endif
                                     </td>
