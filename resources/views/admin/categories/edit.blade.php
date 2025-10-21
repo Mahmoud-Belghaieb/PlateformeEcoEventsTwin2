@@ -59,6 +59,57 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="color" class="form-label">Category Color</label>
+                                            <input type="color" 
+                                                   class="form-control form-control-color @error('color') is-invalid @enderror" 
+                                                   id="color" 
+                                                   name="color" 
+                                                   value="{{ old('color', $category->color) }}" 
+                                                   title="Choose category color">
+                                            @error('color')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="icon" class="form-label">Icon Class</label>
+                                            <input type="text" 
+                                                   class="form-control @error('icon') is-invalid @enderror" 
+                                                   id="icon" 
+                                                   name="icon" 
+                                                   value="{{ old('icon', $category->icon) }}" 
+                                                   placeholder="fas fa-leaf">
+                                            @error('icon')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                            <div class="form-text">Font Awesome class (e.g., fas fa-leaf, fas fa-tree)</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input @error('is_active') is-invalid @enderror" 
+                                               type="checkbox" 
+                                               role="switch" 
+                                               id="is_active" 
+                                               name="is_active" 
+                                               value="1"
+                                               {{ old('is_active', $category->is_active) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="is_active">
+                                            Active Category
+                                        </label>
+                                        @error('is_active')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <div class="form-text">Inactive categories won't be available for new events</div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="col-md-4">

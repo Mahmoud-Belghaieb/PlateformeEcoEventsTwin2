@@ -21,10 +21,17 @@
             <div class="row">
                 <div class="col-md-8">
                     <div class="card shadow-sm">
-                        <div class="card-header bg-primary-green text-white">
+                        <div class="card-header text-white" style="background-color: {{ $category->color }};">
                             <h5 class="mb-0">
-                                <i class="fas fa-tag me-2"></i>
+                                @if($category->icon)
+                                    <i class="{{ $category->icon }} me-2"></i>
+                                @else
+                                    <i class="fas fa-tag me-2"></i>
+                                @endif
                                 {{ $category->name }}
+                                @if(!$category->is_active)
+                                    <span class="badge bg-secondary ms-2">Inactive</span>
+                                @endif
                             </h5>
                         </div>
                         <div class="card-body">
@@ -38,6 +45,37 @@
                                 <div class="col-md-6">
                                     <h6>Category Information</h6>
                                     <table class="table table-sm">
+                                        <tr>
+                                            <td><strong>Slug:</strong></td>
+                                            <td><code>{{ $category->slug }}</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Color:</strong></td>
+                                            <td>
+                                                <span class="badge text-white" style="background-color: {{ $category->color }};">
+                                                    {{ $category->color }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        @if($category->icon)
+                                        <tr>
+                                            <td><strong>Icon:</strong></td>
+                                            <td>
+                                                <i class="{{ $category->icon }}"></i> 
+                                                <code>{{ $category->icon }}</code>
+                                            </td>
+                                        </tr>
+                                        @endif
+                                        <tr>
+                                            <td><strong>Status:</strong></td>
+                                            <td>
+                                                @if($category->is_active)
+                                                    <span class="badge bg-success">Active</span>
+                                                @else
+                                                    <span class="badge bg-secondary">Inactive</span>
+                                                @endif
+                                            </td>
+                                        </tr>
                                         <tr>
                                             <td><strong>Created:</strong></td>
                                             <td>{{ $category->created_at->format('M d, Y H:i') }}</td>

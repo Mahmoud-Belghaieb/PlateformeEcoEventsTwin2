@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -33,9 +34,28 @@ class CategoryController extends Controller
         $request->validate([
             'name' => 'required|string|max:255|unique:categories',
             'description' => 'nullable|string|max:1000',
+            'color' => 'nullable|string|max:7',
+            'icon' => 'nullable|string|max:100',
+            'is_active' => 'boolean',
         ]);
 
-        Category::create($request->only(['name', 'description']));
+        $data = $request->only(['name', 'description', 'color', 'icon']);
+        
+        // Generate slug from name
+        $data['slug'] = Str::slug($request->name);
+        
+        // Ensure slug is unique
+        $originalSlug = $data['slug'];
+        $counter = 1;
+        while (Category::where('slug', $data['slug'])->exists()) {
+            $data['slug'] = $originalSlug . '-' . $counter;
+            $counter++;
+        }
+        
+        // Handle is_active checkbox
+        $data['is_active'] = $request->has('is_active') ? true : false;
+
+        Category::create($data);
 
         return redirect()->route('admin.categories.index')
             ->with('success', 'Category created successfully.');
@@ -65,9 +85,30 @@ class CategoryController extends Controller
         $request->validate([
             'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
             'description' => 'nullable|string|max:1000',
+            'color' => 'nullable|string|max:7',
+            'icon' => 'nullable|string|max:100',
+            'is_active' => 'boolean',
         ]);
 
-        $category->update($request->only(['name', 'description']));
+        $data = $request->only(['name', 'description', 'color', 'icon']);
+        
+        // Update slug only if name changed
+        if ($request->name !== $category->name) {
+            $data['slug'] = Str::slug($request->name);
+            
+            // Ensure slug is unique (excluding current category)
+            $originalSlug = $data['slug'];
+            $counter = 1;
+            while (Category::where('slug', $data['slug'])->where('id', '!=', $category->id)->exists()) {
+                $data['slug'] = $originalSlug . '-' . $counter;
+                $counter++;
+            }
+        }
+        
+        // Handle is_active checkbox
+        $data['is_active'] = $request->has('is_active') ? true : false;
+
+        $category->update($data);
 
         return redirect()->route('admin.categories.index')
             ->with('success', 'Category updated successfully.');
