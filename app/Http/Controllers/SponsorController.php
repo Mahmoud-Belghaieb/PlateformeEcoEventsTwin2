@@ -48,7 +48,7 @@ class SponsorController extends Controller
 
         Sponsor::create($validated);
 
-        return redirect()->route('sponsors.index')
+        return redirect()->route('admin.sponsors.index')
             ->with('success', 'Sponsor ajouté avec succès!');
     }
 
@@ -96,7 +96,7 @@ class SponsorController extends Controller
 
         $sponsor->update($validated);
 
-        return redirect()->route('sponsors.index')
+        return redirect()->route('admin.sponsors.index')
             ->with('success', 'Sponsor mis à jour avec succès!');
     }
 
@@ -111,7 +111,7 @@ class SponsorController extends Controller
 
         $sponsor->delete();
 
-        return redirect()->route('sponsors.index')
+        return redirect()->route('admin.sponsors.index')
             ->with('success', 'Sponsor supprimé avec succès!');
     }
 
