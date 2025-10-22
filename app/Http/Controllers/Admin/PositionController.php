@@ -13,8 +13,8 @@ class PositionController extends Controller
      */
     public function index()
     {
-        $positions = Position::withCount('events')->paginate(15);
-
+        // On compte le nombre d'inscriptions pour chaque position
+        $positions = Position::withCount('registrations')->paginate(15);
         return view('admin.positions.index', compact('positions'));
     }
 
@@ -32,14 +32,21 @@ class PositionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
             'description' => 'required|string|max:1000',
+            'responsibilities' => 'required|string|max:1000',
             'requirements' => 'nullable|string|max:1000',
             'is_leadership' => 'required|boolean',
             'time_commitment' => 'nullable|numeric|min:0.5|max:24',
         ]);
 
-        Position::create($request->all());
+        $data = $request->all();
+        // Ensure responsibilities is set (DB column is non-nullable)
+        if (!isset($data['responsibilities'])) {
+            $data['responsibilities'] = '';
+        }
+
+        Position::create($data);
 
         return redirect()->route('admin.positions.index')
             ->with('success', 'Position created successfully.');
@@ -67,7 +74,7 @@ class PositionController extends Controller
     public function update(Request $request, Position $position)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
             'description' => 'required|string|max:1000',
             'requirements' => 'nullable|string|max:1000',
             'is_leadership' => 'required|boolean',
@@ -85,10 +92,10 @@ class PositionController extends Controller
      */
     public function destroy(Position $position)
     {
-        // Check if position has events
-        if ($position->events()->count() > 0) {
+        // Vérifie s'il y a des inscriptions liées à cette position
+        if ($position->registrations()->count() > 0) {
             return redirect()->route('admin.positions.index')
-                ->with('error', 'Cannot delete position that has events associated with it.');
+                ->with('error', 'Cannot delete position that has registrations associated with it.');
         }
 
         $position->delete();

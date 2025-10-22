@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Category;
+use Illuminate\Database\Seeder;
 use App\Models\Event;
+use App\Models\Category;
 use App\Models\Venue;
 use Carbon\Carbon;
-use Illuminate\Database\Seeder;
 
 class EventSeeder extends Seeder
 {
@@ -15,7 +15,6 @@ class EventSeeder extends Seeder
         // Vérifier si on a déjà des événements
         if (Event::count() > 0) {
             $this->command->info('Des événements existent déjà. Seeder ignoré.');
-
             return;
         }
 
@@ -23,13 +22,13 @@ class EventSeeder extends Seeder
         $ecoCategorie = Category::firstOrCreate([
             'name' => 'Écologie',
             'slug' => 'ecologie',
-            'is_active' => true,
+            'is_active' => true
         ]);
 
         $nettoyageCategorie = Category::firstOrCreate([
             'name' => 'Nettoyage',
-            'slug' => 'nettoyage',
-            'is_active' => true,
+            'slug' => 'nettoyage', 
+            'is_active' => true
         ]);
 
         // Créer quelques lieux si ils n'existent pas
@@ -38,7 +37,7 @@ class EventSeeder extends Seeder
             'address' => 'Avenue Habib Bourguiba',
             'city' => 'Carthage',
             'postal_code' => '2016',
-            'country' => 'Tunisie',
+            'country' => 'Tunisie'
         ]);
 
         $parc = Venue::firstOrCreate([
@@ -46,7 +45,7 @@ class EventSeeder extends Seeder
             'address' => 'Avenue Taieb Mhiri',
             'city' => 'Tunis',
             'postal_code' => '1002',
-            'country' => 'Tunisie',
+            'country' => 'Tunisie'
         ]);
 
         // Créer des événements de test
@@ -62,7 +61,7 @@ class EventSeeder extends Seeder
                 'status' => 'published',
                 'category_id' => $nettoyageCategorie->id,
                 'venue_id' => $plage->id,
-                'created_by' => 1,
+                'created_by' => 1
             ],
             [
                 'title' => 'Atelier Compostage et Jardinage Urbain',
@@ -75,7 +74,7 @@ class EventSeeder extends Seeder
                 'status' => 'published',
                 'category_id' => $ecoCategorie->id,
                 'venue_id' => $parc->id,
-                'created_by' => 1,
+                'created_by' => 1
             ],
             [
                 'title' => 'Marche Écologique au Parc Belvedère',
@@ -88,8 +87,8 @@ class EventSeeder extends Seeder
                 'status' => 'published',
                 'category_id' => $ecoCategorie->id,
                 'venue_id' => $parc->id,
-                'created_by' => 1,
-            ],
+                'created_by' => 1
+            ]
         ];
 
         foreach ($events as $eventData) {
@@ -97,6 +96,6 @@ class EventSeeder extends Seeder
         }
 
         $this->command->info('✅ Événements créés avec succès !');
-        $this->command->info('📊 Total événements : '.Event::count());
+        $this->command->info('📊 Total événements : ' . Event::count());
     }
 }

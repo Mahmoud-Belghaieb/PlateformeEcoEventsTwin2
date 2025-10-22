@@ -13,11 +13,12 @@
                         Event Registrations Management
                     </h5>
                     <div class="d-flex gap-2">
-                        <select class="form-select form-select-sm text-dark" id="statusFilter" style="width: auto;">
+                        <select class="form-select form-select-sm text-dark" id="headerStatusFilter" style="width: auto;">
                             <option value="">All Statuses</option>
-                            <option value="pending">Pending</option>
-                            <option value="confirmed">Confirmed</option>
-                            <option value="cancelled">Cancelled</option>
+                            <option value="pending" {{ request('status')==='pending' ? 'selected' : '' }}>Pending</option>
+                            <option value="approved" {{ request('status')==='approved' ? 'selected' : '' }}>Approved</option>
+                            <option value="rejected" {{ request('status')==='rejected' ? 'selected' : '' }}>Rejected</option>
+                            <option value="cancelled" {{ request('status')==='cancelled' ? 'selected' : '' }}>Cancelled</option>
                         </select>
                     </div>
                 </div>
@@ -31,30 +32,39 @@
                     @endif
 
                     <!-- Filters -->
-                    <div class="row mb-4">
+                    <form id="filtersForm" method="GET" action="{{ route('admin.registrations.index') }}" class="row mb-4 g-2">
                         <div class="col-md-3">
-                            <select class="form-select" id="eventFilter">
+                            <select class="form-select" id="eventFilter" name="event">
                                 <option value="">All Events</option>
                                 @foreach(\App\Models\Event::orderBy('start_date', 'desc')->get() as $event)
-                                    <option value="{{ $event->id }}">{{ Str::limit($event->title, 30) }}</option>
+                                    <option value="{{ $event->id }}" {{ (string)$event->id === (string)request('event') ? 'selected' : '' }}>
+                                        {{ Str::limit($event->title, 30) }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <select class="form-select" id="positionFilter">
+                            <select class="form-select" id="positionFilter" name="position">
                                 <option value="">All Positions</option>
                                 @foreach(\App\Models\Position::all() as $position)
-                                    <option value="{{ $position->id }}">{{ $position->name }}</option>
+                                    <option value="{{ $position->id }}" {{ (string)$position->id === (string)request('position') ? 'selected' : '' }}>
+                                        {{ $position->name }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <input type="date" class="form-control" id="dateFilter" placeholder="Filter by date">
+                            <input type="date" class="form-control" id="dateFilter" name="date" value="{{ request('date') }}" placeholder="Filter by date">
                         </div>
                         <div class="col-md-3">
-                            <input type="text" class="form-control" id="searchFilter" placeholder="Search users...">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="searchFilter" name="search" value="{{ request('search') }}" placeholder="Search users...">
+                                <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+                                <a href="{{ route('admin.registrations.index') }}" class="btn btn-outline-secondary" title="Reset filters"><i class="fas fa-undo"></i></a>
+                            </div>
                         </div>
-                    </div>
+                        <input type="hidden" name="status" id="statusInput" value="{{ request('status') }}">
+                    </form>
 
                     <div class="table-responsive">
                         <table class="table table-hover">
@@ -249,7 +259,7 @@
 
                     @if(method_exists($registrations, 'links'))
                         <div class="d-flex justify-content-center mt-4">
-                            {{ $registrations->links() }}
+                            {{ $registrations->appends(request()->query())->links() }}
                         </div>
                     @endif
                 </div>
@@ -293,4 +303,33 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('filtersForm');
+    const eventFilter = document.getElementById('eventFilter');
+    const positionFilter = document.getElementById('positionFilter');
+    const dateFilter = document.getElementById('dateFilter');
+    const searchFilter = document.getElementById('searchFilter');
+    const headerStatusFilter = document.getElementById('headerStatusFilter');
+    const statusInput = document.getElementById('statusInput');
+
+    function submitForm() { form.submit(); }
+
+    [eventFilter, positionFilter, dateFilter].forEach(el => el && el.addEventListener('change', submitForm));
+    if (headerStatusFilter) {
+        headerStatusFilter.addEventListener('change', function() {
+            statusInput.value = headerStatusFilter.value;
+            submitForm();
+        });
+    }
+    if (searchFilter) {
+        searchFilter.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') submitForm();
+        });
+    }
+});
+</script>
+@endpush
 @endsection

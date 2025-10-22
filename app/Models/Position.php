@@ -11,7 +11,7 @@ class Position extends Model
 
     protected $fillable = [
         'title', 'description', 'responsibilities', 'requirements', 'type',
-        'required_count', 'hourly_rate', 'requires_training', 'is_active',
+        'required_count', 'hourly_rate', 'requires_training', 'is_active'
     ];
 
     protected $casts = [
@@ -24,6 +24,23 @@ class Position extends Model
     public function registrations()
     {
         return $this->hasMany(Registration::class);
+    }
+
+    /**
+     * Events that use this position (via registrations pivot)
+     */
+    public function events()
+    {
+        return $this->belongsToMany(Event::class, 'registrations', 'position_id', 'event_id')
+                    ->withTimestamps();
+    }
+
+    /**
+     * Backwards-compatible accessor for `name` used in some views.
+     */
+    public function getNameAttribute()
+    {
+        return $this->attributes['title'] ?? null;
     }
 
     // Scopes

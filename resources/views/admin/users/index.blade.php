@@ -99,7 +99,7 @@
     <!-- Search and Filters -->
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-body">
-            <form method="GET" action="{{ route('admin.users.index') }}">
+                    <form method="GET" action="{{ route('admin.users.index') }}">
                 <div class="row">
                     <div class="col-md-4">
                         <div class="search-box">
@@ -123,10 +123,15 @@
                         </select>
                     </div>
                     <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary-green w-100">
-                            <i class="fas fa-filter me-1"></i>
-                            Filter
-                        </button>
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary-green w-100">
+                                <i class="fas fa-filter me-1"></i>
+                                Filter
+                            </button>
+                            <a href="{{ route('admin.users.index') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-redo"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </form>

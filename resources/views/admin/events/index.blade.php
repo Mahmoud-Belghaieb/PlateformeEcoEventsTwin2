@@ -3,17 +3,7 @@
 @section('title', 'Events Management')
 
 @section('content')
-<div cla                            <div class="col-md-2 mb-3 mb-md-0">
-                <select class="form-select" id="statusFilter">
-                    <option value="">All Status</option>
-                    <option value="draft">Draft</option>
-                    <option value="pending">Pending Approval</option>
-                    <option value="published">Published</option>
-                    <option value="rejected">Rejected</option>
-                    <option value="cancelled">Cancelled</option>
-                    <option value="completed">Completed</option>
-                </select>
-            </div>ainer-fluid">
+<div class="container-fluid">
     <!-- Page Header -->
     <div class="page-header">
         <div class="container-fluid">
@@ -99,46 +89,50 @@
         </div>
     </div>
 
-    <!-- Search and Filters -->
-    <div class="search-filter-bar">
-        <div class="row">
-            <div class="col-md-4 mb-3 mb-md-0">
-                <div class="position-relative">
-                    <i class="fas fa-search search-icon"></i>
-                    <input type="text" class="form-control" id="searchEvents" placeholder="Search events...">
+    <!-- Search and Filters (server-side) -->
+    <div class="search-filter-bar mb-3">
+        <form method="GET" action="{{ route('admin.events.index') }}">
+            <div class="row g-2">
+                <div class="col-md-4">
+                    <div class="position-relative">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Search events...">
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <select name="time" class="form-select">
+                        <option value="">Any</option>
+                        <option value="upcoming" {{ request('time') == 'upcoming' ? 'selected' : '' }}>Upcoming</option>
+                        <option value="past" {{ request('time') == 'past' ? 'selected' : '' }}>Past</option>
+                        <option value="today" {{ request('time') == 'today' ? 'selected' : '' }}>Today</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <select name="category_id" class="form-select">
+                        <option value="">All Categories</option>
+                        @foreach(\App\Models\Category::all() as $category)
+                            <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <select name="venue_id" class="form-select">
+                        <option value="">All Venues</option>
+                        @foreach(\App\Models\Venue::all() as $venue)
+                            <option value="{{ $venue->id }}" {{ request('venue_id') == $venue->id ? 'selected' : '' }}>{{ $venue->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-2 d-flex">
+                    <button type="submit" class="btn btn-primary-green me-2 w-100">Filter</button>
+                    <a href="{{ route('admin.events.index') }}" class="btn btn-outline-secondary w-100">Reset</a>
                 </div>
             </div>
-            <div class="col-md-2 mb-3 mb-md-0">
-                <select class="form-select" id="statusFilter">
-                    <option value="">All Status</option>
-                    <option value="upcoming">Upcoming</option>
-                    <option value="past">Past</option>
-                    <option value="today">Today</option>
-                </select>
-            </div>
-            <div class="col-md-2 mb-3 mb-md-0">
-                <select class="form-select" id="categoryFilter">
-                    <option value="">All Categories</option>
-                    @foreach(\App\Models\Category::all() as $category)
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="col-md-2 mb-3 mb-md-0">
-                <select class="form-select" id="venueFilter">
-                    <option value="">All Venues</option>
-                    @foreach(\App\Models\Venue::all() as $venue)
-                        <option value="{{ $venue->id }}">{{ $venue->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="col-md-2">
-                <button class="btn btn-outline-primary-green w-100" id="clearFilters">
-                    <i class="fas fa-times me-1"></i>
-                    Clear
-                </button>
-            </div>
-        </div>
+        </form>
     </div>
     <!-- Events Table -->
     <div class="card border-0 shadow-sm fade-in">

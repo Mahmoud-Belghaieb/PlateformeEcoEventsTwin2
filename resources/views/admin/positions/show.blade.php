@@ -14,7 +14,7 @@
                     <li class="breadcrumb-item">
                         <a href="{{ route('admin.positions.index') }}">Positions</a>
                     </li>
-                    <li class="breadcrumb-item active">{{ $position->name }}</li>
+                    <li class="breadcrumb-item active">{{ $position->title }}</li>
                 </ol>
             </nav>
 
@@ -24,8 +24,8 @@
                         <div class="card-header bg-primary-green text-white">
                             <h5 class="mb-0">
                                 <i class="fas fa-user-cog me-2"></i>
-                                {{ $position->name }}
-                                @if($position->is_leadership)
+                                {{ $position->title }}
+                                    @if($position->is_leadership)
                                     <span class="badge bg-warning text-dark ms-2">Leadership</span>
                                 @else
                                     <span class="badge bg-light text-dark ms-2">Volunteer</span>
@@ -84,7 +84,7 @@
                                         <tr>
                                             <td><strong>Total Events:</strong></td>
                                             <td>
-                                                <span class="badge bg-primary">{{ $position->events()->count() }}</span>
+                                                <span class="badge bg-primary">{{ $position->events()->distinct('events.id')->count('events.id') }}</span>
                                             </td>
                                         </tr>
                                     </table>

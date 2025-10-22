@@ -57,6 +57,6 @@ class Panier extends Model
 
     public function getFormattedSubtotalAttribute()
     {
-        return number_format($this->subtotal, 2).' DT';
+        return number_format($this->subtotal, 2) . ' DT';
     }
 }

@@ -34,7 +34,6 @@
                                     <th>Name</th>
                                     <th>Description</th>
                                     <th>Events Count</th>
-                                    <th>Created At</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -55,7 +54,6 @@
                                             {{ $category->events_count ?? 0 }} events
                                         </span>
                                     </td>
-                                    <td>{{ $category->created_at->format('M d, Y') }}</td>
                                     <td>
                                         <div class="btn-group btn-group-sm" role="group">
                                             <a href="{{ route('admin.categories.show', $category) }}" 

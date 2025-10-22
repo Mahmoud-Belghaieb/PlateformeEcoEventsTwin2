@@ -2,12 +2,12 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Database\Seeder;
 use App\Models\Avis;
 use App\Models\Commentaire;
+use App\Models\User;
 use App\Models\Event;
 use App\Models\Registration;
-use App\Models\User;
-use Illuminate\Database\Seeder;
 
 class AvisCommentaireSeeder extends Seeder
 {
@@ -18,7 +18,7 @@ class AvisCommentaireSeeder extends Seeder
 
         if ($users->count() === 0 || $events->count() === 0) {
             $this->command->info('Pas d\'utilisateurs ou d\'événements trouvés. Création de données de base...');
-
+            
             // Créer quelques utilisateurs si aucun n'existe
             if ($users->count() === 0) {
                 $users = collect([
@@ -69,33 +69,33 @@ class AvisCommentaireSeeder extends Seeder
             [
                 'title' => 'Événement fantastique !',
                 'content' => 'J\'ai participé à cet événement éco-responsable et j\'ai été absolument ravi ! L\'organisation était parfaite, les intervenants très compétents et l\'ambiance conviviale. J\'ai beaucoup appris sur les gestes écologiques au quotidien.',
-                'rating' => 5,
+                'rating' => 5
             ],
             [
                 'title' => 'Très enrichissant',
                 'content' => 'Une expérience très positive. Les ateliers étaient bien organisés et les informations partagées très utiles. Quelques petits points d\'amélioration possibles sur la logistique mais dans l\'ensemble, très satisfait.',
-                'rating' => 4,
+                'rating' => 4
             ],
             [
                 'title' => 'Bonne initiative',
                 'content' => 'Contenu intéressant et pertinent. L\'événement m\'a permis de découvrir de nouvelles pratiques écologiques. L\'équipe était accueillante et disponible pour répondre aux questions.',
-                'rating' => 4,
+                'rating' => 4
             ],
             [
                 'title' => 'Correct mais peut mieux faire',
                 'content' => 'L\'événement était correct dans l\'ensemble. Quelques aspects pourraient être améliorés, notamment la durée de certains ateliers qui étaient un peu courts. Mais l\'idée générale est bonne.',
-                'rating' => 3,
+                'rating' => 3
             ],
             [
                 'title' => 'Excellente sensibilisation',
                 'content' => 'Parfait pour sensibiliser aux enjeux environnementaux ! Les activités étaient variées et adaptées à tous les âges. Bravo pour cette belle initiative qui mérite d\'être renouvelée.',
-                'rating' => 5,
+                'rating' => 5
             ],
             [
                 'title' => 'Déçu par l\'organisation',
                 'content' => 'L\'idée de l\'événement était bonne mais l\'organisation laissait à désirer. Trop d\'attente entre les ateliers et manque de communication. Dommage car le contenu était intéressant.',
-                'rating' => 2,
-            ],
+                'rating' => 2
+            ]
         ];
 
         $commentaireTexts = [
@@ -122,10 +122,10 @@ class AvisCommentaireSeeder extends Seeder
             // Créer 2-4 avis par événement
             $nombreAvis = rand(2, 4);
             $usersForEvent = $users->shuffle()->take($nombreAvis);
-
+            
             foreach ($usersForEvent as $index => $user) {
                 $avisData = $avisTexts[array_rand($avisTexts)];
-
+                
                 $avis = Avis::create([
                     'user_id' => $user->id,
                     'event_id' => $event->id,
@@ -141,7 +141,7 @@ class AvisCommentaireSeeder extends Seeder
                 if (rand(1, 10) <= 6) {
                     $nombreCommentaires = rand(1, 3);
                     $usersForComments = $users->where('id', '!=', $user->id)->shuffle()->take($nombreCommentaires);
-
+                    
                     foreach ($usersForComments as $commentUser) {
                         $commentaire = Commentaire::create([
                             'user_id' => $commentUser->id,
@@ -172,9 +172,9 @@ class AvisCommentaireSeeder extends Seeder
 
         $this->command->info('✅ Avis et commentaires créés avec succès !');
         $this->command->info('📊 Statistiques :');
-        $this->command->info('   - Avis créés : '.Avis::count());
-        $this->command->info('   - Avis approuvés : '.Avis::where('is_approved', true)->count());
-        $this->command->info('   - Commentaires créés : '.Commentaire::count());
-        $this->command->info('   - Commentaires approuvés : '.Commentaire::where('is_approved', true)->count());
+        $this->command->info('   - Avis créés : ' . Avis::count());
+        $this->command->info('   - Avis approuvés : ' . Avis::where('is_approved', true)->count());
+        $this->command->info('   - Commentaires créés : ' . Commentaire::count());
+        $this->command->info('   - Commentaires approuvés : ' . Commentaire::where('is_approved', true)->count());
     }
 }

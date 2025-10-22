@@ -264,6 +264,15 @@
             </div>
         @endif
 
+        <div style="margin: 12px 0;">
+            <a href="{{ route('auth.google.redirect') }}"
+               style="display:inline-flex;align-items:center;gap:8px;width:100%;justify-content:center;padding:12px;border:2px solid #e5e7eb;border-radius:12px;text-decoration:none;font-weight:700;color:#1f2937;background:#fff;">
+                <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" style="width:18px;height:18px;">
+                Continue with Google
+            </a>
+        </div>
+        <div style="text-align:center;margin:12px 0;color:#6b7280;">or</div>
+
         <form method="POST" action="{{ route('login') }}">
             @csrf
             

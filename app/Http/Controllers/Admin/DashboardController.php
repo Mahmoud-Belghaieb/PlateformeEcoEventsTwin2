@@ -3,16 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
 use App\Models\Event;
+use App\Models\User;
+use App\Models\Registration;
+use App\Models\Category;
+use App\Models\Venue;
+use App\Models\Position;
+use App\Models\Sponsor;
+use App\Models\Produit;
 use App\Models\Materiel;
 use App\Models\Panier;
-use App\Models\Position;
-use App\Models\Produit;
-use App\Models\Registration;
-use App\Models\Sponsor;
-use App\Models\User;
-use App\Models\Venue;
 
 class DashboardController extends Controller
 {

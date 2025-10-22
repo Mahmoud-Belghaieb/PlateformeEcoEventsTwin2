@@ -700,14 +700,15 @@
                 EcoEvents
             </a>
             <div class="nav-links">
-                <a href="{{ route('home') }}#features" class="nav-link">Fonctionnalités</a>
+                <a href="{{ route('home') }}" class="nav-link">Accueil</a>
                 <a href="{{ route('events.index') }}" class="nav-link active">Événements</a>
-                <a href="#" class="nav-link">Communauté</a>
+                <a href="{{ route('produits.index') }}" class="nav-link">Produits</a>
+                <a href="{{ route('sponsors.index') }}" class="nav-link">Sponsors</a>
                 @auth
                     @if(Auth::user()->isAdmin())
                         <a href="{{ route('admin.users.index') }}" class="nav-link">Administration</a>
                     @endif
-                    <a href="#" class="nav-link">Dashboard</a>
+                    <a href="{{ route('panier.index') }}" class="nav-link">Mes Paniers</a>
                 @endauth
             </div>
             <div class="user-menu">
