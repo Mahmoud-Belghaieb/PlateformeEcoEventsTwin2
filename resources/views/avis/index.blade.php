@@ -273,15 +273,24 @@
                     <!-- Comment Form -->
                     @auth
                     <div class="comment-form mt-3">
-                        <form action="{{ route('commentaires.store', $avi->id) }}" method="POST">
+                        <form action="{{ route('commentaires.store', $avi->id) }}" method="POST" class="comment-form-submit">
                             @csrf
                             <div class="input-group">
-                                <input type="text" class="form-control" name="content" 
-                                       placeholder="Ajouter un commentaire..." required maxlength="500">
+                                <input type="text" 
+                                       class="form-control @error('content') is-invalid @enderror" 
+                                       name="content" 
+                                       placeholder="Ajouter un commentaire..." 
+                                       required 
+                                       minlength="5"
+                                       maxlength="500"
+                                       value="{{ old('content') }}">
                                 <button type="submit" class="btn btn-outline-primary">
                                     <i class="fas fa-paper-plane me-1"></i>Commenter
                                 </button>
                             </div>
+                            @error('content')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </form>
                     </div>
                     @else
@@ -401,6 +410,24 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.cancel-reply').forEach(btn => {
         btn.addEventListener('click', function() {
             this.closest('.reply-form').style.display = 'none';
+        });
+    });
+    
+    // Debug des formulaires de commentaires
+    document.querySelectorAll('.comment-form-submit').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            console.log('📝 Formulaire de commentaire soumis');
+            console.log('Action:', this.action);
+            console.log('Method:', this.method);
+            console.log('Content:', this.querySelector('input[name="content"]').value);
+            
+            // Vérification basique
+            const content = this.querySelector('input[name="content"]').value.trim();
+            if (content.length < 5) {
+                e.preventDefault();
+                alert('Le commentaire doit contenir au moins 5 caractères');
+                return false;
+            }
         });
     });
 });

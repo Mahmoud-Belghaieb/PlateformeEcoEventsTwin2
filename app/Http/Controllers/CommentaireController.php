@@ -6,6 +6,7 @@ use App\Models\Commentaire;
 use App\Models\Avis;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class CommentaireController extends Controller
 {
@@ -14,6 +15,17 @@ class CommentaireController extends Controller
      */
     public function store(Request $request, $avisId)
     {
+        // Debug: voir ce qui est envoyé
+        // dd('COMMENTAIRE CONTROLLER ATTEINT', $request->all(), $avisId, Auth::id());
+        
+        // Log pour debug
+        Log::info('CommentaireController@store called', [
+            'avisId' => $avisId,
+            'userId' => Auth::id(),
+            'content' => $request->get('content'),
+            'all_request' => $request->all()
+        ]);
+        
         $request->validate([
             'content' => 'required|string|min:5|max:500',
             'parent_id' => 'nullable|exists:commentaires,id'
@@ -33,10 +45,12 @@ class CommentaireController extends Controller
             'avis_id' => $avisId,
             'parent_id' => $request->parent_id,
             'content' => $request->content,
-            'is_approved' => false // Nécessite une approbation admin
+            'is_approved' => true, // Auto-approuvé pour les tests - changer en false pour la production
+            'approved_at' => now(),
+            'approved_by' => Auth::id()
         ]);
 
-        return back()->with('success', 'Votre commentaire a été soumis et sera publié après modération.');
+        return back()->with('success', 'Votre commentaire a été publié avec succès !');
     }
 
     /**
@@ -67,11 +81,13 @@ class CommentaireController extends Controller
 
         $commentaire->update([
             'content' => $request->content,
-            'is_approved' => false // Nécessite une nouvelle approbation après modification
+            'is_approved' => true, // Auto-approuvé pour les tests
+            'approved_at' => now(),
+            'approved_by' => Auth::id()
         ]);
 
         return redirect()->route('avis.index', $commentaire->avis->event_id)
-            ->with('success', 'Votre commentaire a été mis à jour et sera republié après modération.');
+            ->with('success', 'Votre commentaire a été mis à jour avec succès !');
     }
 
     /**
@@ -106,9 +122,11 @@ class CommentaireController extends Controller
             'avis_id' => $parentComment->avis_id,
             'parent_id' => $parentComment->id,
             'content' => $request->content,
-            'is_approved' => false
+            'is_approved' => true, // Auto-approuvé pour les tests
+            'approved_at' => now(),
+            'approved_by' => Auth::id()
         ]);
 
-        return back()->with('success', 'Votre réponse a été soumise et sera publiée après modération.');
+        return back()->with('success', 'Votre réponse a été publiée avec succès !');
     }
 }
