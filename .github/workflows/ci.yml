@@ -32,7 +32,8 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: '8.2'
-        extensions: mbstring, dom, fileinfo, mysql, gd
+        extensions: mbstring, dom, fileinfo, mysql, gd, pcov
+        coverage: pcov
         tools: composer:v2
         
     # Step 3: Cache dependencies (saves time by not re-downloading everything)
@@ -69,8 +70,8 @@ jobs:
     - name: Run code style checks
       run: ./vendor/bin/pint --test
       
-    # Step 8: Run tests
-    - name: Run tests
+    # Step 8: Run tests with coverage
+    - name: Run tests with coverage
       env:
         DB_CONNECTION: mysql
         DB_HOST: 127.0.0.1
@@ -78,4 +79,27 @@ jobs:
         DB_DATABASE: laravel_test
         DB_USERNAME: root
         DB_PASSWORD: password
-      run: php artisan test
+      run: php artisan test --coverage --coverage-clover=coverage.xml
+      
+    # Step 9: Setup Java (required for SonarQube Scanner)
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    # Step 10: Run SonarQube Scanner
+    - name: SonarQube Scan
+      uses: sonarsource/sonarqube-scan-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        
+    # Step 11: SonarQube Quality Gate
+    - name: SonarQube Quality Gate Check
+      uses: sonarqube-quality-gate-action@master
+      timeout-minutes: 5
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}

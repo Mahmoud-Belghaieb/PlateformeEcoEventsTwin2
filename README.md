@@ -4,6 +4,7 @@
     <img src="https://img.shields.io/badge/Laravel-12.31.1-FF2D20?style=for-the-badge&logo=laravel" alt="Laravel">
     <img src="https://img.shields.io/badge/PHP-8.2.29-777BB4?style=for-the-badge&logo=php" alt="PHP">
     <img src="https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql" alt="MySQL">
+    <img src="https://github.com/balsemkhouniblossom/PlateformeEcoEventsTwin2/actions/workflows/ci.yml/badge.svg" alt="CI Status">
     <img src="https://img.shields.io/badge/Status-Active-success?style=for-the-badge" alt="Status">
 </p>
 
@@ -147,6 +148,13 @@ php artisan serve
 - **Migrations** - Versioning de la base de données
 - **Seeders** - Données de test
 
+### 🔍 Qualité du Code & CI/CD
+- **GitHub Actions** - Pipeline CI/CD automatisé
+- **SonarQube** - Analyse statique du code
+- **Laravel Pint** - Formatage du code PSR-12
+- **PHPUnit** - Tests unitaires et fonctionnels
+- **Code Coverage** - Couverture de tests
+
 ## 📁 Structure du Projet
 
 ```
@@ -193,7 +201,51 @@ ecoEvents/
 - Filtrage et recherche avancés
 - Design moderne et responsive
 
-## 🚧 Développement Futur
+## � Configuration SonarQube
+
+### Prérequis
+- Compte SonarQube (SonarCloud ou instance SonarQube locale)
+- Token d'authentification SonarQube
+
+### Configuration GitHub Secrets
+
+Pour activer l'analyse SonarQube dans votre CI/CD, ajoutez ces secrets dans votre repository GitHub :
+
+1. Allez dans **Settings** → **Secrets and variables** → **Actions**
+2. Ajoutez les secrets suivants :
+
+```bash
+SONAR_TOKEN=votre_token_sonarqube
+SONAR_HOST_URL=https://sonarcloud.io  # ou votre URL SonarQube
+```
+
+### Fichiers de Configuration
+
+Le projet inclut :
+- `sonar-project.properties` - Configuration SonarQube
+- `.github/workflows/ci.yml` - Pipeline avec analyse SonarQube
+
+### Métriques Analysées
+- **Quality Gate** - Validation automatique de la qualité
+- **Code Coverage** - Couverture des tests (>80% recommandée)
+- **Duplications** - Détection du code dupliqué
+- **Maintainability** - Indice de maintenabilité
+- **Reliability** - Détection des bugs
+- **Security** - Analyse des vulnérabilités
+
+### Commandes Locales
+```bash
+# Génération du rapport de couverture
+php artisan test --coverage --coverage-clover=coverage.xml
+
+# Vérification du style de code
+./vendor/bin/pint --test
+
+# Tests avec métrics détaillées
+php artisan test --coverage --coverage-html=coverage-html
+```
+
+## �🚧 Développement Futur
 
 ### Fonctionnalités Prévues
 - [ ] API REST pour applications mobiles
