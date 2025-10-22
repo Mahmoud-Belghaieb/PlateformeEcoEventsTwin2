@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test des URLs avec Navbar Unifiée</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #059669;
+            text-align: center;
+        }
+        .url-list {
+            list-style: none;
+            padding: 0;
+        }
+        .url-item {
+            margin: 10px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #059669;
+        }
+        .url-item a {
+            text-decoration: none;
+            color: #059669;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .url-item a:hover {
+            color: #10b981;
+        }
+        .description {
+            color: #6b7280;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .status {
+            background: #059669;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌱 EcoEvents - Test Navbar Unifiée</h1>
+        <p style="text-align: center; color: #6b7280;">Testez toutes les pages avec la navbar uniforme :</p>
+        
+        <ul class="url-list">
+            <li class="url-item">
+                <a href="http://127.0.0.1:8000/" target="_blank">
+                    🏠 Page d'Accueil
+                    <span class="status">✅ UNIFIÉ</span>
+                </a>
+                <div class="description">Navbar avec "Accueil" actif</div>
+            </li>
+            
+            <li class="url-item">
+                <a href="http://127.0.0.1:8000/events" target="_blank">
+                    📅 Liste des Événements
+                    <span class="status">✅ UNIFIÉ</span>
+                </a>
+                <div class="description">Navbar avec "Événements" actif</div>
+            </li>
+            
+            <li class="url-item">
+                <a href="http://127.0.0.1:8000/produits" target="_blank">
+                    🛍️ Liste des Produits
+                    <span class="status">✅ UNIFIÉ</span>
+                </a>
+                <div class="description">Navbar avec "Produits" actif</div>
+            </li>
+            
+            <li class="url-item">
+                <a href="http://127.0.0.1:8000/sponsors" target="_blank">
+                    🤝 Nos Sponsors
+                    <span class="status">✅ UNIFIÉ</span>
+                </a>
+                <div class="description">Navbar avec "Sponsors" actif</div>
+            </li>
+            
+            <li class="url-item">
+                <a href="http://127.0.0.1:8000/panier" target="_blank">
+                    � Mes Paniers
+                    <span class="status">✅ UNIFIÉ</span>
+                </a>
+                <div class="description">Navbar avec "Mes Paniers" actif (nécessite connexion)</div>
+            </li>
+        </ul>
+
+        <div style="margin-top: 30px; padding: 20px; background: #e6fffa; border-radius: 8px; border-left: 4px solid #10b981;">
+            <h3 style="color: #059669; margin-top: 0;">✅ Navbar Unifiée Implémentée !</h3>
+            <p style="color: #047857; margin-bottom: 0;">
+                <strong>Toutes les pages utilisent maintenant la même navbar avec :</strong><br>
+                • Accueil<br>
+                • Événements<br>
+                • Produits<br>
+                • Sponsors<br>
+                • Mes Paniers (pour les utilisateurs connectés)<br>
+                • Administration (pour les admins)<br>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
