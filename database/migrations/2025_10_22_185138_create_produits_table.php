@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->string('category')->nullable();
             $table->boolean('is_available')->default(true);
-            $table->foreignId('sponsor_id')->nullable()->constrained('sponsors')->onDelete('set null');
+            $table->foreignId('sponsor_id')->nullable()->constrained()->onDelete('set null');
             $table->timestamps();
         });
     }

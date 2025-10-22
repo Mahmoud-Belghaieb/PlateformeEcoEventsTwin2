@@ -11,16 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('produits', function (Blueprint $table) {
+        Schema::create('sponsors', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->decimal('price', 10, 2);
-            $table->integer('stock')->default(0);
-            $table->string('image')->nullable();
-            $table->string('category')->nullable();
-            $table->boolean('is_available')->default(true);
-            $table->foreignId('sponsor_id')->nullable()->constrained('sponsors')->onDelete('set null');
+            $table->string('logo')->nullable();
+            $table->string('website')->nullable();
+            $table->string('contact_email')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('produits');
+        Schema::dropIfExists('sponsors');
     }
 };
