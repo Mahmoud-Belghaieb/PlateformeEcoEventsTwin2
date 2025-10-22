@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Email Reset Password - EcoEvents</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #059669;
+            margin-bottom: 10px;
+        }
+        .step {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 4px solid #059669;
+        }
+        .step h3 {
+            margin-top: 0;
+            color: #059669;
+        }
+        button {
+            background: #059669;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin: 10px 0;
+        }
+        button:hover {
+            background: #047857;
+        }
+        .log-output {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 20px 0;
+            display: none;
+        }
+        .log-output.show {
+            display: block;
+        }
+        .success {
+            color: #10b981;
+            font-weight: bold;
+        }
+        .error {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        .info {
+            color: #3b82f6;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            margin: 10px 0;
+            box-sizing: border-box;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        .loading.show {
+            display: block;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #059669;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .result-box {
+            background: #d1fae5;
+            border: 2px solid #10b981;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: none;
+        }
+        .result-box.show {
+            display: block;
+        }
+        .result-box a {
+            color: #059669;
+            word-break: break-all;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test Email Reset Password</h1>
+        <p style="color: #6b7280;">
+            Testez l'envoi d'email de réinitialisation de mot de passe (Mode LOG)
+        </p>
+
+        <div class="step">
+            <h3>📋 Étape 1 : Choisir un email</h3>
+            <input type="email" id="email" value="admin@admin.com" placeholder="Entrez l'email">
+            <small style="color: #6b7280;">
+                Utilisez un email qui existe dans votre base de données
+            </small>
+        </div>
+
+        <button onclick="testResetPassword()">
+            📧 Envoyer la demande de réinitialisation
+        </button>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Envoi en cours...</p>
+        </div>
+
+        <div class="result-box" id="resultBox">
+            <h3>✅ Email envoyé avec succès!</h3>
+            <p>L'email a été enregistré dans les logs. Voici le lien de réinitialisation :</p>
+            <div id="resetLink"></div>
+        </div>
+
+        <div class="step">
+            <h3>📊 Étape 2 : Voir le résultat</h3>
+            <button onclick="checkLogs()">
+                📄 Afficher les logs (dernieres 100 lignes)
+            </button>
+            <button onclick="openAdminPage()">
+                🖥️ Ouvrir la page Admin Email Logs
+            </button>
+        </div>
+
+        <div class="log-output" id="logOutput">
+            Chargement des logs...
+        </div>
+
+        <div class="step">
+            <h3>💡 Important à comprendre</h3>
+            <ul>
+                <li><strong>Mode LOG</strong> : Les emails ne sont PAS envoyés à une vraie boîte mail</li>
+                <li>Ils sont <strong>enregistrés</strong> dans <code>storage/logs/laravel.log</code></li>
+                <li>Vous devez <strong>copier le lien</strong> manuellement depuis les logs</li>
+                <li>Pour recevoir de vrais emails, configurez Gmail, Mailtrap ou MailHog</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        async function testResetPassword() {
+            const email = document.getElementById('email').value;
+            const loading = document.getElementById('loading');
+            const resultBox = document.getElementById('resultBox');
+            
+            if (!email) {
+                alert('Veuillez entrer un email!');
+                return;
+            }
+
+            loading.classList.add('show');
+            resultBox.classList.remove('show');
+
+            try {
+                const response = await fetch('/forgot-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRF-TOKEN': await getCSRFToken()
+                    },
+                    body: `email=${encodeURIComponent(email)}`
+                });
+
+                loading.classList.remove('show');
+
+                if (response.ok) {
+                    // Attendre 2 secondes pour que le log soit écrit
+                    setTimeout(() => {
+                        checkLogs();
+                    }, 2000);
+                    
+                    alert('✅ Demande envoyée! Vérifiez les logs ci-dessous.');
+                } else {
+                    const text = await response.text();
+                    alert('❌ Erreur: ' + text);
+                }
+            } catch (error) {
+                loading.classList.remove('show');
+                alert('❌ Erreur: ' + error.message);
+            }
+        }
+
+        async function getCSRFToken() {
+            try {
+                const response = await fetch('/login');
+                const html = await response.text();
+                const match = html.match(/name="_token"[^>]*value="([^"]+)"/);
+                return match ? match[1] : '';
+            } catch {
+                return '';
+            }
+        }
+
+        async function checkLogs() {
+            const logOutput = document.getElementById('logOutput');
+            const resultBox = document.getElementById('resultBox');
+            const resetLink = document.getElementById('resetLink');
+            
+            logOutput.classList.add('show');
+            logOutput.innerHTML = '<span class="info">Chargement des logs...</span>';
+
+            try {
+                const response = await fetch('/storage/logs/laravel.log');
+                
+                if (!response.ok) {
+                    logOutput.innerHTML = '<span class="error">❌ Impossible de lire le fichier log</span><br>' +
+                                         '<span class="info">Allez plutôt sur: /admin/email-logs</span>';
+                    return;
+                }
+
+                const text = await response.text();
+                const lines = text.split('\n');
+                const last100 = lines.slice(-100);
+                
+                // Chercher les URLs de reset
+                const resetUrls = [];
+                last100.forEach(line => {
+                    const match = line.match(/(http[s]?:\/\/[^\s]+reset-password\/[^\s]+)/);
+                    if (match) {
+                        resetUrls.push(match[1]);
+                    }
+                });
+
+                if (resetUrls.length > 0) {
+                    const lastUrl = resetUrls[resetUrls.length - 1];
+                    resultBox.classList.add('show');
+                    resetLink.innerHTML = `
+                        <a href="${lastUrl}" target="_blank">${lastUrl}</a>
+                        <br><br>
+                        <button onclick="window.open('${lastUrl}', '_blank')" style="width: auto; padding: 10px 20px;">
+                            🔗 Ouvrir le lien
+                        </button>
+                        <button onclick="copyToClipboard('${lastUrl}')" style="width: auto; padding: 10px 20px; background: #3b82f6;">
+                            📋 Copier
+                        </button>
+                    `;
+                }
+
+                // Afficher les logs
+                let output = '<span class="info">Dernières 100 lignes du log:</span><br><br>';
+                output += last100.map(line => {
+                    if (line.includes('reset-password')) {
+                        return `<span class="success">${escapeHtml(line)}</span>`;
+                    } else if (line.includes('ERROR') || line.includes('Exception')) {
+                        return `<span class="error">${escapeHtml(line)}</span>`;
+                    } else {
+                        return escapeHtml(line);
+                    }
+                }).join('<br>');
+
+                logOutput.innerHTML = output;
+                logOutput.scrollTop = logOutput.scrollHeight;
+
+            } catch (error) {
+                logOutput.innerHTML = `<span class="error">❌ Erreur: ${error.message}</span><br>` +
+                                     `<span class="info">Utilisez plutôt: /admin/email-logs</span>`;
+            }
+        }
+
+        function openAdminPage() {
+            window.open('/admin/email-logs', '_blank');
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✅ Lien copié dans le presse-papiers!');
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
