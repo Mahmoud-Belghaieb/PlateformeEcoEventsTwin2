@@ -13,7 +13,15 @@ return new class extends Migration
     {
         Schema::create('registrations', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('event_id')->constrained()->onDelete('cascade');
+            $table->string('status')->default('pending'); // pending, approved, rejected
+            $table->datetime('registered_at')->nullable();
+            $table->text('notes')->nullable();
             $table->timestamps();
+            
+            // Prevent duplicate registrations
+            $table->unique(['user_id', 'event_id']);
         });
     }
 
