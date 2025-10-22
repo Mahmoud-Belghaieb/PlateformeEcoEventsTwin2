@@ -483,5 +483,18 @@
         @endauth
     </div>
 </section>
+
+<!-- Chatbase Integration -->
+<script>
+    window.embeddedChatbotConfig = {
+        chatbotId: "BMbYDI5JT6uWysGBwPeD3",
+        domain: "www.chatbase.co"
+    }
+</script>
+<script src="https://www.chatbase.co/embed.min.js"
+    id="BMbYDI5JT6uWysGBwPeD3"
+    defer>
+</script>
+
 </body>
 </html>
