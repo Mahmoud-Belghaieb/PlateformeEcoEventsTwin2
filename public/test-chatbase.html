@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Chatbase EcoEvents</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #218838; }
+        #log {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🌱 Test Chatbase EcoEvents</h1>
+        <p>Bot ID: <strong>BMbYDI5JT6uWysGBwPeD3</strong></p>
+        
+        <div id="status-container">
+            <div class="status warning" id="loading-status">
+                ⏳ Chargement de Chatbase en cours...
+            </div>
+        </div>
+        
+        <div style="margin: 20px 0;">
+            <button onclick="testChatbaseAPI()">🧪 Test API</button>
+            <button onclick="openChat()">💬 Ouvrir Chat</button>
+            <button onclick="getStatus()">📊 Status</button>
+            <button onclick="clearLog()">🗑️ Vider Log</button>
+        </div>
+        
+        <h3>Console de Debug:</h3>
+        <div id="log"></div>
+    </div>
+
+    <!-- Configuration Chatbase -->
+    <script>
+        window.embeddedChatbotConfig = {
+            chatbotId: "BMbYDI5JT6uWysGBwPeD3",
+            domain: "www.chatbase.co"
+        };
+        
+        // Log function
+        function log(message, type = 'info') {
+            const logElement = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            const colors = {
+                info: '#333',
+                success: '#28a745',
+                warning: '#ffc107',
+                error: '#dc3545'
+            };
+            
+            logElement.innerHTML += `<div style="color: ${colors[type]}; margin: 2px 0;">[${timestamp}] ${message}</div>`;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+        
+        // Test functions
+        function testChatbaseAPI() {
+            log('🧪 Test de l\'API Chatbase...', 'info');
+            
+            // Vérification de la configuration
+            if (window.embeddedChatbotConfig) {
+                log(`✅ Configuration détectée: ${window.embeddedChatbotConfig.chatbotId}`, 'success');
+            } else {
+                log('❌ Configuration manquante', 'error');
+            }
+            
+            // Vérification du script chargé
+            const scripts = document.querySelectorAll('script[src*="chatbase"]');
+            log(`📊 Scripts Chatbase trouvés: ${scripts.length}`, scripts.length > 0 ? 'success' : 'warning');
+            
+            // Vérification des éléments DOM
+            const iframe = document.querySelector('iframe[src*="chatbase"]');
+            const chatElements = document.querySelectorAll('[class*="chatbase"], [id*="chatbase"]');
+            
+            log(`🖼️ iFrame Chatbase: ${iframe ? 'Trouvé' : 'Non trouvé'}`, iframe ? 'success' : 'warning');
+            log(`🎯 Éléments chat: ${chatElements.length}`, chatElements.length > 0 ? 'success' : 'warning');
+        }
+        
+        function openChat() {
+            log('💬 Tentative d\'ouverture du chat...', 'info');
+            
+            if (window.EcoEventsChat && window.EcoEventsChat.open) {
+                window.EcoEventsChat.open();
+                log('✅ Commande envoyée via EcoEventsChat.open()', 'success');
+            } else {
+                // Fallback direct
+                const button = document.querySelector('button[id*="chatbase"], iframe[src*="chatbase"] + div button');
+                if (button) {
+                    button.click();
+                    log('✅ Clic direct sur le bouton chat', 'success');
+                } else {
+                    log('❌ Aucun bouton chat trouvé', 'error');
+                }
+            }
+        }
+        
+        function getStatus() {
+            log('📊 Récupération du status...', 'info');
+            
+            if (window.EcoEventsChat && window.EcoEventsChat.getStatus) {
+                const status = window.EcoEventsChat.getStatus();
+                log(`Status: ${JSON.stringify(status, null, 2)}`, 'info');
+            } else {
+                log('❌ API EcoEventsChat non disponible', 'error');
+            }
+            
+            // Status global
+            log(`URL actuelle: ${window.location.href}`, 'info');
+            log(`User Agent: ${navigator.userAgent}`, 'info');
+        }
+        
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+            log('🗑️ Log vidé', 'info');
+        }
+        
+        // Monitoring automatique
+        let checkInterval;
+        let checkCount = 0;
+        
+        function startMonitoring() {
+            checkInterval = setInterval(function() {
+                checkCount++;
+                
+                const iframe = document.querySelector('iframe[src*="chatbase"]');
+                const statusContainer = document.getElementById('status-container');
+                
+                if (iframe) {
+                    statusContainer.innerHTML = '<div class="status success">✅ Chatbase chargé avec succès !</div>';
+                    log('🎉 Chatbase détecté et opérationnel', 'success');
+                    clearInterval(checkInterval);
+                } else if (checkCount > 20) { // 10 secondes
+                    statusContainer.innerHTML = '<div class="status error">❌ Chatbase non chargé - Mode fallback recommandé</div>';
+                    log('⚠️ Timeout: Chatbase non détecté après 10 secondes', 'error');
+                    clearInterval(checkInterval);
+                } else {
+                    log(`⏳ Vérification ${checkCount}/20...`, 'info');
+                }
+            }, 500);
+        }
+        
+        // Démarrage automatique
+        document.addEventListener('DOMContentLoaded', function() {
+            log('🌱 Test Chatbase EcoEvents démarré', 'success');
+            log(`Bot ID: BMbYDI5JT6uWysGBwPeD3`, 'info');
+            startMonitoring();
+        });
+    </script>
+
+    <!-- Script Chatbase -->
+    <script 
+        src="https://www.chatbase.co/embed.min.js" 
+        chatbotId="BMbYDI5JT6uWysGBwPeD3" 
+        domain="www.chatbase.co"
+        async>
+    </script>
+</body>
+</html>
