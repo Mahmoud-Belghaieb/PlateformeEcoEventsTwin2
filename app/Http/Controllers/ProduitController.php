@@ -13,6 +13,7 @@ class ProduitController extends Controller
     public function index()
     {
         $produits = Produit::with('sponsor')->paginate(10);
+
         return view('admin.produits.index', compact('produits'));
     }
 
@@ -20,6 +21,7 @@ class ProduitController extends Controller
     public function create()
     {
         $sponsors = Sponsor::where('is_active', true)->get();
+
         return view('admin.produits.create', compact('sponsors'));
     }
 
@@ -34,7 +36,7 @@ class ProduitController extends Controller
             'category' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'sponsor_id' => 'nullable|exists:sponsors,id',
-            'is_available' => 'boolean'
+            'is_available' => 'boolean',
         ]);
 
         if ($request->hasFile('image')) {
@@ -50,6 +52,7 @@ class ProduitController extends Controller
     public function show(Produit $produit)
     {
         $produit->load('sponsor');
+
         return view('admin.produits.show', compact('produit'));
     }
 
@@ -57,6 +60,7 @@ class ProduitController extends Controller
     public function edit(Produit $produit)
     {
         $sponsors = Sponsor::where('is_active', true)->get();
+
         return view('admin.produits.edit', compact('produit', 'sponsors'));
     }
 
@@ -71,7 +75,7 @@ class ProduitController extends Controller
             'category' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'sponsor_id' => 'nullable|exists:sponsors,id',
-            'is_available' => 'boolean'
+            'is_available' => 'boolean',
         ]);
 
         if ($request->hasFile('image')) {
@@ -93,7 +97,7 @@ class ProduitController extends Controller
         if ($produit->image) {
             Storage::disk('public')->delete($produit->image);
         }
-        
+
         $produit->delete();
 
         return redirect()->route('admin.produits.index')->with('success', 'Produit supprimé avec succès!');
@@ -106,7 +110,7 @@ class ProduitController extends Controller
 
         // Search
         if ($request->has('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $query->where('name', 'like', '%'.$request->search.'%');
         }
 
         // Filter by category

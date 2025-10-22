@@ -14,6 +14,7 @@ class VenueController extends Controller
     public function index()
     {
         $venues = Venue::withCount('events')->paginate(15);
+
         return view('admin.venues.index', compact('venues'));
     }
 

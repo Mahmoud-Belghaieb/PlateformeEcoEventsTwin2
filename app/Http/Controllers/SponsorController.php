@@ -14,6 +14,7 @@ class SponsorController extends Controller
     public function index()
     {
         $sponsors = Sponsor::latest()->paginate(10);
+
         return view('admin.sponsors.index', compact('sponsors'));
     }
 
@@ -58,6 +59,7 @@ class SponsorController extends Controller
     public function show(Sponsor $sponsor)
     {
         $sponsor->load('produits');
+
         return view('admin.sponsors.show', compact('sponsor'));
     }
 
@@ -121,6 +123,7 @@ class SponsorController extends Controller
     public function publicIndex()
     {
         $sponsors = Sponsor::active()->get();
+
         return view('sponsors.index', compact('sponsors'));
     }
 }

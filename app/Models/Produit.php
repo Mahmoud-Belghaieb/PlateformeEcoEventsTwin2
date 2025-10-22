@@ -56,6 +56,6 @@ class Produit extends Model
     // Accessors
     public function getFormattedPriceAttribute()
     {
-        return number_format($this->price, 2) . ' TND';
+        return number_format($this->price, 2).' TND';
     }
 }

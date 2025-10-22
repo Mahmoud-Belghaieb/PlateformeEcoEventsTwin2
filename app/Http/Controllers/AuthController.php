@@ -1,13 +1,14 @@
 <?php
+
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -21,27 +22,29 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            
+
             // Check if user is active
-            if (!$user->is_active) {
+            if (! $user->is_active) {
                 Auth::logout();
+
                 return back()->withErrors([
                     'email' => 'Votre compte a été désactivé. Contactez l\'administrateur.',
                 ])->withInput($request->only('email'));
             }
-            
+
             // Update last login time
             $user->update(['last_login_at' => now()]);
-            
+
             $request->session()->regenerate();
-            
+
             // Redirect based on role
             if ($user->isAdmin()) {
                 return redirect()->intended(route('admin.users.index'));
             }
-            
+
             return redirect()->intended(route('home'));
         }
+
         return back()->withErrors([
             'email' => 'Ces identifiants ne correspondent pas à nos enregistrements.',
         ])->withInput($request->only('email'));
@@ -69,6 +72,7 @@ class AuthController extends Controller
             'last_login_at' => now(),
         ]);
         Auth::login($user);
+
         return redirect()->route('home');
     }
 
@@ -77,6 +81,7 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
         return redirect('/login');
     }
 
@@ -115,30 +120,30 @@ class AuthController extends Controller
         ]);
 
         // Generate reset URL
-        $resetUrl = url('/reset-password/' . $token . '?email=' . urlencode($request->email));
+        $resetUrl = url('/reset-password/'.$token.'?email='.urlencode($request->email));
 
         // Send email with reset link
         try {
             Mail::raw(
-                "Bonjour,\n\n" .
-                "Vous recevez cet e-mail car nous avons reçu une demande de réinitialisation du mot de passe pour votre compte EcoEvents.\n\n" .
-                "Cliquez sur le lien ci-dessous pour réinitialiser votre mot de passe :\n" .
-                $resetUrl . "\n\n" .
-                "Ce lien expirera dans 60 minutes.\n\n" .
-                "Si vous n'avez pas demandé de réinitialisation de mot de passe, aucune action n'est requise.\n\n" .
-                "Cordialement,\n" .
+                "Bonjour,\n\n".
+                "Vous recevez cet e-mail car nous avons reçu une demande de réinitialisation du mot de passe pour votre compte EcoEvents.\n\n".
+                "Cliquez sur le lien ci-dessous pour réinitialiser votre mot de passe :\n".
+                $resetUrl."\n\n".
+                "Ce lien expirera dans 60 minutes.\n\n".
+                "Si vous n'avez pas demandé de réinitialisation de mot de passe, aucune action n'est requise.\n\n".
+                "Cordialement,\n".
                 "L'équipe EcoEvents",
                 function ($message) use ($request) {
                     $message->to($request->email)
-                            ->subject('Réinitialisation de votre mot de passe - EcoEvents');
+                        ->subject('Réinitialisation de votre mot de passe - EcoEvents');
                 }
             );
         } catch (\Exception $e) {
-            \Log::error('Erreur envoi email reset password: ' . $e->getMessage());
+            \Log::error('Erreur envoi email reset password: '.$e->getMessage());
         }
 
         // Log the reset URL for development
-        \Log::info('Password Reset URL: ' . $resetUrl);
+        \Log::info('Password Reset URL: '.$resetUrl);
 
         return back()->with('status', 'Un lien de réinitialisation a été généré! En mode développement, consultez les logs pour voir le lien.');
     }
@@ -149,9 +154,10 @@ class AuthController extends Controller
     public function showResetPassword($token, Request $request)
     {
         $email = $request->query('email');
+
         return view('auth.reset-password', [
             'token' => $token,
-            'email' => $email
+            'email' => $email,
         ]);
     }
 
@@ -176,13 +182,14 @@ class AuthController extends Controller
             ->first();
 
         // Check if token exists
-        if (!$passwordReset) {
+        if (! $passwordReset) {
             return back()->withErrors(['email' => 'Ce lien de réinitialisation est invalide.']);
         }
 
         // Check if token is valid (not expired - 60 minutes)
         if (now()->diffInMinutes($passwordReset->created_at) > 60) {
             DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+
             return back()->withErrors(['email' => 'Ce lien de réinitialisation a expiré.']);
         }
 

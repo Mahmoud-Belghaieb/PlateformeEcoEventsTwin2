@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Commentaire;
 use App\Models\Avis;
+use App\Models\Commentaire;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,7 +16,7 @@ class CommentaireController extends Controller
     {
         $request->validate([
             'content' => 'required|string|min:5|max:500',
-            'parent_id' => 'nullable|exists:commentaires,id'
+            'parent_id' => 'nullable|exists:commentaires,id',
         ]);
 
         $avis = Avis::findOrFail($avisId);
@@ -33,7 +33,7 @@ class CommentaireController extends Controller
             'avis_id' => $avisId,
             'parent_id' => $request->parent_id,
             'content' => $request->content,
-            'is_approved' => false // Nécessite une approbation admin
+            'is_approved' => false, // Nécessite une approbation admin
         ]);
 
         return back()->with('success', 'Votre commentaire a été soumis et sera publié après modération.');
@@ -58,7 +58,7 @@ class CommentaireController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'content' => 'required|string|min:5|max:500'
+            'content' => 'required|string|min:5|max:500',
         ]);
 
         $commentaire = Commentaire::where('id', $id)
@@ -67,7 +67,7 @@ class CommentaireController extends Controller
 
         $commentaire->update([
             'content' => $request->content,
-            'is_approved' => false // Nécessite une nouvelle approbation après modification
+            'is_approved' => false, // Nécessite une nouvelle approbation après modification
         ]);
 
         return redirect()->route('avis.index', $commentaire->avis->event_id)
@@ -96,7 +96,7 @@ class CommentaireController extends Controller
     public function reply(Request $request, $id)
     {
         $request->validate([
-            'content' => 'required|string|min:5|max:500'
+            'content' => 'required|string|min:5|max:500',
         ]);
 
         $parentComment = Commentaire::findOrFail($id);
@@ -106,7 +106,7 @@ class CommentaireController extends Controller
             'avis_id' => $parentComment->avis_id,
             'parent_id' => $parentComment->id,
             'content' => $request->content,
-            'is_approved' => false
+            'is_approved' => false,
         ]);
 
         return back()->with('success', 'Votre réponse a été soumise et sera publiée après modération.');

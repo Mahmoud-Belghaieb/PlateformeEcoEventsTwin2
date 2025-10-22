@@ -21,13 +21,13 @@ class Avis extends Model
         'content',
         'is_approved',
         'approved_at',
-        'approved_by'
+        'approved_by',
     ];
 
     protected $casts = [
         'is_approved' => 'boolean',
         'approved_at' => 'datetime',
-        'rating' => 'integer'
+        'rating' => 'integer',
     ];
 
     /**
@@ -120,7 +120,9 @@ class Avis extends Model
     public static function repartitionNotesEvent($eventId)
     {
         $total = static::nombreAvisEvent($eventId);
-        if ($total == 0) return [];
+        if ($total == 0) {
+            return [];
+        }
 
         $repartition = [];
         for ($i = 1; $i <= 5; $i++) {
@@ -130,9 +132,10 @@ class Avis extends Model
                 ->count();
             $repartition[$i] = [
                 'count' => $count,
-                'percentage' => $total > 0 ? round(($count / $total) * 100, 1) : 0
+                'percentage' => $total > 0 ? round(($count / $total) * 100, 1) : 0,
             ];
         }
+
         return $repartition;
     }
 }

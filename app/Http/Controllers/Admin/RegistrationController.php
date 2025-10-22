@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Registration;
 use App\Models\Event;
-use App\Models\User;
 use App\Models\Position;
+use App\Models\Registration;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class RegistrationController extends Controller
@@ -32,15 +32,15 @@ class RegistrationController extends Controller
         }
 
         if ($request->filled('date')) {
-            $query->whereHas('event', function($q) use ($request) {
+            $query->whereHas('event', function ($q) use ($request) {
                 $q->whereDate('date', $request->date);
             });
         }
 
         if ($request->filled('search')) {
-            $query->whereHas('user', function($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->search . '%')
-                  ->orWhere('email', 'like', '%' . $request->search . '%');
+            $query->whereHas('user', function ($q) use ($request) {
+                $q->where('name', 'like', '%'.$request->search.'%')
+                    ->orWhere('email', 'like', '%'.$request->search.'%');
             });
         }
 
@@ -57,6 +57,7 @@ class RegistrationController extends Controller
         $users = User::all();
         $events = Event::where('date', '>=', now())->get();
         $positions = Position::all();
+
         return view('admin.registrations.create', compact('users', 'events', 'positions'));
     }
 
@@ -101,6 +102,7 @@ class RegistrationController extends Controller
     public function show(Registration $registration)
     {
         $registration->load(['user', 'event.venue', 'event.category', 'position']);
+
         return view('admin.registrations.show', compact('registration'));
     }
 
@@ -112,6 +114,7 @@ class RegistrationController extends Controller
         $users = User::all();
         $events = Event::all();
         $positions = Position::all();
+
         return view('admin.registrations.edit', compact('registration', 'users', 'events', 'positions'));
     }
 
@@ -131,7 +134,7 @@ class RegistrationController extends Controller
         if ($request->status === 'confirmed' && $registration->status !== 'confirmed') {
             $event = Event::find($request->event_id);
             $confirmedCount = $event->registrations()->where('status', 'confirmed')->count();
-            
+
             if ($confirmedCount >= $event->max_participants) {
                 return redirect()->back()
                     ->with('error', 'Event has reached maximum capacity.');
@@ -163,7 +166,7 @@ class RegistrationController extends Controller
         // Check if event has capacity
         $event = $registration->event;
         $approvedCount = $event->registrations()->where('status', 'approved')->count();
-        
+
         if ($approvedCount >= $event->max_participants) {
             return redirect()->back()
                 ->with('error', 'L\'événement a atteint sa capacité maximale.');
@@ -172,7 +175,7 @@ class RegistrationController extends Controller
         $registration->update([
             'status' => 'approved',
             'approved_at' => now(),
-            'approved_by' => auth()->id()
+            'approved_by' => auth()->id(),
         ]);
 
         return redirect()->back()
@@ -185,13 +188,13 @@ class RegistrationController extends Controller
     public function reject(Request $request, Registration $registration)
     {
         $request->validate([
-            'rejection_reason' => 'nullable|string|max:1000'
+            'rejection_reason' => 'nullable|string|max:1000',
         ]);
 
         $registration->update([
             'status' => 'rejected',
             'rejection_reason' => $request->rejection_reason,
-            'approved_by' => auth()->id()
+            'approved_by' => auth()->id(),
         ]);
 
         return redirect()->back()
@@ -204,7 +207,7 @@ class RegistrationController extends Controller
     public function cancel(Registration $registration)
     {
         $registration->update([
-            'status' => 'cancelled'
+            'status' => 'cancelled',
         ]);
 
         return redirect()->back()

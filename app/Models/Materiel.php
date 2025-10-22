@@ -52,6 +52,6 @@ class Materiel extends Model
     // Accessors
     public function getFormattedValueAttribute()
     {
-        return number_format($this->value, 2) . ' DT';
+        return number_format($this->value, 2).' DT';
     }
 }

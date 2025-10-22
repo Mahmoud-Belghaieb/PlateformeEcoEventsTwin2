@@ -19,7 +19,7 @@ class SimpleEventSeeder extends Seeder
                 'icon' => 'fa-broom',
                 'is_active' => true,
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
             [
                 'name' => 'Plantation d\'arbres',
@@ -29,7 +29,7 @@ class SimpleEventSeeder extends Seeder
                 'icon' => 'fa-tree',
                 'is_active' => true,
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
             [
                 'name' => 'Sensibilisation',
@@ -39,8 +39,8 @@ class SimpleEventSeeder extends Seeder
                 'icon' => 'fa-lightbulb',
                 'is_active' => true,
                 'created_at' => now(),
-                'updated_at' => now()
-            ]
+                'updated_at' => now(),
+            ],
         ]);
 
         // Insérer des lieux
@@ -60,7 +60,7 @@ class SimpleEventSeeder extends Seeder
                 'contact_phone' => '+216 71 234 567',
                 'is_active' => true,
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
             [
                 'name' => 'Parc National de Ichkeul',
@@ -77,8 +77,8 @@ class SimpleEventSeeder extends Seeder
                 'contact_phone' => '+216 70 987 654',
                 'is_active' => true,
                 'created_at' => now(),
-                'updated_at' => now()
-            ]
+                'updated_at' => now(),
+            ],
         ]);
 
         // Insérer des postes
@@ -94,7 +94,7 @@ class SimpleEventSeeder extends Seeder
                 'requires_training' => true,
                 'is_active' => true,
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
             [
                 'title' => 'Bénévole collecte',
@@ -107,8 +107,8 @@ class SimpleEventSeeder extends Seeder
                 'requires_training' => false,
                 'is_active' => true,
                 'created_at' => now(),
-                'updated_at' => now()
-            ]
+                'updated_at' => now(),
+            ],
         ]);
 
         // Insérer des événements
@@ -135,7 +135,7 @@ class SimpleEventSeeder extends Seeder
                 'requires_approval' => false,
                 'cancellation_policy' => 'Annulation gratuite jusqu\'à 48h avant l\'événement',
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
             [
                 'title' => 'Plantation d\'Arbres - Parc Ichkeul',
@@ -159,8 +159,8 @@ class SimpleEventSeeder extends Seeder
                 'requires_approval' => true,
                 'cancellation_policy' => 'Remboursement intégral jusqu\'à 1 semaine avant',
                 'created_at' => now(),
-                'updated_at' => now()
-            ]
+                'updated_at' => now(),
+            ],
         ]);
 
         // Quelques inscriptions exemple
@@ -176,8 +176,8 @@ class SimpleEventSeeder extends Seeder
                 'approved_at' => now(),
                 'approved_by' => 1,
                 'created_at' => now(),
-                'updated_at' => now()
-            ]
+                'updated_at' => now(),
+            ],
         ]);
 
         $this->command->info('✅ Données d\'événements créées avec succès !');

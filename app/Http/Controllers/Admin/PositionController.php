@@ -14,6 +14,7 @@ class PositionController extends Controller
     public function index()
     {
         $positions = Position::withCount('events')->paginate(15);
+
         return view('admin.positions.index', compact('positions'));
     }
 

@@ -2,14 +2,14 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
+use App\Models\Event;
+use App\Models\Position;
+use App\Models\Registration;
+use App\Models\User;
+use App\Models\Venue;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use App\Models\Category;
-use App\Models\Venue;
-use App\Models\Position;
-use App\Models\Event;
-use App\Models\User;
-use App\Models\Registration;
 
 class EventSystemSeeder extends Seeder
 {
@@ -186,7 +186,7 @@ class EventSystemSeeder extends Seeder
             // Événement 1 (Nettoyage plage) - Postes requis
             ['event_id' => 1, 'position_id' => 1, 'required_count' => 2, 'filled_count' => 0],
             ['event_id' => 1, 'position_id' => 2, 'required_count' => 25, 'filled_count' => 0],
-            
+
             // Événement 2 (Plantation) - Postes requis
             ['event_id' => 2, 'position_id' => 1, 'required_count' => 1, 'filled_count' => 0],
             ['event_id' => 2, 'position_id' => 3, 'required_count' => 2, 'filled_count' => 0],
@@ -223,7 +223,7 @@ class EventSystemSeeder extends Seeder
                 'motivation' => 'Passionné par l\'environnement, je souhaite contribuer à la reforestation.',
                 'registered_at' => now(),
             ],
-            
+
             // Utilisateur 3 (bénévole) s'inscrit comme bénévole
             [
                 'event_id' => 1,

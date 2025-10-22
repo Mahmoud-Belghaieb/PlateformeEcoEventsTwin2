@@ -34,12 +34,12 @@ class CommentaireController extends Controller
         }
 
         if (request('search')) {
-            $query->where(function($q) {
-                $q->whereHas('user', function($userQuery) {
-                    $userQuery->where('name', 'like', '%' . request('search') . '%')
-                             ->orWhere('email', 'like', '%' . request('search') . '%');
+            $query->where(function ($q) {
+                $q->whereHas('user', function ($userQuery) {
+                    $userQuery->where('name', 'like', '%'.request('search').'%')
+                        ->orWhere('email', 'like', '%'.request('search').'%');
                 })
-                ->orWhere('content', 'like', '%' . request('search') . '%');
+                    ->orWhere('content', 'like', '%'.request('search').'%');
             });
         }
 
@@ -72,11 +72,11 @@ class CommentaireController extends Controller
     public function approve($id)
     {
         $commentaire = Commentaire::findOrFail($id);
-        
+
         $commentaire->update([
             'is_approved' => true,
             'approved_at' => now(),
-            'approved_by' => Auth::id()
+            'approved_by' => Auth::id(),
         ]);
 
         return back()->with('success', 'Commentaire approuvé avec succès.');
@@ -111,17 +111,18 @@ class CommentaireController extends Controller
     {
         $request->validate([
             'commentaire_ids' => 'required|array',
-            'commentaire_ids.*' => 'exists:commentaires,id'
+            'commentaire_ids.*' => 'exists:commentaires,id',
         ]);
 
         Commentaire::whereIn('id', $request->commentaire_ids)
             ->update([
                 'is_approved' => true,
                 'approved_at' => now(),
-                'approved_by' => Auth::id()
+                'approved_by' => Auth::id(),
             ]);
 
         $count = count($request->commentaire_ids);
+
         return back()->with('success', "{$count} commentaires approuvés avec succès.");
     }
 
@@ -132,7 +133,7 @@ class CommentaireController extends Controller
     {
         $request->validate([
             'commentaire_ids' => 'required|array',
-            'commentaire_ids.*' => 'exists:commentaires,id'
+            'commentaire_ids.*' => 'exists:commentaires,id',
         ]);
 
         $count = count($request->commentaire_ids);

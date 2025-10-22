@@ -30,13 +30,13 @@ class AvisController extends Controller
         }
 
         if (request('search')) {
-            $query->where(function($q) {
-                $q->whereHas('user', function($userQuery) {
-                    $userQuery->where('name', 'like', '%' . request('search') . '%')
-                             ->orWhere('email', 'like', '%' . request('search') . '%');
+            $query->where(function ($q) {
+                $q->whereHas('user', function ($userQuery) {
+                    $userQuery->where('name', 'like', '%'.request('search').'%')
+                        ->orWhere('email', 'like', '%'.request('search').'%');
                 })
-                ->orWhere('title', 'like', '%' . request('search') . '%')
-                ->orWhere('content', 'like', '%' . request('search') . '%');
+                    ->orWhere('title', 'like', '%'.request('search').'%')
+                    ->orWhere('content', 'like', '%'.request('search').'%');
             });
         }
 
@@ -46,7 +46,7 @@ class AvisController extends Controller
             'total' => Avis::count(),
             'pending' => Avis::where('is_approved', false)->count(),
             'approved' => Avis::where('is_approved', true)->count(),
-            'average_rating' => Avis::where('is_approved', true)->avg('rating') ?? 0
+            'average_rating' => Avis::where('is_approved', true)->avg('rating') ?? 0,
         ];
 
         return view('admin.avis.index', compact('avis', 'stats'));
@@ -69,11 +69,11 @@ class AvisController extends Controller
     public function approve($id)
     {
         $avis = Avis::findOrFail($id);
-        
+
         $avis->update([
             'is_approved' => true,
             'approved_at' => now(),
-            'approved_by' => Auth::id()
+            'approved_by' => Auth::id(),
         ]);
 
         return back()->with('success', 'Avis approuvé avec succès.');
@@ -108,17 +108,18 @@ class AvisController extends Controller
     {
         $request->validate([
             'avis_ids' => 'required|array',
-            'avis_ids.*' => 'exists:avis,id'
+            'avis_ids.*' => 'exists:avis,id',
         ]);
 
         Avis::whereIn('id', $request->avis_ids)
             ->update([
                 'is_approved' => true,
                 'approved_at' => now(),
-                'approved_by' => Auth::id()
+                'approved_by' => Auth::id(),
             ]);
 
         $count = count($request->avis_ids);
+
         return back()->with('success', "{$count} avis approuvés avec succès.");
     }
 
@@ -129,7 +130,7 @@ class AvisController extends Controller
     {
         $request->validate([
             'avis_ids' => 'required|array',
-            'avis_ids.*' => 'exists:avis,id'
+            'avis_ids.*' => 'exists:avis,id',
         ]);
 
         $count = count($request->avis_ids);
