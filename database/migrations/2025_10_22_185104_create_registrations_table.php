@@ -19,7 +19,7 @@ return new class extends Migration
             $table->datetime('registered_at')->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();
-            
+
             // Prevent duplicate registrations
             $table->unique(['user_id', 'event_id']);
         });
