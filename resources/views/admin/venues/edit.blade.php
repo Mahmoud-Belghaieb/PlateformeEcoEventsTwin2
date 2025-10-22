@@ -171,12 +171,8 @@
                                             </div>
                                         </div>
                                         <hr>
-                                        <p class="small text-muted mb-0">
-                                            <strong>Created:</strong> {{ $venue->created_at->format('M d, Y') }}
-                                        </p>
-                                        <p class="small text-muted mb-0">
-                                            <strong>Last Updated:</strong> {{ $venue->updated_at->format('M d, Y') }}
-                                        </p>
+                                 
+                                      
                                     </div>
                                 </div>
 
