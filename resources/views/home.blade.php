@@ -41,6 +41,7 @@
     align-items: center;
     position: relative;
     z-index: 1;
+    min-height: 600px;
 }
 
 .hero-content {
@@ -694,6 +695,8 @@
         grid-template-columns: 1fr;
         text-align: center;
         gap: 3rem;
+        min-height: auto;
+        padding: 2rem 1rem;
     }
 
     .hero-title {
@@ -702,15 +705,18 @@
 
     .hero-buttons {
         justify-content: center;
+        flex-wrap: wrap;
     }
 
     .hero-stats {
         justify-content: center;
+        flex-wrap: wrap;
     }
 
     .visual-grid {
         width: 400px;
         height: 400px;
+        margin: 0 auto;
     }
 
     .section-title {
@@ -729,21 +735,44 @@
 
     .hero-container {
         padding: 0 1rem;
+        gap: 2rem;
     }
 
     .hero-title {
         font-size: 2.5rem;
+        line-height: 1.2;
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
     }
 
     .hero-buttons {
         flex-direction: column;
         gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
     }
 
     .hero-stats {
-        flex-direction: column;
+        flex-direction: row;
         align-items: center;
         gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .stat-card {
+        min-width: 80px;
+        flex: 1;
+        max-width: 120px;
     }
 
     .visual-grid {
@@ -760,6 +789,7 @@
     .features-grid,
     .events-grid {
         grid-template-columns: 1fr;
+        gap: 2rem;
     }
 
     .feature-card {
@@ -768,12 +798,13 @@
 
     .event-card {
         margin: 0 auto;
-        max-width: 400px;
+        max-width: 100%;
     }
 
     .event-content {
         flex-direction: column;
         gap: 1rem;
+        padding: 1.5rem;
     }
 
     .event-date {
@@ -784,6 +815,7 @@
     .event-actions {
         flex-direction: column;
         gap: 0.75rem;
+        padding: 0 1.5rem 1.5rem;
     }
 
     .events-section {
@@ -792,6 +824,14 @@
 
     .no-events {
         padding: 4rem 1rem;
+    }
+
+    .section-header {
+        margin-bottom: 3rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
     }
 }
 

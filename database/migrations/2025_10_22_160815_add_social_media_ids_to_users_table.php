@@ -12,9 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->enum('role', ['admin', 'participant', 'volunteer'])->nullable()->after('email');
-            $table->boolean('is_active')->default(true);
-            $table->timestamp('last_login_at')->nullable();
+            $table->string('facebook_id')->nullable()->unique()->after('google_id');
+            $table->string('twitter_id')->nullable()->unique()->after('facebook_id');
+            $table->string('linkedin_id')->nullable()->unique()->after('twitter_id');
+            $table->string('github_id')->nullable()->unique()->after('linkedin_id');
         });
     }
 
@@ -24,7 +25,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['role', 'is_active', 'last_login_at']);
+            $table->dropColumn(['facebook_id', 'twitter_id', 'linkedin_id', 'github_id']);
         });
     }
 };

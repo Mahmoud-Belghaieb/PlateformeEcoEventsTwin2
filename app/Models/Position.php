@@ -26,6 +26,12 @@ class Position extends Model
         return $this->hasMany(Registration::class);
     }
 
+    public function events()
+    {
+        return $this->belongsToMany(Event::class, 'registrations')
+                    ->distinct();
+    }
+
     // Scopes
     public function scopeActive($query)
     {
