@@ -6,6 +6,7 @@
     <title>{{ $event->title }} - EcoEvents</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <style>
         :root {
             --primary-green: #059669;
@@ -107,6 +108,81 @@
 
         .reponse-item {
             border-left: 2px solid var(--accent-orange);
+        }
+
+        /* Map Styles */
+        .venue-map-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .map-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .map-subtitle {
+            color: var(--light-text);
+            margin-bottom: 1.5rem;
+        }
+
+        #venueMap {
+            height: 400px;
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .leaflet-popup-content {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        .popup-venue-card {
+            min-width: 280px;
+            padding: 0.5rem 0;
+        }
+
+        .popup-venue-title {
+            font-weight: 600;
+            color: var(--primary-green);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .popup-venue-details {
+            font-size: 0.9rem;
+            color: var(--dark-text);
+            line-height: 1.5;
+        }
+
+        .popup-venue-address {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid #e5e7eb;
+            font-size: 0.85rem;
+            color: var(--light-text);
+        }
+
+        @media (max-width: 768px) {
+            .venue-map-section {
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            #venueMap {
+                height: 300px;
+            }
+
+            .popup-venue-card {
+                min-width: 250px;
+            }
         }
     </style>
 </head>
@@ -534,6 +610,20 @@
         </div>
     </div>
 
+    <!-- Venue Location Map -->
+    @if($event->venue && $event->venue->latitude && $event->venue->longitude)
+    <div class="container mt-4">
+        <div class="venue-map-section">
+            <h3 class="map-title">
+                <i class="fas fa-map-marked-alt me-2"></i>
+                Localisation du Lieu
+            </h3>
+            <p class="map-subtitle">{{ $event->venue->name ?? 'Venue de l\'événement' }} - {{ $event->venue->city ?? '' }}</p>
+            <div id="venueMap"></div>
+        </div>
+    </div>
+    @endif
+
     <!-- Success/Error Messages -->
     @if(session('success'))
         <div class="toast-container position-fixed bottom-0 end-0 p-3">
@@ -647,5 +737,71 @@
             }
         });
     </script>
+
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    @if($event->venue && $event->venue->latitude && $event->venue->longitude)
+    <script>
+        // Initialize the map when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Event venue coordinates
+            var venueLatitude = {{ $event->venue->latitude }};
+            var venueLongitude = {{ $event->venue->longitude }};
+            
+            // Initialize map centered on the venue
+            var map = L.map('venueMap').setView([venueLatitude, venueLongitude], 15);
+
+            // Add OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            // Custom marker icon
+            var customIcon = L.divIcon({
+                html: '<div style="background-color: {{ $event->category->color ?? "#059669" }}; width: 24px; height: 24px; border-radius: 50%; border: 4px solid white; box-shadow: 0 3px 8px rgba(0,0,0,0.3);"></div>',
+                iconSize: [32, 32],
+                iconAnchor: [16, 16],
+                popupAnchor: [0, -16],
+                className: 'custom-venue-icon'
+            });
+
+            // Add marker for the venue
+            var marker = L.marker([venueLatitude, venueLongitude], {
+                icon: customIcon
+            }).addTo(map);
+
+            // Create popup content
+            var popupContent = `
+                <div class="popup-venue-card">
+                    <div class="popup-venue-title">{{ addslashes($event->venue->name ?? 'Venue de l\'événement') }}</div>
+                    <div class="popup-venue-details">
+                        <strong>{{ addslashes($event->title) }}</strong><br>
+                        <i class="fas fa-calendar me-1"></i> {{ $event->start_date->format('d/m/Y à H:i') }}<br>
+                        <i class="fas fa-tag me-1"></i> {{ addslashes($event->category->name ?? '') }}<br>
+                        @if($event->price > 0)
+                            <i class="fas fa-lira-sign me-1"></i> {{ number_format($event->price, 2) }} TND
+                        @else
+                            <i class="fas fa-gift me-1"></i> Gratuit
+                        @endif
+                    </div>
+                    @if($event->venue->full_address)
+                    <div class="popup-venue-address">
+                        <i class="fas fa-map-marker-alt me-1"></i> {{ addslashes($event->venue->full_address) }}
+                    </div>
+                    @endif
+                </div>
+            `;
+
+            marker.bindPopup(popupContent).openPopup();
+
+            // Add click event for directions
+            marker.on('click', function() {
+                // You can add directions functionality here if needed
+                console.log('Venue marker clicked');
+            });
+        });
+    </script>
+    @endif
 </body>
 </html>

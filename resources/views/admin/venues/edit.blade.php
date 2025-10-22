@@ -2,6 +2,42 @@
 
 @section('title', 'Edit Venue')
 
+@push('styles')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<style>
+    #venueLocationMap {
+        height: 400px;
+        width: 100%;
+        border-radius: 8px;
+        border: 2px solid #e5e7eb;
+        margin-bottom: 1rem;
+    }
+    
+    .coordinates-display {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+    
+    .coordinate-input {
+        background-color: #f8f9fa;
+        border: 1px solid #ced4da;
+        border-radius: 0.375rem;
+        color: #495057;
+    }
+    
+    .map-instructions {
+        background: #e3f2fd;
+        border: 1px solid #bbdefb;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="container-fluid">
     <div class="row">
@@ -76,6 +112,56 @@
                                     @error('address')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
+                                </div>
+
+                                <!-- Location Section -->
+                                <div class="mb-4">
+                                    <h6 class="mb-3">
+                                        <i class="fas fa-map-marked-alt me-2"></i>
+                                        Location Coordinates
+                                    </h6>
+                                    
+                                    <div class="map-instructions">
+                                        <i class="fas fa-info-circle me-2"></i>
+                                        <strong>Instructions:</strong> Click on the map to set the venue location. The coordinates will be automatically filled.
+                                    </div>
+                                    
+                                    <div id="venueLocationMap"></div>
+                                    
+                                    <div class="coordinates-display">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label for="latitude" class="form-label">Latitude</label>
+                                                <input type="number" 
+                                                       class="form-control coordinate-input @error('latitude') is-invalid @enderror" 
+                                                       id="latitude" 
+                                                       name="latitude" 
+                                                       value="{{ old('latitude', $venue->latitude) }}"
+                                                       step="0.0000001"
+                                                       placeholder="Click on map or enter manually">
+                                                @error('latitude')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="longitude" class="form-label">Longitude</label>
+                                                <input type="number" 
+                                                       class="form-control coordinate-input @error('longitude') is-invalid @enderror" 
+                                                       id="longitude" 
+                                                       name="longitude" 
+                                                       value="{{ old('longitude', $venue->longitude) }}"
+                                                       step="0.0000001"
+                                                       placeholder="Click on map or enter manually">
+                                                @error('longitude')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <small class="text-muted">
+                                            <i class="fas fa-mouse-pointer me-1"></i>
+                                            Click on the map to set coordinates, or you can manually edit these fields if needed.
+                                        </small>
+                                    </div>
                                 </div>
 
                                 <div class="row">
@@ -235,3 +321,116 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize map centered on Tunisia
+    const map = L.map('venueLocationMap').setView([33.8869, 9.5375], 7);
+
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Get input fields
+    const latitudeInput = document.getElementById('latitude');
+    const longitudeInput = document.getElementById('longitude');
+
+    // Variable to store the current marker
+    let currentMarker = null;
+
+    // Custom marker icon
+    const customIcon = L.divIcon({
+        html: '<div style="background-color: #f59e0b; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 3px 8px rgba(0,0,0,0.3);"></div>',
+        iconSize: [26, 26],
+        iconAnchor: [13, 13],
+        popupAnchor: [0, -13],
+        className: 'venue-location-marker'
+    });
+
+    // Function to add/update marker
+    function addMarker(lat, lng) {
+        // Remove existing marker if any
+        if (currentMarker) {
+            map.removeLayer(currentMarker);
+        }
+
+        // Add new marker
+        currentMarker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
+        
+        // Update input fields
+        latitudeInput.value = lat.toFixed(7);
+        longitudeInput.value = lng.toFixed(7);
+
+        // Add popup to marker
+        currentMarker.bindPopup(`
+            <div style="font-family: Arial, sans-serif;">
+                <strong>{{ addslashes($venue->name) }}</strong><br>
+                Latitude: ${lat.toFixed(7)}<br>
+                Longitude: ${lng.toFixed(7)}
+            </div>
+        `).openPopup();
+    }
+
+    // Map click event
+    map.on('click', function(e) {
+        const lat = e.latlng.lat;
+        const lng = e.latlng.lng;
+        addMarker(lat, lng);
+    });
+
+    // Input field change events (for manual entry)
+    function updateMarkerFromInputs() {
+        const lat = parseFloat(latitudeInput.value);
+        const lng = parseFloat(longitudeInput.value);
+
+        if (!isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
+            addMarker(lat, lng);
+            map.setView([lat, lng], 15); // Zoom to the location
+        }
+    }
+
+    latitudeInput.addEventListener('change', updateMarkerFromInputs);
+    longitudeInput.addEventListener('change', updateMarkerFromInputs);
+
+    // Load existing coordinates if available
+    const existingLat = latitudeInput.value;
+    const existingLng = longitudeInput.value;
+    
+    if (existingLat && existingLng) {
+        const lat = parseFloat(existingLat);
+        const lng = parseFloat(existingLng);
+        if (!isNaN(lat) && !isNaN(lng)) {
+            addMarker(lat, lng);
+            map.setView([lat, lng], 15);
+        }
+    }
+
+    // Add some popular Tunisia locations as reference
+    const tunisiaLocations = [
+        { name: 'Tunis Centre', lat: 36.8065, lng: 10.1815 },
+        { name: 'Carthage', lat: 36.8570, lng: 10.3314 },
+        { name: 'Sidi Bou Said', lat: 36.8705, lng: 10.3500 },
+        { name: 'Hammamet', lat: 36.4000, lng: 10.6167 },
+        { name: 'Sousse', lat: 35.8256, lng: 10.6411 }
+    ];
+
+    // Add reference markers (smaller and lighter)
+    tunisiaLocations.forEach(location => {
+        const referenceIcon = L.divIcon({
+            html: '<div style="background-color: #e0e0e0; width: 8px; height: 8px; border-radius: 50%; border: 1px solid #999;"></div>',
+            iconSize: [10, 10],
+            iconAnchor: [5, 5],
+            className: 'reference-marker'
+        });
+
+        L.marker([location.lat, location.lng], { icon: referenceIcon })
+            .addTo(map)
+            .bindTooltip(location.name, { permanent: false, direction: 'top' });
+    });
+});
+</script>
+@endpush
