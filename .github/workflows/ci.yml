@@ -3,9 +3,9 @@ name: Laravel CI
 # When should this run?
 on:
   push:
-    branches: [ main, mahmoud ]  # Run when you push to main or mahmoud branch
+    branches: [ mahmoud, main ]
   pull_request:
-    branches: [ main ]  # Run when someone creates a pull request to main
+    branches: [ mahmoud, main ]
 
 jobs:
   test:
@@ -107,11 +107,10 @@ jobs:
         
     # Step 13: Run SonarQube Scanner
     - name: SonarQube Scan
-      uses: sonarsource/sonarqube-scan-action@master
+      uses: SonarSource/sonarqube-scan-action@v6
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
   # Docker Build Job (runs after tests pass)
   docker-build:
