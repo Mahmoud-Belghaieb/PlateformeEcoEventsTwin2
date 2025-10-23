@@ -45,45 +45,173 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
 
-        .nav-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 2rem;
-        }
+.hero-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+    min-height: 600px;
+}
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--primary-green);
-            text-decoration: none;
-        }
+.hero-content {
+    position: relative;
+}
 
-        .logo i {
-            color: var(--accent-orange);
-        }
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, var(--accent-orange), #ea580c);
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    animation: pulse 2s ease-in-out infinite;
+    box-shadow: 0 8px 25px rgba(249, 115, 22, 0.3);
+}
 
-        .nav-links {
-            display: flex;
-            gap: 2.5rem;
-            align-items: center;
-        }
+.hero-title {
+    font-size: 4rem;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 2rem;
+    color: var(--dark-text);
+}
 
-        .nav-link {
-            color: var(--light-text);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            position: relative;
-        }
+.hero-title .accent {
+    background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-subtitle {
+    font-size: 1.3rem;
+    line-height: 1.7;
+    color: var(--light-text);
+    margin-bottom: 3rem;
+    max-width: 600px;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+    color: white;
+    padding: 1.2rem 2.5rem;
+    border: none;
+    border-radius: 16px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow: 0 10px 30px rgba(5, 150, 105, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(5, 150, 105, 0.4);
+}
+
+.btn-secondary {
+    background: white;
+    color: var(--primary-green);
+    padding: 1.2rem 2.5rem;
+    border: 2px solid var(--primary-green);
+    border-radius: 16px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.btn-secondary:hover {
+    background: var(--primary-green);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(5, 150, 105, 0.3);
+}
+
+.hero-stats {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem 2rem;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(16, 185, 129, 0.1);
+    text-align: center;
+    min-width: 120px;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--primary-green);
+    display: block;
+}
+
+.stat-label {
+    color: var(--light-text);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+
+.hero-visual {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.visual-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 1.5rem;
+    width: 500px;
+    height: 500px;
+}
+
+.visual-card {
+    background: white;
+    border-radius: 24px;
+    padding: 2rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(16, 185, 129, 0.1);
+    position: relative;
+    overflow: hidden;
+}
 
         .nav-link:hover {
             color: var(--primary-green);
@@ -134,92 +262,457 @@
             color: var(--light-text);
         }
 
-        .logout-btn {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: white;
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-        }
+.features-section {
+    padding: 8rem 0;
+    background: white;
+}
 
-        .logout-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
-        }
+.features-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
 
-        /* Responsive navbar */
-        @media (max-width: 968px) {
-            .nav-links {
-                display: none;
-            }
-        }
+.section-header {
+    text-align: center;
+    margin-bottom: 5rem;
+}
 
-        @media (max-width: 768px) {
-            .nav-container {
-                padding: 0 1rem;
-            }
-            .user-menu {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            .user-info {
-                flex-direction: column;
-                text-align: center;
-            }
-        }
+.section-title {
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--dark-text);
+    margin-bottom: 1.5rem;
+}
 
-        /* Adjust content for fixed navbar */
-        .hero-section {
-            padding-top: 80px;
-        }
-    </style>
-</head>
-<body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="{{ route('home') }}" class="logo">
-                <i class="fas fa-leaf"></i>
-                EcoEvents
-            </a>
-            <div class="nav-links">
-                <a href="{{ route('home') }}" class="nav-link active">Accueil</a>
-                <a href="{{ route('events.index') }}" class="nav-link">Événements</a>
-                <a href="{{ route('produits.index') }}" class="nav-link">Produits</a>
-                <a href="{{ route('sponsors.index') }}" class="nav-link">Sponsors</a>
-                @auth
-                    @if(Auth::user()->isAdmin())
-                        <a href="{{ route('admin.users.index') }}" class="nav-link">Administration</a>
-                    @endif
-                    <a href="{{ route('panier.index') }}" class="nav-link">Mes Paniers</a>
-                @endauth
-            </div>
-            <div class="user-menu">
-                @auth
-                    <div class="user-info">
-                        <div class="user-avatar">{{ substr(Auth::user()->name, 0, 1) }}</div>
-                        <div>
-                            <div class="user-name">{{ Auth::user()->name }}</div>
-                            <div class="user-role">{{ Auth::user()->getRoleDisplayName() }}</div>
-                        </div>
-                    </div>
-                    <form method="POST" action="{{ route('logout') }}" style="display: inline;">
-                        @csrf
-                        <button type="submit" class="logout-btn">
-                            <i class="fas fa-sign-out-alt"></i>
-                            Déconnexion
-                        </button>
-                    </form>
-                @else
-                    <a href="{{ route('login') }}" class="nav-link">Connexion</a>
-                    <a href="{{ route('register') }}" class="nav-link">Inscription</a>
-                @endauth
-            </div>
-        </div>
-    </nav>
+.section-subtitle {
+    font-size: 1.2rem;
+    color: var(--light-text);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 3rem;
+}
+
+.feature-card {
+    background: white;
+    padding: 3rem;
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(16, 185, 129, 0.1);
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+}
+
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 2rem;
+    font-size: 2rem;
+    color: white;
+}
+
+.feature-card h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--dark-text);
+    margin-bottom: 1rem;
+}
+
+.feature-card p {
+    color: var(--light-text);
+    line-height: 1.6;
+}
+
+.cta-section {
+    padding: 8rem 0;
+    background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+    color: white;
+    text-align: center;
+}
+
+.cta-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.cta-title {
+    font-size: 3rem;
+    font-weight: 900;
+    margin-bottom: 1.5rem;
+}
+
+.cta-subtitle {
+    font-size: 1.3rem;
+    opacity: 0.9;
+    margin-bottom: 3rem;
+    line-height: 1.6;
+}
+
+.cta-button {
+    background: white;
+    color: var(--primary-green);
+    padding: 1.5rem 3rem;
+    border: none;
+    border-radius: 16px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+@media (max-width: 1200px) {
+    .hero-container {
+        gap: 4rem;
+    }
+
+    .features-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .events-grid {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 968px) {
+    .hero-container {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 3rem;
+        min-height: auto;
+        padding: 2rem 1rem;
+    }
+
+    .hero-title {
+        font-size: 3rem;
+    }
+
+    .hero-buttons {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .hero-stats {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .visual-grid {
+        width: 400px;
+        height: 400px;
+        margin: 0 auto;
+    }
+
+    .section-title {
+        font-size: 2.5rem;
+    }
+
+    .cta-title {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 8rem 0 4rem;
+    }
+
+    .hero-container {
+        padding: 0 1rem;
+        gap: 2rem;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+        line-height: 1.2;
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+
+    .hero-stats {
+        flex-direction: row;
+        align-items: center;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .stat-card {
+        min-width: 80px;
+        flex: 1;
+        max-width: 120px;
+    }
+
+    .visual-grid {
+        width: 320px;
+        height: 320px;
+    }
+
+    .features-container,
+    .cta-container,
+    .events-container {
+        padding: 0 1rem;
+    }
+
+    .features-grid,
+    .events-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .feature-card {
+        padding: 2rem;
+    }
+
+    .event-card {
+        margin: 0 auto;
+        max-width: 100%;
+    }
+
+    .event-content {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1.5rem;
+    }
+
+    .event-date {
+        align-self: flex-start;
+        min-width: 60px;
+    }
+
+    .event-actions {
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 0 1.5rem 1.5rem;
+    }
+
+    .events-section {
+        padding: 6rem 0;
+    }
+
+    .no-events {
+        padding: 4rem 1rem;
+    }
+
+    .section-header {
+        margin-bottom: 3rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-section {
+        padding: 6rem 0 3rem;
+    }
+
+    .hero-container {
+        padding: 0 1rem;
+        gap: 2rem;
+    }
+
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
+
+    .hero-buttons {
+        gap: 0.75rem;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        padding: 1rem 1.5rem;
+        font-size: 1rem;
+    }
+
+    .hero-stats {
+        gap: 0.75rem;
+    }
+
+    .stat-card {
+        padding: 1rem 1.5rem;
+        min-width: 100px;
+    }
+
+    .stat-number {
+        font-size: 1.5rem;
+    }
+
+    .visual-grid {
+        width: 280px;
+        height: 280px;
+        gap: 1rem;
+    }
+
+    .visual-card {
+        padding: 1.5rem;
+    }
+
+    .visual-card i {
+        font-size: 2rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .visual-card h3 {
+        font-size: 1rem;
+    }
+
+    .visual-card p {
+        font-size: 0.8rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .section-subtitle {
+        font-size: 1rem;
+    }
+
+    .features-grid,
+    .events-grid {
+        gap: 1.5rem;
+    }
+
+    .feature-card {
+        padding: 1.5rem;
+    }
+
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .feature-card h3 {
+        font-size: 1.3rem;
+    }
+
+    .event-card {
+        max-width: 100%;
+    }
+
+    .event-content {
+        padding: 1.5rem;
+        gap: 1rem;
+    }
+
+    .event-title {
+        font-size: 1.2rem;
+    }
+
+    .event-description {
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .event-actions {
+        padding: 0 1.5rem 1.5rem;
+    }
+
+    .btn-register,
+    .btn-details,
+    .btn-registered {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .cta-section {
+        padding: 6rem 0;
+    }
+
+    .cta-title {
+        font-size: 2.5rem;
+    }
+
+    .cta-subtitle {
+        font-size: 1.1rem;
+    }
+
+    .cta-button {
+        padding: 1.2rem 2rem;
+        font-size: 1rem;
+    }
+}
+</style>
+@endpush
+
+@section('content')
 <section class="hero-section">
     <div class="hero-container">
         <!-- Flash Messages -->

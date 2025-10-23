@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use App\Models\LoginCode;
 
@@ -137,6 +138,546 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/login');
+    }
+
+    // ========== GOOGLE OAUTH METHODS ==========
+
+    /**
+     * Redirect to Google OAuth
+     */
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    /**
+     * Handle Google OAuth callback
+     */
+    public function handleGoogleCallback()
+    {
+        try {
+            \Log::info('Google OAuth callback started');
+
+            $googleUser = Socialite::driver('google')->user();
+
+            \Log::info('Google user retrieved', [
+                'name' => $googleUser->getName(),
+                'email' => $googleUser->getEmail(),
+                'id' => $googleUser->getId()
+            ]);
+
+            // Check if user already exists
+            $user = User::where('email', $googleUser->getEmail())->first();
+            $isNewUser = false;
+
+            if ($user) {
+                \Log::info('Existing user found, updating info', ['user_id' => $user->id]);
+
+                // Update user info if needed
+                $user->update([
+                    'google_id' => $googleUser->getId(),
+                    'avatar' => $googleUser->getAvatar(),
+                    'last_login_at' => now(),
+                ]);
+            } else {
+                \Log::info('Creating new user');
+
+                // Create new user without role (will be set after role selection)
+                $user = User::create([
+                    'name' => $googleUser->getName(),
+                    'email' => $googleUser->getEmail(),
+                    'google_id' => $googleUser->getId(),
+                    'avatar' => $googleUser->getAvatar(),
+                    'password' => Hash::make(Str::random(24)), // Random password since OAuth
+                    'is_active' => true,
+                    'last_login_at' => now(),
+                ]);
+
+                $isNewUser = true;
+                \Log::info('New user created, redirecting to role selection', ['user_id' => $user->id]);
+            }
+
+            // Check if user is active
+            if (!$user->is_active) {
+                \Log::info('User is not active, redirecting to login');
+                return redirect()->route('login')->withErrors([
+                    'email' => 'Votre compte a été désactivé. Contactez l\'administrateur.',
+                ]);
+            }
+
+            // For new OAuth users, redirect to role selection
+            if ($isNewUser) {
+                \Log::info('New OAuth user, redirecting to role selection');
+                return redirect()->route('auth.oauth-role-selection', ['user' => $user->id]);
+            }
+
+            \Log::info('Logging in existing user', ['user_id' => $user->id]);
+            Auth::login($user);
+
+            // Regenerate session for security
+            $request = app('request');
+            $request->session()->regenerate();
+
+            // Verify login
+            if (Auth::check()) {
+                \Log::info('User successfully logged in', ['user_id' => Auth::id()]);
+            } else {
+                \Log::error('Failed to log in user');
+            }
+
+            // Redirect based on role
+            if ($user->isAdmin()) {
+                \Log::info('Redirecting admin user to dashboard');
+                return redirect()->intended(route('admin.users.index'));
+            }
+
+            \Log::info('Redirecting user to home page');
+            return redirect()->intended(route('home'));
+
+        } catch (\Exception $e) {
+            \Log::error('Google OAuth error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->route('login')->withErrors([
+                'email' => 'Erreur lors de la connexion avec Google. Veuillez réessayer.',
+            ]);
+        }
+    }
+
+    // ========== FACEBOOK OAUTH METHODS ==========
+
+    /**
+     * Redirect to Facebook OAuth
+     */
+    public function redirectToFacebook()
+    {
+        return Socialite::driver('facebook')->redirect();
+    }
+
+    /**
+     * Handle Facebook OAuth callback
+     */
+    public function handleFacebookCallback()
+    {
+        try {
+            \Log::info('Facebook OAuth callback started');
+
+            $facebookUser = Socialite::driver('facebook')->user();
+
+            \Log::info('Facebook user retrieved', [
+                'name' => $facebookUser->getName(),
+                'email' => $facebookUser->getEmail(),
+                'id' => $facebookUser->getId()
+            ]);
+
+            // Check if user already exists
+            $user = User::where('email', $facebookUser->getEmail())->first();
+            $isNewUser = false;
+
+            if ($user) {
+                \Log::info('Existing user found, updating info', ['user_id' => $user->id]);
+
+                // Update user info if needed
+                $user->update([
+                    'facebook_id' => $facebookUser->getId(),
+                    'avatar' => $facebookUser->getAvatar(),
+                    'last_login_at' => now(),
+                ]);
+            } else {
+                \Log::info('Creating new user');
+
+                // Create new user without role (will be set after role selection)
+                $user = User::create([
+                    'name' => $facebookUser->getName(),
+                    'email' => $facebookUser->getEmail(),
+                    'facebook_id' => $facebookUser->getId(),
+                    'avatar' => $facebookUser->getAvatar(),
+                    'password' => Hash::make(Str::random(24)), // Random password since OAuth
+                    'is_active' => true,
+                    'last_login_at' => now(),
+                ]);
+
+                $isNewUser = true;
+                \Log::info('New user created, redirecting to role selection', ['user_id' => $user->id]);
+            }
+
+            // Check if user is active
+            if (!$user->is_active) {
+                \Log::info('User is not active, redirecting to login');
+                return redirect()->route('login')->withErrors([
+                    'email' => 'Votre compte a été désactivé. Contactez l\'administrateur.',
+                ]);
+            }
+
+            \Log::info('Logging in user', ['user_id' => $user->id]);
+            Auth::login($user);
+
+            // Regenerate session for security
+            $request = app('request');
+            $request->session()->regenerate();
+
+            // Redirect based on role
+            if ($user->isAdmin()) {
+                \Log::info('Redirecting admin user to dashboard');
+                return redirect()->intended(route('admin.users.index'));
+            }
+
+            return redirect()->intended(route('home'));
+
+        } catch (\Exception $e) {
+            \Log::error('Facebook OAuth error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->route('login')->withErrors([
+                'email' => 'Erreur lors de la connexion avec Facebook. Veuillez réessayer.',
+            ]);
+        }
+    }
+
+    // ========== TWITTER OAUTH METHODS ==========
+
+    /**
+     * Redirect to Twitter OAuth
+     */
+    public function redirectToTwitter()
+    {
+        return Socialite::driver('twitter')->redirect();
+    }
+
+    /**
+     * Handle Twitter OAuth callback
+     */
+    public function handleTwitterCallback()
+    {
+        try {
+            \Log::info('Twitter OAuth callback started');
+
+            $twitterUser = Socialite::driver('twitter')->user();
+
+            \Log::info('Twitter user retrieved', [
+                'name' => $twitterUser->getName(),
+                'email' => $twitterUser->getEmail(),
+                'id' => $twitterUser->getId()
+            ]);
+
+            // Check if user already exists
+            $user = User::where('email', $twitterUser->getEmail())->first();
+            $isNewUser = false;
+
+            if ($user) {
+                \Log::info('Existing user found, updating info', ['user_id' => $user->id]);
+
+                // Update user info if needed
+                $user->update([
+                    'twitter_id' => $twitterUser->getId(),
+                    'avatar' => $twitterUser->getAvatar(),
+                    'last_login_at' => now(),
+                ]);
+            } else {
+                \Log::info('Creating new user');
+
+                // Create new user without role (will be set after role selection)
+                $user = User::create([
+                    'name' => $twitterUser->getName(),
+                    'email' => $twitterUser->getEmail(),
+                    'twitter_id' => $twitterUser->getId(),
+                    'avatar' => $twitterUser->getAvatar(),
+                    'password' => Hash::make(Str::random(24)), // Random password since OAuth
+                    'is_active' => true,
+                    'last_login_at' => now(),
+                ]);
+
+                $isNewUser = true;
+                \Log::info('New user created, redirecting to role selection', ['user_id' => $user->id]);
+            }
+
+            // Check if user is active
+            if (!$user->is_active) {
+                \Log::info('User is not active, redirecting to login');
+                return redirect()->route('login')->withErrors([
+                    'email' => 'Votre compte a été désactivé. Contactez l\'administrateur.',
+                ]);
+            }
+
+            // For new OAuth users, redirect to role selection
+            if ($isNewUser) {
+                \Log::info('New OAuth user, redirecting to role selection');
+                return redirect()->route('auth.oauth-role-selection', ['user' => $user->id]);
+            }
+
+            \Log::info('Logging in existing user', ['user_id' => $user->id]);
+            Auth::login($user);
+
+            // Regenerate session for security
+            $request = app('request');
+            $request->session()->regenerate();
+
+            // Redirect based on role
+            if ($user->isAdmin()) {
+                \Log::info('Redirecting admin user to dashboard');
+                return redirect()->intended(route('admin.users.index'));
+            }
+
+            return redirect()->intended(route('home'));
+
+        } catch (\Exception $e) {
+            \Log::error('Twitter OAuth error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->route('login')->withErrors([
+                'email' => 'Erreur lors de la connexion avec Twitter. Veuillez réessayer.',
+            ]);
+        }
+    }
+
+    // ========== LINKEDIN OAUTH METHODS ==========
+
+    /**
+     * Redirect to LinkedIn OAuth
+     */
+    public function redirectToLinkedIn()
+    {
+        return Socialite::driver('linkedin')->redirect();
+    }
+
+    /**
+     * Handle LinkedIn OAuth callback
+     */
+    public function handleLinkedInCallback()
+    {
+        try {
+            \Log::info('LinkedIn OAuth callback started');
+
+            $linkedinUser = Socialite::driver('linkedin')->user();
+
+            \Log::info('LinkedIn user retrieved', [
+                'name' => $linkedinUser->getName(),
+                'email' => $linkedinUser->getEmail(),
+                'id' => $linkedinUser->getId()
+            ]);
+
+            // Check if user already exists
+            $user = User::where('email', $linkedinUser->getEmail())->first();
+            $isNewUser = false;
+
+            if ($user) {
+                \Log::info('Existing user found, updating info', ['user_id' => $user->id]);
+
+                // Update user info if needed
+                $user->update([
+                    'linkedin_id' => $linkedinUser->getId(),
+                    'avatar' => $linkedinUser->getAvatar(),
+                    'last_login_at' => now(),
+                ]);
+            } else {
+                \Log::info('Creating new user');
+
+                // Create new user without role (will be set after role selection)
+                $user = User::create([
+                    'name' => $linkedinUser->getName(),
+                    'email' => $linkedinUser->getEmail(),
+                    'linkedin_id' => $linkedinUser->getId(),
+                    'avatar' => $linkedinUser->getAvatar(),
+                    'password' => Hash::make(Str::random(24)), // Random password since OAuth
+                    'is_active' => true,
+                    'last_login_at' => now(),
+                ]);
+
+                $isNewUser = true;
+                \Log::info('New user created, redirecting to role selection', ['user_id' => $user->id]);
+            }
+
+            // Check if user is active
+            if (!$user->is_active) {
+                \Log::info('User is not active, redirecting to login');
+                return redirect()->route('login')->withErrors([
+                    'email' => 'Votre compte a été désactivé. Contactez l\'administrateur.',
+                ]);
+            }
+
+            // For new OAuth users, redirect to role selection
+            if ($isNewUser) {
+                \Log::info('New OAuth user, redirecting to role selection');
+                return redirect()->route('auth.oauth-role-selection', ['user' => $user->id]);
+            }
+
+            \Log::info('Logging in existing user', ['user_id' => $user->id]);
+            Auth::login($user);
+
+            // Regenerate session for security
+            $request = app('request');
+            $request->session()->regenerate();
+
+            // Redirect based on role
+            if ($user->isAdmin()) {
+                \Log::info('Redirecting admin user to dashboard');
+                return redirect()->intended(route('admin.users.index'));
+            }
+
+            return redirect()->intended(route('home'));
+
+        } catch (\Exception $e) {
+            \Log::error('LinkedIn OAuth error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->route('login')->withErrors([
+                'email' => 'Erreur lors de la connexion avec LinkedIn. Veuillez réessayer.',
+            ]);
+        }
+    }
+
+    // ========== GITHUB OAUTH METHODS ==========
+
+    /**
+     * Redirect to GitHub OAuth
+     */
+    public function redirectToGitHub()
+    {
+        return Socialite::driver('github')->redirect();
+    }
+
+    /**
+     * Handle GitHub OAuth callback
+     */
+    public function handleGitHubCallback()
+    {
+        try {
+            \Log::info('GitHub OAuth callback started');
+
+            $githubUser = Socialite::driver('github')->user();
+
+            \Log::info('GitHub user retrieved', [
+                'name' => $githubUser->getName(),
+                'email' => $githubUser->getEmail(),
+                'id' => $githubUser->getId()
+            ]);
+
+            // Check if user already exists
+            $user = User::where('email', $githubUser->getEmail())->first();
+            $isNewUser = false;
+
+            if ($user) {
+                \Log::info('Existing user found, updating info', ['user_id' => $user->id]);
+
+                // Update user info if needed
+                $user->update([
+                    'github_id' => $githubUser->getId(),
+                    'avatar' => $githubUser->getAvatar(),
+                    'last_login_at' => now(),
+                ]);
+            } else {
+                \Log::info('Creating new user');
+
+                // Create new user without role (will be set after role selection)
+                $user = User::create([
+                    'name' => $githubUser->getName(),
+                    'email' => $githubUser->getEmail(),
+                    'github_id' => $githubUser->getId(),
+                    'avatar' => $githubUser->getAvatar(),
+                    'password' => Hash::make(Str::random(24)), // Random password since OAuth
+                    'is_active' => true,
+                    'last_login_at' => now(),
+                ]);
+
+                $isNewUser = true;
+                \Log::info('New user created, redirecting to role selection', ['user_id' => $user->id]);
+            }
+
+            // Check if user is active
+            if (!$user->is_active) {
+                \Log::info('User is not active, redirecting to login');
+                return redirect()->route('login')->withErrors([
+                    'email' => 'Votre compte a été désactivé. Contactez l\'administrateur.',
+                ]);
+            }
+
+            // For new OAuth users, redirect to role selection
+            if ($isNewUser) {
+                \Log::info('New OAuth user, redirecting to role selection');
+                return redirect()->route('auth.oauth-role-selection', ['user' => $user->id]);
+            }
+
+            \Log::info('Logging in existing user', ['user_id' => $user->id]);
+            Auth::login($user);
+
+            // Regenerate session for security
+            $request = app('request');
+            $request->session()->regenerate();
+
+            // Redirect based on role
+            if ($user->isAdmin()) {
+                \Log::info('Redirecting admin user to dashboard');
+                return redirect()->intended(route('admin.users.index'));
+            }
+
+            return redirect()->intended(route('home'));
+
+        } catch (\Exception $e) {
+            \Log::error('GitHub OAuth error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->route('login')->withErrors([
+                'email' => 'Erreur lors de la connexion avec GitHub. Veuillez réessayer.',
+            ]);
+        }
+    }
+
+    // ========== OAUTH ROLE SELECTION METHODS ==========
+
+    /**
+     * Show OAuth role selection page
+     */
+    public function showOAuthRoleSelection($userId)
+    {
+        $user = User::findOrFail($userId);
+
+        // Ensure user doesn't have a role yet (new OAuth user)
+        if ($user->role) {
+            return redirect()->route('home');
+        }
+
+        return view('auth.oauth-role-selection', compact('user'));
+    }
+
+    /**
+     * Complete OAuth registration with role selection
+     */
+    public function completeOAuthRegistration(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'role' => 'required|in:participant,volunteer',
+        ]);
+
+        $user = User::findOrFail($request->user_id);
+
+        // Ensure user doesn't have a role yet
+        if ($user->role) {
+            return redirect()->route('home');
+        }
+
+        // Update user with selected role
+        $user->update([
+            'role' => $request->role,
+        ]);
+
+        \Log::info('OAuth user role set', [
+            'user_id' => $user->id,
+            'role' => $request->role
+        ]);
+
+        // Log in the user
+        Auth::login($user);
+
+        // Regenerate session for security
+        $request->session()->regenerate();
+
+        // Redirect based on role
+        if ($user->isAdmin()) {
+            return redirect()->route('admin.users.index');
+        }
+
+        return redirect()->route('home')->with('success', 'Bienvenue sur EcoEvents ! Votre compte a été configuré avec succès.');
     }
 
     // ========== PASSWORD RESET METHODS ==========

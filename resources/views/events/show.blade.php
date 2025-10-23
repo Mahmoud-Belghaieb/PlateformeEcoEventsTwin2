@@ -110,79 +110,68 @@
             border-left: 2px solid var(--accent-orange);
         }
 
-        /* Map Styles */
-        .venue-map-section {
-            background: white;
-            padding: 2rem;
-            border-radius: 16px;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(16, 185, 129, 0.1);
-            margin-bottom: 2rem;
+        /* Social Media Sharing Styles */
+        .social-share-btn {
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            height: 40px;
         }
 
-        .map-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--dark-text);
-            margin-bottom: 0.5rem;
+        .social-share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
-        .map-subtitle {
-            color: var(--light-text);
-            margin-bottom: 1.5rem;
+        .api-share-form {
+            margin: 0;
         }
 
-        #venueMap {
-            height: 400px;
+        .api-share-form button {
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            font-weight: 500;
+            border: none;
             width: 100%;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
         }
 
-        .leaflet-popup-content {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        .api-share-form button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
         }
 
-        .popup-venue-card {
-            min-width: 280px;
-            padding: 0.5rem 0;
+        .api-share-form button:active {
+            transform: translateY(0);
         }
 
-        .popup-venue-title {
-            font-weight: 600;
-            color: var(--primary-green);
-            margin-bottom: 0.5rem;
-            font-size: 1rem;
+        .btn-facebook {
+            background: linear-gradient(135deg, #1877f2, #42a5f5);
+            color: white;
         }
 
-        .popup-venue-details {
-            font-size: 0.9rem;
-            color: var(--dark-text);
-            line-height: 1.5;
+        .btn-facebook:hover {
+            background: linear-gradient(135deg, #166fe5, #1976d2);
+            color: white;
         }
 
-        .popup-venue-address {
-            margin-top: 0.75rem;
-            padding-top: 0.75rem;
-            border-top: 1px solid #e5e7eb;
-            font-size: 0.85rem;
-            color: var(--light-text);
+        .btn-instagram {
+            background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            color: white;
         }
 
-        @media (max-width: 768px) {
-            .venue-map-section {
-                padding: 1.5rem;
-                margin-bottom: 1.5rem;
-            }
-
-            #venueMap {
-                height: 300px;
-            }
-
-            .popup-venue-card {
-                min-width: 250px;
-            }
+        .btn-instagram:hover {
+            background: linear-gradient(135deg, #d6822f 0%, #c85a35 25%, #c0243a 50%, #b0225f 75%, #a11881 100%);
+            color: white;
         }
     </style>
 </head>
@@ -596,15 +585,101 @@
                     @endauth
                 </div>
 
-                <!-- Contact Info -->
+                <!-- Social Sharing -->
                 <div class="info-item">
                     <h6 class="mb-3">
-                        <i class="fas fa-envelope me-2" style="color: var(--accent-orange);"></i>
-                        Contact organisateur
+                        <i class="fas fa-share-alt me-2" style="color: var(--primary-green);"></i>
+                        Partager cet événement
                     </h6>
-                    <p class="mb-1"><strong>Email :</strong> contact@ecoevents.com</p>
-                    <p class="mb-1"><strong>Téléphone :</strong> +216 71 123 456</p>
-                    <p class="mb-0"><strong>Site web :</strong> www.ecoevents.com</p>
+
+                    <!-- API-based Social Media Posting (for authenticated users) -->
+                    @auth
+                        <div class="mb-3">
+                            <small class="text-muted d-block mb-2">Publier directement sur les réseaux sociaux :</small>
+                            <div class="d-flex gap-2 mb-2">
+                                <form action="{{ route('events.share.social', [$event, 'facebook']) }}" method="POST" class="flex-fill api-share-form">
+                                    @csrf
+                                    <button type="submit" class="btn btn-facebook" title="Publier sur Facebook">
+                                        <i class="fab fa-facebook-f me-1"></i>Facebook
+                                    </button>
+                                </form>
+                                <form action="{{ route('events.share.social', [$event, 'instagram']) }}" method="POST" class="flex-fill api-share-form">
+                                    @csrf
+                                    <button type="submit" class="btn btn-instagram" title="Publier sur Instagram">
+                                        <i class="fab fa-instagram me-1"></i>Instagram
+                                    </button>
+                                </form>
+                            </div>
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Publication directe sur votre page/compte professionnel
+                            </small>
+                        </div>
+                        <hr class="my-3">
+                    @endauth
+
+                    <!-- URL-based Social Sharing Links -->
+                    <div class="mb-2">
+                        <small class="text-muted d-block mb-2">Partager le lien sur les réseaux sociaux :</small>
+                        <div class="d-flex flex-wrap gap-2">
+                            <!-- Facebook Share -->
+                            <a href="{{ route('events.share.facebook', $event->slug) }}"
+                               target="_blank"
+                               class="social-share-btn btn-outline-primary"
+                               title="Partager sur Facebook"
+                               onclick="trackShare('facebook')">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+
+                            <!-- Twitter Share -->
+                            <a href="{{ route('events.share.twitter', $event->slug) }}"
+                               target="_blank"
+                               class="social-share-btn btn-outline-info"
+                               title="Partager sur Twitter"
+                               onclick="trackShare('twitter')">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+
+                            <!-- LinkedIn Share -->
+                            <a href="{{ route('events.share.linkedin', $event->slug) }}"
+                               target="_blank"
+                               class="social-share-btn btn-outline-primary"
+                               title="Partager sur LinkedIn"
+                               onclick="trackShare('linkedin')">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+
+                            <!-- WhatsApp Share -->
+                            <a href="{{ route('events.share.whatsapp', $event->slug) }}"
+                               target="_blank"
+                               class="social-share-btn btn-outline-success"
+                               title="Partager sur WhatsApp"
+                               onclick="trackShare('whatsapp')">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+
+                            <!-- Email Share -->
+                            <a href="{{ route('events.share.email', $event->slug) }}"
+                               class="social-share-btn btn-outline-secondary"
+                               title="Partager par email"
+                               onclick="trackShare('email')">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+
+                            <!-- Copy Link -->
+                            <button type="button"
+                                    class="social-share-btn btn-outline-dark"
+                                    title="Copier le lien"
+                                    onclick="copyEventLink()">
+                                <i class="fas fa-link"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Copy Link Feedback -->
+                    <div id="copy-feedback" class="alert alert-success py-2 px-3 mb-0 d-none" role="alert">
+                        <small><i class="fas fa-check me-1"></i>Lien copié dans le presse-papiers !</small>
+                    </div>
                 </div>
             </div>
         </div>
@@ -736,72 +811,66 @@
                 });
             }
         });
-    </script>
 
-    <!-- Leaflet JavaScript -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    
-    @if($event->venue && $event->venue->latitude && $event->venue->longitude)
-    <script>
-        // Initialize the map when the page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            // Event venue coordinates
-            var venueLatitude = {{ $event->venue->latitude }};
-            var venueLongitude = {{ $event->venue->longitude }};
-            
-            // Initialize map centered on the venue
-            var map = L.map('venueMap').setView([venueLatitude, venueLongitude], 15);
-
-            // Add OpenStreetMap tiles
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
-
-            // Custom marker icon
-            var customIcon = L.divIcon({
-                html: '<div style="background-color: {{ $event->category->color ?? "#059669" }}; width: 24px; height: 24px; border-radius: 50%; border: 4px solid white; box-shadow: 0 3px 8px rgba(0,0,0,0.3);"></div>',
-                iconSize: [32, 32],
-                iconAnchor: [16, 16],
-                popupAnchor: [0, -16],
-                className: 'custom-venue-icon'
+        // Social Sharing Functions
+        function trackShare(platform) {
+            // Send tracking request to backend
+            fetch(`{{ route("events.share.track", $event->slug) }}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    platform: platform
+                })
+            }).catch(error => {
+                console.log('Share tracking failed:', error);
             });
+        }
 
-            // Add marker for the venue
-            var marker = L.marker([venueLatitude, venueLongitude], {
-                icon: customIcon
-            }).addTo(map);
+        function copyEventLink() {
+            const eventUrl = '{{ url("/events/" . $event->slug) }}';
 
-            // Create popup content
-            var popupContent = `
-                <div class="popup-venue-card">
-                    <div class="popup-venue-title">{{ addslashes($event->venue->name ?? 'Venue de l\'événement') }}</div>
-                    <div class="popup-venue-details">
-                        <strong>{{ addslashes($event->title) }}</strong><br>
-                        <i class="fas fa-calendar me-1"></i> {{ $event->start_date->format('d/m/Y à H:i') }}<br>
-                        <i class="fas fa-tag me-1"></i> {{ addslashes($event->category->name ?? '') }}<br>
-                        @if($event->price > 0)
-                            <i class="fas fa-lira-sign me-1"></i> {{ number_format($event->price, 2) }} TND
-                        @else
-                            <i class="fas fa-gift me-1"></i> Gratuit
-                        @endif
-                    </div>
-                    @if($event->venue->full_address)
-                    <div class="popup-venue-address">
-                        <i class="fas fa-map-marker-alt me-1"></i> {{ addslashes($event->venue->full_address) }}
-                    </div>
-                    @endif
-                </div>
-            `;
+            if (navigator.clipboard && window.isSecureContext) {
+                // Use the Clipboard API when available and in secure context
+                navigator.clipboard.writeText(eventUrl).then(() => {
+                    showCopyFeedback();
+                });
+            } else {
+                // Fallback for older browsers or non-secure contexts
+                const textArea = document.createElement('textarea');
+                textArea.value = eventUrl;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
 
-            marker.bindPopup(popupContent).openPopup();
+                try {
+                    document.execCommand('copy');
+                    showCopyFeedback();
+                } catch (err) {
+                    console.error('Fallback: Oops, unable to copy', err);
+                }
 
-            // Add click event for directions
-            marker.on('click', function() {
-                // You can add directions functionality here if needed
-                console.log('Venue marker clicked');
-            });
-        });
+                textArea.remove();
+            }
+
+            // Track the copy action
+            trackShare('copy_link');
+        }
+
+        function showCopyFeedback() {
+            const feedback = document.getElementById('copy-feedback');
+            feedback.classList.remove('d-none');
+
+            // Hide after 3 seconds
+            setTimeout(() => {
+                feedback.classList.add('d-none');
+            }, 3000);
+        }
     </script>
-    @endif
 </body>
 </html>

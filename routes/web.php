@@ -1,17 +1,27 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 use App\Http\Controllers\HomeController as PublicHomeController;
 
-use Illuminate\Support\Facades\Auth;
-
-// Show login view at root (always)
-Route::get('/', function () {
-    return view('auth.login');
-})->name('root');
-
-
+// Public homepage route (shared for guests and authenticated users)
+Route::get('/', function (Request $request) {
+    // Handle OAuth callback parameters that might come to root URL
+    if ($request->has(['code', 'state']) && $request->has('scope')) {
+        // Redirect Google OAuth parameters to proper callback
+        if (str_contains($request->get('scope', ''), 'google')) {
+            return redirect()->route('auth.google.callback', $request->query());
+        }
+        // Redirect Facebook OAuth parameters to proper callback
+        if (str_contains($request->get('scope', ''), 'facebook')) {
+            return redirect()->route('auth.facebook.callback', $request->query());
+        }
+        // Redirect other OAuth providers as needed
+    }
+    
+    return app(PublicHomeController::class)->index($request);
+})->name('home');
 
 // Authentication routes
 use App\Http\Controllers\AuthController;
@@ -23,26 +33,47 @@ use App\Http\Controllers\Admin\PositionController;
 use App\Http\Controllers\Admin\AdminEventController;
 use App\Http\Controllers\Admin\RegistrationController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\SocialShareController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\AvisController;
 use App\Http\Controllers\CommentaireController;
-use App\Http\Controllers\SponsorController;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\MaterielController;
 use App\Http\Controllers\PanierController;
+use App\Http\Controllers\SponsorController;
+use App\Http\Controllers\SocialMediaController;
 
 // Guest routes (only accessible when not logged in)
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
+    
     // Google OAuth routes
-    Route::get('/auth/google', [\App\Http\Controllers\GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
-    Route::get('/auth/google/callback', [\App\Http\Controllers\GoogleAuthController::class, 'callback'])->name('auth.google.callback');
-    // OTP Email login routes
-    Route::get('/login/code', [AuthController::class, 'showLoginCode'])->name('login.code');
-    Route::post('/login/code', [AuthController::class, 'sendLoginCode'])->name('login.code.send');
-    Route::get('/login/verify', [AuthController::class, 'showVerifyCode'])->name('login.verify');
-    Route::post('/login/verify', [AuthController::class, 'verifyLoginCode'])->name('login.verify.submit');
+    Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
+    Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
+    
+    // Facebook OAuth routes
+    Route::get('/auth/facebook', [AuthController::class, 'redirectToFacebook'])->name('auth.facebook');
+    Route::get('/auth/facebook/callback', [AuthController::class, 'handleFacebookCallback'])->name('auth.facebook.callback');
+    
+    // Twitter OAuth routes
+    Route::get('/auth/twitter', [AuthController::class, 'redirectToTwitter'])->name('auth.twitter');
+    Route::get('/auth/twitter/callback', [AuthController::class, 'handleTwitterCallback'])->name('auth.twitter.callback');
+    
+    // LinkedIn OAuth routes
+    Route::get('/auth/linkedin', [AuthController::class, 'redirectToLinkedIn'])->name('auth.linkedin');
+    Route::get('/auth/linkedin/callback', [AuthController::class, 'handleLinkedInCallback'])->name('auth.linkedin.callback');
+    
+    // GitHub OAuth routes
+    Route::get('/auth/github', [AuthController::class, 'redirectToGitHub'])->name('auth.github');
+    Route::get('/auth/github/callback', [AuthController::class, 'handleGitHubCallback'])->name('auth.github.callback');
+    
+    // OAuth Role Selection
+    Route::get('/auth/role-selection/{user}', [AuthController::class, 'showOAuthRoleSelection'])->name('auth.oauth-role-selection');
+    Route::post('/auth/complete-registration', [AuthController::class, 'completeOAuthRegistration'])->name('auth.complete-oauth-registration');
     
     // Password reset routes
     Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('password.request');
@@ -60,6 +91,10 @@ Route::middleware('auth')->group(function () {
     // Home route for authenticated users
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    
+    // Profile routes
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::post('/profile/update-role', [ProfileController::class, 'updateRole'])->name('profile.update-role');
     
     // My events
     Route::get('/my-events', [EventController::class, 'myEvents'])->name('my-events');
@@ -90,11 +125,26 @@ Route::middleware('auth')->group(function () {
     Route::post('/panier/clear', [PanierController::class, 'clear'])->name('panier.clear');
     Route::post('/panier/checkout', [PanierController::class, 'checkout'])->name('panier.checkout');
     Route::get('/mes-commandes', [PanierController::class, 'orders'])->name('panier.orders');
+    
+    // Social Media Sharing
+    Route::post('/events/{event}/share/{platform}', [SocialMediaController::class, 'shareToSocialMedia'])->name('events.share.social');
 });
 
 // Public event routes
 Route::get('/events', [EventController::class, 'index'])->name('events.index');
 Route::get('/events/{event:slug}', [EventController::class, 'show'])->name('events.show');
+
+// Social Sharing Routes
+Route::prefix('events/{event:slug}/share')->name('events.share.')->group(function () {
+    Route::get('/urls', [SocialShareController::class, 'getShareUrls'])->name('urls');
+    Route::get('/facebook', [SocialShareController::class, 'shareOnFacebook'])->name('facebook');
+    Route::get('/twitter', [SocialShareController::class, 'shareOnTwitter'])->name('twitter');
+    Route::get('/linkedin', [SocialShareController::class, 'shareOnLinkedIn'])->name('linkedin');
+    Route::get('/whatsapp', [SocialShareController::class, 'shareOnWhatsApp'])->name('whatsapp');
+    Route::get('/email', [SocialShareController::class, 'shareViaEmail'])->name('email');
+    Route::get('/embed', [SocialShareController::class, 'getEmbedCode'])->name('embed');
+    Route::post('/track', [SocialShareController::class, 'trackShare'])->name('track');
+});
 
 // Public avis routes (standalone)
 Route::get('/avis', [AvisController::class, 'indexAll'])->name('avis.index.all');

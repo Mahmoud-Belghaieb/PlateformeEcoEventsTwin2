@@ -24,6 +24,12 @@ class User extends Authenticatable
         'role',
         'is_active',
         'last_login_at',
+        'google_id',
+        'facebook_id',
+        'twitter_id',
+        'linkedin_id',
+        'github_id',
+        'avatar',
     ];
 
     /**

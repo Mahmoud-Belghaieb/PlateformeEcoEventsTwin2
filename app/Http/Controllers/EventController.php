@@ -8,6 +8,7 @@ use App\Models\Event;
 use App\Models\Category;
 use App\Models\Registration;
 use App\Models\Avis;
+use App\Http\Controllers\SocialMediaController;
 
 class EventController extends Controller
 {
@@ -161,5 +162,25 @@ class EventController extends Controller
                 'registrations' => 'Active - Many-to-Many principale'
             ]
         ]);
+    }
+
+    /**
+     * Example method showing how to use social media sharing
+     * This demonstrates calling the SocialMediaController
+     */
+    public function shareToSocialMediaExample(Event $event, $platform)
+    {
+        // Create an instance of the SocialMediaController
+        $socialMediaController = new SocialMediaController();
+
+        // Call the shareToSocialMedia method
+        $result = $socialMediaController->shareToSocialMedia($event, $platform);
+
+        // Handle the response
+        if ($result['success']) {
+            return back()->with('success', $result['message']);
+        } else {
+            return back()->with('error', $result['message']);
+        }
     }
 }
