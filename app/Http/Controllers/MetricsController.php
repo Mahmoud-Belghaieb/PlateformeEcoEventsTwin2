@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Prometheus\CollectorRegistry;
-use Prometheus\Storage\InMemory;
-use Prometheus\RenderTextFormat;
-use App\Models\User;
 use App\Models\Event;
 use App\Models\Registration;
-use Illuminate\Support\Facades\DB;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Prometheus\CollectorRegistry;
+use Prometheus\RenderTextFormat;
+use Prometheus\Storage\InMemory;
 
 class MetricsController extends Controller
 {
@@ -19,7 +19,7 @@ class MetricsController extends Controller
 
     public function __construct()
     {
-        $this->registry = new CollectorRegistry(new InMemory());
+        $this->registry = new CollectorRegistry(new InMemory);
     }
 
     /**
@@ -29,18 +29,18 @@ class MetricsController extends Controller
     {
         // Application metrics
         $this->collectApplicationMetrics();
-        
+
         // Business metrics
         $this->collectBusinessMetrics();
-        
+
         // Database metrics
         $this->collectDatabaseMetrics();
 
-        $renderer = new RenderTextFormat();
+        $renderer = new RenderTextFormat;
         $result = $renderer->render($this->registry->getMetricFamilySamples());
 
         return response($result, 200, [
-            'Content-Type' => RenderTextFormat::MIME_TYPE
+            'Content-Type' => RenderTextFormat::MIME_TYPE,
         ]);
     }
 
@@ -70,7 +70,7 @@ class MetricsController extends Controller
         $cacheHits = Cache::get('metrics_cache_hits', 0);
         $cacheMisses = Cache::get('metrics_cache_misses', 0);
         $totalRequests = $cacheHits + $cacheMisses;
-        
+
         if ($totalRequests > 0) {
             $cacheHitRatio = $this->registry->getOrRegisterGauge(
                 'laravel',
@@ -146,10 +146,10 @@ class MetricsController extends Controller
             'database_connections_active',
             'Number of active database connections'
         );
-        
+
         try {
             $activeConnections = DB::select("SHOW STATUS LIKE 'Threads_connected'");
-            if (!empty($activeConnections)) {
+            if (! empty($activeConnections)) {
                 $dbConnections->set((float) $activeConnections[0]->Value);
             }
         } catch (\Exception $e) {
@@ -168,13 +168,13 @@ class MetricsController extends Controller
 
         // Database size metrics
         try {
-            $dbSize = DB::select("
+            $dbSize = DB::select('
                 SELECT ROUND(SUM(data_length + index_length) / 1024 / 1024, 1) AS db_size 
                 FROM information_schema.tables 
                 WHERE table_schema = DATABASE()
-            ");
-            
-            if (!empty($dbSize)) {
+            ');
+
+            if (! empty($dbSize)) {
                 $databaseSize = $this->registry->getOrRegisterGauge(
                     'laravel',
                     'database_size_mb',
