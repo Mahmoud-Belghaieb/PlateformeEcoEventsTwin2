@@ -853,4 +853,42 @@ class AuthController extends Controller
         $request->session()->regenerate();
         return redirect()->intended(route('home'));
     }
+
+    public function resendVerifyCode(Request $request)
+    {
+        $email = session('otp_email');
+        if (!$email) {
+            return redirect()->route('login')->withErrors(['email' => 'Session expirée. Veuillez vous reconnecter.']);
+        }
+
+        $user = User::where('email', $email)->first();
+        if (!$user) {
+            return redirect()->route('login')->withErrors(['email' => 'Utilisateur non trouvé.']);
+        }
+
+        // Générer un nouveau code
+        $code = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
+        
+        // Invalider les anciens codes
+        LoginCode::where('user_id', $user->id)->whereNull('consumed_at')->update(['consumed_at' => now()]);
+        
+        // Créer le nouveau code
+        LoginCode::create([
+            'user_id' => $user->id,
+            'code' => $code,
+            'expires_at' => now()->addMinutes(10),
+        ]);
+
+        // Envoyer l'email avec le nouveau code
+        try {
+            Mail::send('emails.verification', ['code' => $code, 'user' => $user], function ($message) use ($user) {
+                $message->to($user->email, $user->name)
+                    ->subject('Nouveau code de vérification - EcoEvents');
+            });
+        } catch (\Exception $e) {
+            Log::error('Erreur envoi email verification (resend): ' . $e->getMessage());
+        }
+
+        return redirect()->route('login.verify')->with('status', 'Un nouveau code de vérification a été envoyé à votre e-mail.');
+    }
 }

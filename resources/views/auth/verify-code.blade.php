@@ -32,7 +32,10 @@
             </div>
             <div class="d-grid gap-2">
               <button type="submit" class="btn btn-primary">Se connecter</button>
-              <a href="{{ route('login.code') }}" class="btn btn-outline-secondary">Renvoyer un code</a>
+              <form method="POST" action="{{ route('login.verify.resend') }}" style="margin-top: 10px;">
+                @csrf
+                <button type="submit" class="btn btn-outline-secondary w-100">Renvoyer un code</button>
+              </form>
             </div>
           </form>
         </div>

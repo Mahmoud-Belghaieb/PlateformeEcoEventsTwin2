@@ -6,7 +6,11 @@
     <title>EcoEvents - Home</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/css/home.css', 'resources/js/app.js'])
-    <style>
+</head>
+<body>
+
+@push('styles')
+<style>
         * {
             margin: 0;
             padding: 0;
@@ -43,6 +47,115 @@
             right: 0;
             z-index: 1000;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+
+
+        /* Styles de la navbar simplifiée comme dans events */
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary-green);
+            text-decoration: none;
+        }
+
+        .logo i {
+            color: var(--accent-orange);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--light-text);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-green);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .nav-link.active {
+            color: var(--primary-green);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 12px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: var(--primary-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .user-name {
+            color: var(--dark-text);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .user-role {
+            font-size: 0.8rem;
+            color: var(--light-text);
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
         }
 
 .hero-container {
@@ -710,10 +823,52 @@
     }
 }
 </style>
-@endpush
 
-@section('content')
-<section class="hero-section">
+<!-- Navigation -->
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="{{ route('home') }}" class="logo">
+            <i class="fas fa-leaf"></i>
+            EcoEvents
+        </a>
+        <div class="nav-links">
+            <a href="{{ route('home') }}" class="nav-link active">Accueil</a>
+            <a href="{{ route('events.index') }}" class="nav-link">Événements</a>
+            <a href="{{ route('produits.index') }}" class="nav-link">Produits</a>
+            <a href="{{ route('sponsors.index') }}" class="nav-link">Sponsors</a>
+            @auth
+                @if(Auth::user()->isAdmin())
+                    <a href="{{ route('admin.users.index') }}" class="nav-link">Administration</a>
+                @endif
+                <a href="{{ route('panier.index') }}" class="nav-link">Mes Paniers</a>
+            @endauth
+        </div>
+        <div class="user-menu">
+            @auth
+                <div class="user-info">
+                    <div class="user-avatar">{{ substr(Auth::user()->name, 0, 1) }}</div>
+                    <div>
+                        <div class="user-name">{{ Auth::user()->name }}</div>
+                        <div class="user-role">{{ Auth::user()->getRoleDisplayName() }}</div>
+                    </div>
+                </div>
+                <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                    @csrf
+                    <button type="submit" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Déconnexion
+                    </button>
+                </form>
+            @else
+                <a href="{{ route('login') }}" class="nav-link">Connexion</a>
+                <a href="{{ route('register') }}" class="nav-link">Inscription</a>
+            @endauth
+        </div>
+    </div>
+</nav>
+
+<!-- Contenu de la page -->
+<section class="hero-section" style="margin-top: 80px;"></section>
     <div class="hero-container">
         <!-- Flash Messages -->
         @if(session('success'))

@@ -75,6 +75,15 @@ Route::middleware('guest')->group(function () {
     Route::get('/auth/role-selection/{user}', [AuthController::class, 'showOAuthRoleSelection'])->name('auth.oauth-role-selection');
     Route::post('/auth/complete-registration', [AuthController::class, 'completeOAuthRegistration'])->name('auth.complete-oauth-registration');
     
+    // Email verification routes
+    Route::get('/login/verify', [AuthController::class, 'showVerifyCode'])->name('login.verify');
+    // form submission for verification code (from verify-code view)
+    Route::post('/login/verify', [AuthController::class, 'verifyLoginCode'])->name('login.verify.submit');
+    // legacy/alternate name kept for backward compatibility
+    Route::post('/login/verify/code', [AuthController::class, 'verifyLoginCode'])->name('login.verify.code');
+    // resend verification code
+    Route::post('/login/verify/resend', [AuthController::class, 'resendVerifyCode'])->name('login.verify.resend');
+    
     // Password reset routes
     Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('password.request');
     Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
