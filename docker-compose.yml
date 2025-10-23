@@ -151,6 +151,9 @@ services:
       - "9104:9104"
     environment:
       - DATA_SOURCE_NAME=exporter:exporter_password@tcp(mysql:3306)/
+    command: 
+      - --mysqld.address=mysql:3306
+      - --mysqld.username=exporter
     depends_on:
       mysql:
         condition: service_healthy
