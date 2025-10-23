@@ -82,10 +82,14 @@ Route::middleware('guest')->group(function () {
     Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 });
 
+// Public registration routes (accessible even if already authenticated)
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'register']);
+
 // Authenticated routes
 Route::middleware('auth')->group(function () {
-    // Note: '/home' route intentionally removed to keep homepage at '/'
-    // Route::get('/home', [HomeController::class, 'index'])->name('home');
+    // Home route for authenticated users
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     
     // Profile routes

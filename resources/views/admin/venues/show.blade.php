@@ -102,10 +102,7 @@
                                 <div class="col-md-6">
                                     <h6>Venue Information</h6>
                                     <table class="table table-sm">
-                                        <tr>
-                                            <td><strong>Created:</strong></td>
-                                            <td>{{ $venue->created_at->format('M d, Y H:i') }}</td>
-                                        </tr>
+                                      
                                         <tr>
                                             <td><strong>Last Updated:</strong></td>
                                             <td>{{ $venue->updated_at->format('M d, Y H:i') }}</td>

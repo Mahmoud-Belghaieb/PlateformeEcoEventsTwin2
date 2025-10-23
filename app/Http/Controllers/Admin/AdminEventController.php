@@ -15,20 +15,56 @@ class AdminEventController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Eager load relations and precompute approved registrations count per event
-        $events = Event::with(['category', 'venue'])
+        // Build base query with eager loading and counts
+        $query = Event::with(['category', 'venue'])
             ->withCount([
                 'registrations',
-                'registrations as approved_registrations_count' => function ($query) {
-                    $query->where('status', 'approved');
+                'registrations as approved_registrations_count' => function ($q) {
+                    $q->where('status', 'approved');
                 }
-            ])
-            ->latest('start_date')
-            ->paginate(15);
+            ]);
 
-        // Summary totals for dashboard cards (computed here to avoid queries in the blade)
+        // Search by title or description
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by exact status (draft, pending, published, etc.)
+        if ($request->filled('status') && in_array($request->input('status'), ['draft','pending','published','rejected','cancelled','completed'])) {
+            $query->where('status', $request->input('status'));
+        }
+
+        // Time-based filter: upcoming / past / today
+        if ($request->filled('time')) {
+            $time = $request->input('time');
+            if ($time === 'upcoming') {
+                $query->where('start_date', '>', now());
+            } elseif ($time === 'past') {
+                $query->where('start_date', '<', now());
+            } elseif ($time === 'today') {
+                $query->whereDate('start_date', now()->toDateString());
+            }
+        }
+
+        // Category and venue filters
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->input('category_id'));
+        }
+
+        if ($request->filled('venue_id')) {
+            $query->where('venue_id', $request->input('venue_id'));
+        }
+
+        // Paginate and preserve query string
+        $events = $query->latest('start_date')->paginate(15)->appends($request->query());
+
+        // Summary totals for dashboard cards (kept global)
         $totals = [
             'total_events' => Event::count(),
             'pending' => Event::where('status', 'pending')->count(),
@@ -98,10 +134,8 @@ class AdminEventController extends Controller
 
         $event = Event::create($eventData);
 
-        // Attach positions if provided
-        if ($request->has('positions')) {
-            $event->positions()->attach($request->positions);
-        }
+        // Note: event_positions pivot table was removed in this deployment.
+        // If you reintroduce event_positions, re-enable attaching positions here.
 
         return redirect()->route('admin.events.index')
             ->with('success', 'Event created successfully.');
@@ -112,7 +146,8 @@ class AdminEventController extends Controller
      */
     public function show(Event $event)
     {
-        $event->load(['category', 'venue', 'positions', 'registrations.user']);
+        // 'positions' relation/pivot table removed — load only existing relations
+        $event->load(['category', 'venue', 'registrations.user']);
         return view('admin.events.show', compact('event'));
     }
 
@@ -124,7 +159,7 @@ class AdminEventController extends Controller
         $categories = Category::all();
         $venues = Venue::all();
         $positions = Position::all();
-        $event->load('positions');
+        // Do not load positions relation here — pivot table removed
         return view('admin.events.edit', compact('event', 'categories', 'venues', 'positions'));
     }
 

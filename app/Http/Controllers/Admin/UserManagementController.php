@@ -14,7 +14,30 @@ class UserManagementController extends Controller
      */
     public function index()
     {
-        $users = User::orderBy('created_at', 'desc')->paginate(15);
+        $query = User::query();
+
+        // Filters
+        if ($search = request('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        if ($role = request('role')) {
+            $query->where('role', $role);
+        }
+
+        if ($status = request('status')) {
+            if ($status === 'active') {
+                $query->where('is_active', true);
+            } elseif ($status === 'inactive') {
+                $query->where('is_active', false);
+            }
+        }
+
+        $users = $query->orderBy('created_at', 'desc')->paginate(15)->appends(request()->query());
+
         $stats = [
             'total' => User::count(),
             'admins' => User::where('role', 'admin')->count(),
@@ -22,7 +45,7 @@ class UserManagementController extends Controller
             'volunteers' => User::where('role', 'volunteer')->count(),
             'active' => User::where('is_active', true)->count(),
         ];
-        
+
         return view('admin.users.index', compact('users', 'stats'));
     }
 
@@ -63,6 +86,27 @@ class UserManagementController extends Controller
 
         return redirect()->route('admin.users.index')
             ->with('success', 'Utilisateur créé avec succès.');
+    }
+
+    /**
+     * Display the specified user
+     */
+    public function show(User $user)
+    {
+        // Load user relationships
+        $user->load(['registrations.event.category', 'registrations.event.venue']);
+        
+        // Get user statistics
+        $stats = [
+            'total_registrations' => $user->registrations->count(),
+            'approved_registrations' => $user->registrations->where('status', 'approved')->count(),
+            'pending_registrations' => $user->registrations->where('status', 'pending')->count(),
+            'rejected_registrations' => $user->registrations->where('status', 'rejected')->count(),
+            'member_since' => $user->created_at->diffForHumans(),
+            'last_login' => $user->last_login_at ? $user->last_login_at->diffForHumans() : 'Jamais connecté'
+        ];
+        
+        return view('admin.users.show', compact('user', 'stats'));
     }
 
     /**

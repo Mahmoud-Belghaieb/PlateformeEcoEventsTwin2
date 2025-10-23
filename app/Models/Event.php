@@ -121,6 +121,15 @@ class Event extends Model
         return $this->hasMany(Materiel::class);
     }
 
+    /**
+     * Positions (roles) available for volunteers in this event via registrations pivot
+     */
+    public function positions()
+    {
+        return $this->belongsToMany(Position::class, 'registrations', 'event_id', 'position_id')
+                    ->withTimestamps();
+    }
+
     // ====== MÉTHODES UTILES ======
 
     /**

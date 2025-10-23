@@ -33,7 +33,7 @@ class RegistrationController extends Controller
 
         if ($request->filled('date')) {
             $query->whereHas('event', function($q) use ($request) {
-                $q->whereDate('date', $request->date);
+                $q->whereDate('start_date', $request->date);
             });
         }
 
@@ -55,7 +55,7 @@ class RegistrationController extends Controller
     public function create()
     {
         $users = User::all();
-        $events = Event::where('date', '>=', now())->get();
+        $events = Event::where('start_date', '>=', now())->get();
         $positions = Position::all();
         return view('admin.registrations.create', compact('users', 'events', 'positions'));
     }
@@ -69,7 +69,7 @@ class RegistrationController extends Controller
             'user_id' => 'required|exists:users,id',
             'event_id' => 'required|exists:events,id',
             'position_id' => 'nullable|exists:positions,id',
-            'status' => 'required|in:pending,confirmed,cancelled',
+            'status' => 'required|in:pending,approved,rejected,cancelled',
         ]);
 
         // Check if user already registered for this event
@@ -124,13 +124,13 @@ class RegistrationController extends Controller
             'user_id' => 'required|exists:users,id',
             'event_id' => 'required|exists:events,id',
             'position_id' => 'nullable|exists:positions,id',
-            'status' => 'required|in:pending,confirmed,cancelled',
+            'status' => 'required|in:pending,approved,rejected,cancelled',
         ]);
 
-        // If changing status to confirmed, check capacity
-        if ($request->status === 'confirmed' && $registration->status !== 'confirmed') {
+        // If changing status to approved, check capacity
+        if ($request->status === 'approved' && $registration->status !== 'approved') {
             $event = Event::find($request->event_id);
-            $confirmedCount = $event->registrations()->where('status', 'confirmed')->count();
+            $confirmedCount = $event->registrations()->where('status', 'approved')->count();
             
             if ($confirmedCount >= $event->max_participants) {
                 return redirect()->back()

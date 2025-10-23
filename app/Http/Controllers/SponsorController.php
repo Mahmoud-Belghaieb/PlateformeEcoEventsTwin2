@@ -11,9 +11,25 @@ class SponsorController extends Controller
     /**
      * Display a listing of sponsors (Admin)
      */
-    public function index()
+    public function index(Request $request)
     {
-        $sponsors = Sponsor::latest()->paginate(10);
+        $query = Sponsor::query();
+
+        if ($request->has('search') && $request->search) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->has('level') && $request->level) {
+            $query->where('sponsorship_level', $request->level);
+        }
+
+        if ($request->has('status') && $request->status) {
+            $isActive = $request->status === 'active' ? 1 : 0;
+            $query->where('is_active', $isActive);
+        }
+
+        $sponsors = $query->latest()->paginate(15)->withQueryString();
+
         return view('admin.sponsors.index', compact('sponsors'));
     }
 
@@ -48,7 +64,7 @@ class SponsorController extends Controller
 
         Sponsor::create($validated);
 
-        return redirect()->route('sponsors.index')
+        return redirect()->route('admin.sponsors.index')
             ->with('success', 'Sponsor ajouté avec succès!');
     }
 
@@ -96,7 +112,7 @@ class SponsorController extends Controller
 
         $sponsor->update($validated);
 
-        return redirect()->route('sponsors.index')
+        return redirect()->route('admin.sponsors.index')
             ->with('success', 'Sponsor mis à jour avec succès!');
     }
 
@@ -111,7 +127,7 @@ class SponsorController extends Controller
 
         $sponsor->delete();
 
-        return redirect()->route('sponsors.index')
+        return redirect()->route('admin.sponsors.index')
             ->with('success', 'Sponsor supprimé avec succès!');
     }
 

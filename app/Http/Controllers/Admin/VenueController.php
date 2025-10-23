@@ -30,18 +30,39 @@ class VenueController extends Controller
      */
     public function store(Request $request)
     {
+        // Debug: voir ce qui est envoyé
+        // dd($request->all());
+        
         $request->validate([
             'name' => 'required|string|max:255',
             'address' => 'required|string|max:500',
             'city' => 'required|string|max:255',
+            'postal_code' => 'nullable|string|max:20',
+            'country' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:20',
             'email' => 'nullable|email|max:255',
             'website' => 'nullable|url|max:255',
             'capacity' => 'nullable|integer|min:1',
             'description' => 'nullable|string|max:1000',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
         ]);
 
-        Venue::create($request->all());
+        Venue::create([
+            'name' => $request->name,
+            'address' => $request->address,
+            'city' => $request->city,
+            'postal_code' => $request->postal_code,
+            'country' => $request->country,
+            'phone' => $request->phone,
+            'email' => $request->email,
+            'website' => $request->website,
+            'capacity' => $request->capacity,
+            'description' => $request->description,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            'is_active' => true,
+        ]);
 
         return redirect()->route('admin.venues.index')
             ->with('success', 'Venue created successfully.');
@@ -72,14 +93,31 @@ class VenueController extends Controller
             'name' => 'required|string|max:255',
             'address' => 'required|string|max:500',
             'city' => 'required|string|max:255',
+            'postal_code' => 'nullable|string|max:20',
+            'country' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:20',
             'email' => 'nullable|email|max:255',
             'website' => 'nullable|url|max:255',
             'capacity' => 'nullable|integer|min:1',
             'description' => 'nullable|string|max:1000',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
         ]);
 
-        $venue->update($request->all());
+        $venue->update([
+            'name' => $request->name,
+            'address' => $request->address,
+            'city' => $request->city,
+            'postal_code' => $request->postal_code,
+            'country' => $request->country,
+            'phone' => $request->phone,
+            'email' => $request->email,
+            'website' => $request->website,
+            'capacity' => $request->capacity,
+            'description' => $request->description,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+        ]);
 
         return redirect()->route('admin.venues.index')
             ->with('success', 'Venue updated successfully.');

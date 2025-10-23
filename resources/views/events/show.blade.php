@@ -6,6 +6,7 @@
     <title>{{ $event->title }} - EcoEvents</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <style>
         :root {
             --primary-green: #059669;
@@ -683,6 +684,20 @@
             </div>
         </div>
     </div>
+
+    <!-- Venue Location Map -->
+    @if($event->venue && $event->venue->latitude && $event->venue->longitude)
+    <div class="container mt-4">
+        <div class="venue-map-section">
+            <h3 class="map-title">
+                <i class="fas fa-map-marked-alt me-2"></i>
+                Localisation du Lieu
+            </h3>
+            <p class="map-subtitle">{{ $event->venue->name ?? 'Venue de l\'événement' }} - {{ $event->venue->city ?? '' }}</p>
+            <div id="venueMap"></div>
+        </div>
+    </div>
+    @endif
 
     <!-- Success/Error Messages -->
     @if(session('success'))

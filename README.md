@@ -4,6 +4,7 @@
     <img src="https://img.shields.io/badge/Laravel-12.31.1-FF2D20?style=for-the-badge&logo=laravel" alt="Laravel">
     <img src="https://img.shields.io/badge/PHP-8.2.29-777BB4?style=for-the-badge&logo=php" alt="PHP">
     <img src="https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql" alt="MySQL">
+    <img src="https://github.com/balsemkhouniblossom/PlateformeEcoEventsTwin2/actions/workflows/ci.yml/badge.svg" alt="CI Status">
     <img src="https://img.shields.io/badge/Status-Active-success?style=for-the-badge" alt="Status">
 </p>
 

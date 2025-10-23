@@ -6,14 +6,38 @@ use App\Models\Produit;
 use App\Models\Sponsor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class ProduitController extends Controller
 {
     // Admin: List all products
-    public function index()
+    public function index(Request $request)
     {
-        $produits = Produit::with('sponsor')->paginate(10);
-        return view('admin.produits.index', compact('produits'));
+        $query = Produit::with('sponsor');
+
+        // Search filter
+        if ($request->has('search') && $request->search) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        // Category filter
+        if ($request->has('category') && $request->category) {
+            $query->where('category', $request->category);
+        }
+
+        // Stock status filter
+        if ($request->has('stock_status') && $request->stock_status) {
+            if ($request->stock_status === 'in_stock') {
+                $query->where('stock', '>', 0);
+            } elseif ($request->stock_status === 'out_of_stock') {
+                $query->where('stock', '=', 0);
+            }
+        }
+
+        $produits = $query->paginate(10)->withQueryString();
+        $categories = Produit::select('category')->distinct()->pluck('category');
+        
+        return view('admin.produits.index', compact('produits', 'categories'));
     }
 
     // Admin: Show create form

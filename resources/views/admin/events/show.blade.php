@@ -124,7 +124,7 @@
             </div>
 
             <!-- Required Positions -->
-            @if($event->positions->count() > 0)
+            @if(method_exists($event, 'positions') && isset($event->positions) && $event->positions->count() > 0)
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-header">
                     <h5 class="mb-0">

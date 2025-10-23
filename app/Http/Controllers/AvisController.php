@@ -89,9 +89,12 @@ class AvisController extends Controller
      */
     public function store(Request $request, $eventId)
     {
+        // Debug: Voir ce qui est envoyé
+        // dd($request->all());
+        
         $request->validate([
             'rating' => 'required|integer|min:1|max:5',
-            'title' => 'required|string|max:255',
+            'title' => 'nullable|string|max:255',
             'content' => 'required|string|min:10|max:1000'
         ]);
 
@@ -126,10 +129,12 @@ class AvisController extends Controller
             'rating' => $request->rating,
             'title' => $request->title,
             'content' => $request->content,
-            'is_approved' => false // Nécessite une approbation admin
+            'is_approved' => true, // Auto-approuvé pour les tests - changer en false pour la production
+            'approved_at' => now(),
+            'approved_by' => Auth::id()
         ]);
 
-        return back()->with('success', 'Votre avis a été soumis et sera publié après modération.');
+        return redirect()->route('avis.index', $eventId)->with('success', 'Votre avis a été publié avec succès !');
     }
 
     /**
