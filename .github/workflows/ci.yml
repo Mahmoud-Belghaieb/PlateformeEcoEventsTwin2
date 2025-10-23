@@ -70,7 +70,7 @@ jobs:
       
     # Step 7: Run code style checks (makes sure your code looks nice)
     - name: Run code style checks
-      run: ./vendor/bin/pint --test
+      run: php vendor/bin/pint --test
       
     # Step 8: Run tests with coverage
     - name: Run tests with coverage
