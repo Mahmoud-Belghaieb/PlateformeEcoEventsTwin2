@@ -51,13 +51,28 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-interaction
       
-    # Step 5: Setup environment
+    # Step 5: Setup Node.js for frontend assets
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    # Step 6: Install Node.js dependencies
+    - name: Install npm dependencies
+      run: npm ci
+      
+    # Step 7: Build frontend assets
+    - name: Build frontend assets
+      run: npm run build
+      
+    # Step 8: Setup environment
     - name: Setup environment
       run: |
         cp .env.example .env
         php artisan key:generate
         
-    # Step 6: Run database migrations
+    # Step 9: Run database migrations
     - name: Run database migrations
       env:
         DB_CONNECTION: mysql
@@ -68,11 +83,11 @@ jobs:
         DB_PASSWORD: password
       run: php artisan migrate --force
       
-    # Step 7: Run code style checks (makes sure your code looks nice)
+    # Step 10: Run code style checks (makes sure your code looks nice)
     - name: Run code style checks
       run: php vendor/bin/pint --test
       
-    # Step 8: Run tests with coverage
+    # Step 11: Run tests with coverage
     - name: Run tests with coverage
       env:
         DB_CONNECTION: mysql
@@ -83,14 +98,14 @@ jobs:
         DB_PASSWORD: password
       run: php artisan test --coverage --coverage-clover=coverage.xml
       
-    # Step 9: Setup Java (required for SonarQube Scanner)
+    # Step 12: Setup Java (required for SonarQube Scanner)
     - name: Setup Java
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
         
-    # Step 10: Run SonarQube Scanner
+    # Step 13: Run SonarQube Scanner
     - name: SonarQube Scan
       uses: sonarsource/sonarqube-scan-action@master
       env:
