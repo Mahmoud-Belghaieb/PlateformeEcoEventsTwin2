@@ -924,6 +924,19 @@
                 
                 <hr class="my-3" style="border-color: rgba(255,255,255,0.2);">
                 <li class="nav-item">
+                    <small class="text-white-50 px-3 d-block mb-2 mt-2" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">Intelligence Artificielle</small>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.ai.*') ? 'active' : '' }}" 
+                       href="{{ route('admin.ai.dashboard') }}">
+                        <i class="fas fa-robot" style="color: #f97316;"></i>
+                        <span style="color: #f97316; font-weight: 600;">IA Gemini</span>
+                    </a>
+                </li>
+                
+                <hr class="my-3" style="border-color: rgba(255,255,255,0.2);">
+                <li class="nav-item">
                     <small class="text-white-50 px-3 d-block mb-2 mt-2" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">Configuration</small>
                 </li>
                 

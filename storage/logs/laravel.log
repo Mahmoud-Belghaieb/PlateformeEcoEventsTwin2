@@ -2084,3 +2084,221 @@ Did you mean one of these?
 #65 {main}"} 
 [2025-10-23 01:42:54] local.INFO: Password Reset URL: http://127.0.0.1:8000/reset-password/YJBlZP9fPItVrXcjPvsSUT5KRfNWQnfeNyaSDcpV3zr0v16DmWM9oHJTsXk1vzVP?email=anisbenmehrez108%40gmail.com  
 [2025-10-23 01:43:57] local.INFO: Tentative de connexion pour: anisbenmehrez108@gmail.com  
+[2025-10-23 02:03:52] local.INFO: Tentative de connexion pour: participant@ecoevents.com  
+[2025-10-23 02:09:01] local.INFO: Tentative de connexion pour: admin@ecoevents.com  
+[2025-10-23 02:16:10] local.INFO: Tentative de connexion pour: admin@ecoevents.com  
+[2025-10-23 02:28:02] local.ERROR: Gemini API Error: {
+  "error": {
+    "code": 404,
+    "message": "models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+    "status": "NOT_FOUND"
+  }
+}
+  
+[2025-10-23 02:28:09] local.ERROR: Gemini API Error: {
+  "error": {
+    "code": 404,
+    "message": "models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+    "status": "NOT_FOUND"
+  }
+}
+  
+[2025-10-23 02:28:25] local.ERROR: Gemini API Error: {
+  "error": {
+    "code": 404,
+    "message": "models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+    "status": "NOT_FOUND"
+  }
+}
+  
+[2025-10-23 02:29:27] local.ERROR: Gemini API Error: {
+  "error": {
+    "code": 404,
+    "message": "models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+    "status": "NOT_FOUND"
+  }
+}
+  
+[2025-10-23 02:29:34] local.ERROR: Gemini API Error: {
+  "error": {
+    "code": 404,
+    "message": "models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+    "status": "NOT_FOUND"
+  }
+}
+  
+[2025-10-23 02:29:41] local.ERROR: Gemini API Error: {
+  "error": {
+    "code": 404,
+    "message": "models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+    "status": "NOT_FOUND"
+  }
+}
+  
+[2025-10-23 02:29:49] local.ERROR: Gemini API Error: {
+  "error": {
+    "code": 404,
+    "message": "models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+    "status": "NOT_FOUND"
+  }
+}
+  
+[2025-10-23 02:29:55] local.ERROR: Gemini API Error: {
+  "error": {
+    "code": 404,
+    "message": "models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+    "status": "NOT_FOUND"
+  }
+}
+  
+[2025-10-23 02:30:01] local.ERROR: Gemini API Error: {
+  "error": {
+    "code": 404,
+    "message": "models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+    "status": "NOT_FOUND"
+  }
+}
+  
+[2025-10-23 02:30:03] local.ERROR: Gemini API Error: {
+  "error": {
+    "code": 404,
+    "message": "models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+    "status": "NOT_FOUND"
+  }
+}
+  
+[2025-10-23 02:30:06] local.ERROR: Gemini API Error: {
+  "error": {
+    "code": 404,
+    "message": "models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+    "status": "NOT_FOUND"
+  }
+}
+  
+[2025-10-23 02:35:44] local.INFO: Tentative de connexion pour: admin@ecoevents.com  
+[2025-10-23 02:36:26] local.INFO: Tentative de connexion pour: participant@ecoevents.com  
+[2025-10-23 12:34:52] local.INFO: Tentative de connexion pour: admin@ecoevents.com  
+[2025-10-23 12:35:19] local.INFO: Tentative de connexion pour: participant@ecoevents.com  
+[2025-10-23 12:40:18] local.INFO: Tentative de connexion pour: admin@ecoevents.com  
+[2025-10-23 12:40:20] local.ERROR: View [admin.ai.dashboard] not found. {"userId":1,"exception":"[object] (InvalidArgumentException(code: 0): View [admin.ai.dashboard] not found. at C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\View\\FileViewFinder.php:138)
+[stacktrace]
+#0 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\View\\FileViewFinder.php(78): Illuminate\\View\\FileViewFinder->findInPaths('admin.ai.dashbo...', Array)
+#1 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Factory.php(150): Illuminate\\View\\FileViewFinder->find('admin.ai.dashbo...')
+#2 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\helpers.php(1101): Illuminate\\View\\Factory->make('admin.ai.dashbo...', Array, Array)
+#3 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\app\\Http\\Controllers\\AIController.php(233): view('admin.ai.dashbo...', Array)
+#4 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php(46): App\\Http\\Controllers\\AIController->adminDashboard()
+#5 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(265): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(App\\Http\\Controllers\\AIController), 'adminDashboard')
+#6 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(211): Illuminate\\Routing\\Route->runController()
+#7 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(822): Illuminate\\Routing\\Route->run()
+#8 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#9 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\app\\Http\\Middleware\\RoleMiddleware.php(33): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#10 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): App\\Http\\Middleware\\RoleMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure), 'admin')
+#11 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#12 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#13 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Auth\\Middleware\\Authenticate.php(63): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#14 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Auth\\Middleware\\Authenticate->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#15 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(87): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#16 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#17 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(48): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#18 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#19 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(120): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#20 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(63): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#21 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#22 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(36): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#23 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#24 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(74): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#25 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#26 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(137): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#27 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(821): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#28 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(800): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#29 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(764): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#30 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(753): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#31 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#32 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#33 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#34 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#35 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#36 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#37 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(51): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#38 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#39 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#40 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#41 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(109): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#42 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#43 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(48): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#44 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#45 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(58): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#46 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#47 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\InvokeDeferredCallbacks.php(22): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#48 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Foundation\\Http\\Middleware\\InvokeDeferredCallbacks->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#49 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\ValidatePathEncoding.php(26): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#50 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Http\\Middleware\\ValidatePathEncoding->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#51 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(137): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#52 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#53 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#54 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1220): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#55 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\public\\index.php(20): Illuminate\\Foundation\\Application->handleRequest(Object(Illuminate\\Http\\Request))
+#56 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(23): require_once('C:\\\\Users\\\\anisb\\\\...')
+#57 {main}
+"} 
+[2025-10-23 12:41:20] local.ERROR: View [admin.ai.dashboard] not found. {"userId":1,"exception":"[object] (InvalidArgumentException(code: 0): View [admin.ai.dashboard] not found. at C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\View\\FileViewFinder.php:138)
+[stacktrace]
+#0 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\View\\FileViewFinder.php(78): Illuminate\\View\\FileViewFinder->findInPaths('admin.ai.dashbo...', Array)
+#1 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Factory.php(150): Illuminate\\View\\FileViewFinder->find('admin.ai.dashbo...')
+#2 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\helpers.php(1101): Illuminate\\View\\Factory->make('admin.ai.dashbo...', Array, Array)
+#3 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\app\\Http\\Controllers\\AIController.php(233): view('admin.ai.dashbo...', Array)
+#4 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php(46): App\\Http\\Controllers\\AIController->adminDashboard()
+#5 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(265): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(App\\Http\\Controllers\\AIController), 'adminDashboard')
+#6 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(211): Illuminate\\Routing\\Route->runController()
+#7 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(822): Illuminate\\Routing\\Route->run()
+#8 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#9 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\app\\Http\\Middleware\\RoleMiddleware.php(33): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#10 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): App\\Http\\Middleware\\RoleMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure), 'admin')
+#11 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#12 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#13 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Auth\\Middleware\\Authenticate.php(63): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#14 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Auth\\Middleware\\Authenticate->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#15 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(87): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#16 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#17 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(48): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#18 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#19 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(120): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#20 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(63): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#21 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#22 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(36): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#23 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#24 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(74): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#25 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#26 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(137): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#27 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(821): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#28 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(800): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#29 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(764): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#30 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(753): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#31 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#32 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#33 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#34 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#35 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#36 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#37 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(51): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#38 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#39 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#40 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#41 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(109): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#42 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#43 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(48): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#44 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#45 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(58): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#46 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#47 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\InvokeDeferredCallbacks.php(22): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#48 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Foundation\\Http\\Middleware\\InvokeDeferredCallbacks->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#49 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\ValidatePathEncoding.php(26): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#50 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Http\\Middleware\\ValidatePathEncoding->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#51 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(137): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#52 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#53 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#54 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1220): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#55 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\public\\index.php(20): Illuminate\\Foundation\\Application->handleRequest(Object(Illuminate\\Http\\Request))
+#56 C:\\Users\\anisb\\OneDrive\\Desktop\\EcoEvents_Platform\\PlateformeEcoEventsTwin2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(23): require_once('C:\\\\Users\\\\anisb\\\\...')
+#57 {main}
+"} 

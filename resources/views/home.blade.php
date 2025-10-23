@@ -837,6 +837,9 @@
             <a href="{{ route('produits.index') }}" class="nav-link">Produits</a>
             <a href="{{ route('sponsors.index') }}" class="nav-link">Sponsors</a>
             @auth
+                <a href="{{ route('ai.interface') }}" class="nav-link" style="color: #f97316; font-weight: 700;">
+                    <i class="fas fa-robot me-1"></i>IA Gemini
+                </a>
                 @if(Auth::user()->isAdmin())
                     <a href="{{ route('admin.users.index') }}" class="nav-link">Administration</a>
                 @endif

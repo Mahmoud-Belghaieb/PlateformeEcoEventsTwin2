@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\HomeController as PublicHomeController;
@@ -43,6 +45,7 @@ use App\Http\Controllers\MaterielController;
 use App\Http\Controllers\PanierController;
 use App\Http\Controllers\SponsorController;
 use App\Http\Controllers\SocialMediaController;
+use App\Http\Controllers\AIController;
 
 // Guest routes (only accessible when not logged in)
 Route::middleware('guest')->group(function () {
@@ -137,6 +140,19 @@ Route::middleware('auth')->group(function () {
     
     // Social Media Sharing
     Route::post('/events/{event}/share/{platform}', [SocialMediaController::class, 'shareToSocialMedia'])->name('events.share.social');
+    
+    // AI Features Routes (Gemini Integration)
+    Route::prefix('ai')->name('ai.')->group(function () {
+        Route::get('/test', function() { return view('ai.test'); })->name('test.interface');
+        Route::get('/interface', function() { return view('ai.interface'); })->name('interface');
+        Route::post('/test-simple', [AIController::class, 'testSimple'])->name('test.simple');
+        Route::post('/generate-event-description', [AIController::class, 'generateEventDescription'])->name('generate.description');
+        Route::get('/suggest-events', [AIController::class, 'getSuggestedEvents'])->name('suggest.events');
+        Route::post('/analyze-sentiment', [AIController::class, 'analyzeSentiment'])->name('analyze.sentiment');
+        Route::post('/moderate-content', [AIController::class, 'moderateContent'])->name('moderate.content');
+        Route::post('/calculate-carbon-impact', [AIController::class, 'calculateCarbonImpact'])->name('carbon.impact');
+        Route::get('/generate-eco-tips', [AIController::class, 'generateEcoTips'])->name('eco.tips');
+    });
 });
 
 // Public event routes
@@ -235,4 +251,22 @@ Route::middleware(['auth', App\Http\Middleware\RoleMiddleware::class.':admin'])-
     Route::get('panier/{panier}', [PanierController::class, 'adminShow'])->name('panier.show');
     Route::patch('panier/{panier}/status', [PanierController::class, 'updateStatus'])->name('panier.update-status');
     Route::delete('panier/{panier}', [PanierController::class, 'adminDestroy'])->name('panier.destroy');
+    
+    // AI Management (Admin only)
+    Route::prefix('ai')->name('ai.')->group(function () {
+        Route::get('dashboard', [AIController::class, 'adminDashboard'])->name('dashboard');
+        Route::get('test-connection', [AIController::class, 'testGeminiConnection'])->name('test');
+    });
+    
+    // Admin Cache Management
+    Route::post('clear-cache', function() {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+            abort(403);
+        }
+        
+        Artisan::call('config:clear');
+        Artisan::call('cache:clear');
+        
+        return response()->json(['success' => true, 'message' => 'Cache cleared successfully']);
+    })->name('clear-cache');
 });
