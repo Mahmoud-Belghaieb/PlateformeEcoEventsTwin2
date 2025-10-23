@@ -631,6 +631,14 @@
                                 <i class="fab fa-facebook-f"></i>
                             </a>
 
+                            <!-- Instagram Share -->
+                            <a href="#"
+                               class="social-share-btn btn-outline-danger"
+                               title="Partager sur Instagram"
+                               onclick="shareToInstagram(); return false;">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+
                             <!-- Twitter Share -->
                             <a href="{{ route('events.share.twitter', $event->slug) }}"
                                target="_blank"
@@ -860,6 +868,60 @@
 
             // Track the copy action
             trackShare('copy_link');
+        }
+
+        function shareToInstagram() {
+            const eventUrl = '{{ url("/events/" . $event->slug) }}';
+            const eventTitle = '{{ $event->title }}';
+            const shareText = `Découvrez cet événement: ${eventTitle} ${eventUrl}`;
+            
+            // Copy the link to clipboard for Instagram sharing
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(shareText).then(() => {
+                    showInstagramFeedback();
+                });
+            } else {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = shareText;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                
+                try {
+                    document.execCommand('copy');
+                    showInstagramFeedback();
+                } catch (err) {
+                    console.error('Fallback: Unable to copy', err);
+                }
+                
+                textArea.remove();
+            }
+            
+            // Track the share action
+            trackShare('instagram');
+        }
+
+        function showInstagramFeedback() {
+            const feedback = document.getElementById('copy-feedback');
+            const originalContent = feedback.innerHTML;
+            
+            // Show Instagram-specific message
+            feedback.innerHTML = '<small><i class="fab fa-instagram me-1"></i>Lien copié ! Ouvrez Instagram et collez dans votre story/post</small>';
+            feedback.classList.remove('d-none');
+            feedback.classList.remove('alert-success');
+            feedback.classList.add('alert-info');
+            
+            // Reset after 5 seconds
+            setTimeout(() => {
+                feedback.innerHTML = originalContent;
+                feedback.classList.add('d-none');
+                feedback.classList.remove('alert-info');
+                feedback.classList.add('alert-success');
+            }, 5000);
         }
 
         function showCopyFeedback() {

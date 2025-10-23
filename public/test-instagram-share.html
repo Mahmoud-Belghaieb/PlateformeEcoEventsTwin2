@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Partage Instagram</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        .test-card { 
+            background: rgba(255,255,255,0.95); 
+            backdrop-filter: blur(10px); 
+            border-radius: 20px; 
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1); 
+        }
+        .social-share-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            margin: 5px;
+        }
+        .social-share-btn:hover {
+            transform: scale(1.1);
+            text-decoration: none;
+        }
+        .btn-outline-danger {
+            border: 2px solid #dc3545;
+            color: #dc3545;
+        }
+        .btn-outline-danger:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+    </style>
+</head>
+<body class="d-flex align-items-center justify-content-center">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="test-card p-5">
+                    <div class="text-center mb-4">
+                        <h2 class="fw-bold text-danger">
+                            <i class="fab fa-instagram me-2"></i>
+                            Test Partage Instagram
+                        </h2>
+                        <p class="text-muted">Testez la fonctionnalité de partage Instagram</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5>Événement de test :</h5>
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="card-title">Atelier Écologique 2024</h6>
+                                <p class="card-text">Un événement pour apprendre les bonnes pratiques écologiques.</p>
+                                <small class="text-muted">
+                                    <i class="fas fa-calendar me-1"></i>25 Oct 2025 à 14:00 | 
+                                    <i class="fas fa-map-marker-alt me-1"></i>Tunis, Tunisie
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mb-4">
+                        <h6 class="mb-3">Cliquez sur l'icône Instagram :</h6>
+                        <a href="#"
+                           class="social-share-btn btn-outline-danger"
+                           title="Partager sur Instagram"
+                           onclick="shareToInstagram(); return false;">
+                            <i class="fab fa-instagram fa-lg"></i>
+                        </a>
+                    </div>
+
+                    <!-- Copy Link Feedback -->
+                    <div id="copy-feedback" class="alert alert-success py-2 px-3 mb-0 d-none" role="alert">
+                        <small><i class="fas fa-check me-1"></i>Lien copié dans le presse-papiers !</small>
+                    </div>
+
+                    <div class="alert alert-info mt-4">
+                        <h6><i class="fas fa-info-circle me-2"></i>Instructions :</h6>
+                        <ol class="mb-0">
+                            <li>Cliquez sur l'icône Instagram ci-dessus</li>
+                            <li>Le lien sera automatiquement copié dans votre presse-papiers</li>
+                            <li>Ouvrez Instagram sur votre téléphone ou ordinateur</li>
+                            <li>Créez une nouvelle story ou post</li>
+                            <li>Collez le lien dans votre contenu</li>
+                        </ol>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <a href="/events" class="btn btn-success">
+                            <i class="fas fa-calendar-alt me-2"></i>
+                            Tester sur un Événement Réel
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function shareToInstagram() {
+            const eventUrl = window.location.origin + '/events/test-event';
+            const eventTitle = 'Atelier Écologique 2024';
+            const shareText = `Découvrez cet événement: ${eventTitle} ${eventUrl}`;
+            
+            // Copy the link to clipboard for Instagram sharing
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(shareText).then(() => {
+                    showInstagramFeedback();
+                });
+            } else {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = shareText;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                
+                try {
+                    document.execCommand('copy');
+                    showInstagramFeedback();
+                } catch (err) {
+                    console.error('Fallback: Unable to copy', err);
+                    alert('Impossible de copier automatiquement. Voici le lien à copier manuellement:\n\n' + shareText);
+                }
+                
+                textArea.remove();
+            }
+        }
+
+        function showInstagramFeedback() {
+            const feedback = document.getElementById('copy-feedback');
+            const originalContent = feedback.innerHTML;
+            
+            // Show Instagram-specific message
+            feedback.innerHTML = '<small><i class="fab fa-instagram me-1"></i>Lien copié ! Ouvrez Instagram et collez dans votre story/post</small>';
+            feedback.classList.remove('d-none');
+            feedback.classList.remove('alert-success');
+            feedback.classList.add('alert-info');
+            
+            // Reset after 5 seconds
+            setTimeout(() => {
+                feedback.innerHTML = originalContent;
+                feedback.classList.add('d-none');
+                feedback.classList.remove('alert-info');
+                feedback.classList.add('alert-success');
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

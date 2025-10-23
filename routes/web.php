@@ -137,6 +137,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/panier/clear', [PanierController::class, 'clear'])->name('panier.clear');
     Route::post('/panier/checkout', [PanierController::class, 'checkout'])->name('panier.checkout');
     Route::get('/mes-commandes', [PanierController::class, 'orders'])->name('panier.orders');
+    Route::get('/panier/{panier}/facture', [PanierController::class, 'generateUserInvoicePdf'])->name('panier.user.invoice');
     
     // Social Media Sharing
     Route::post('/events/{event}/share/{platform}', [SocialMediaController::class, 'shareToSocialMedia'])->name('events.share.social');
@@ -163,6 +164,7 @@ Route::get('/events/{event:slug}', [EventController::class, 'show'])->name('even
 Route::prefix('events/{event:slug}/share')->name('events.share.')->group(function () {
     Route::get('/urls', [SocialShareController::class, 'getShareUrls'])->name('urls');
     Route::get('/facebook', [SocialShareController::class, 'shareOnFacebook'])->name('facebook');
+    Route::get('/instagram', [SocialShareController::class, 'shareOnInstagram'])->name('instagram');
     Route::get('/twitter', [SocialShareController::class, 'shareOnTwitter'])->name('twitter');
     Route::get('/linkedin', [SocialShareController::class, 'shareOnLinkedIn'])->name('linkedin');
     Route::get('/whatsapp', [SocialShareController::class, 'shareOnWhatsApp'])->name('whatsapp');
@@ -215,6 +217,7 @@ Route::middleware(['auth', App\Http\Middleware\RoleMiddleware::class.':admin'])-
     
     // Registration Management
     Route::resource('registrations', RegistrationController::class);
+    Route::get('registrations-export-csv', [RegistrationController::class, 'exportCsv'])->name('registrations.export-csv');
     Route::post('registrations/{registration}/approve', [RegistrationController::class, 'approve'])->name('registrations.approve');
     Route::post('registrations/{registration}/reject', [RegistrationController::class, 'reject'])->name('registrations.reject');
     Route::post('registrations/{registration}/cancel', [RegistrationController::class, 'cancel'])->name('registrations.cancel');
@@ -251,6 +254,7 @@ Route::middleware(['auth', App\Http\Middleware\RoleMiddleware::class.':admin'])-
     Route::get('panier/{panier}', [PanierController::class, 'adminShow'])->name('panier.show');
     Route::patch('panier/{panier}/status', [PanierController::class, 'updateStatus'])->name('panier.update-status');
     Route::delete('panier/{panier}', [PanierController::class, 'adminDestroy'])->name('panier.destroy');
+    Route::get('panier/{panier}/invoice-pdf', [PanierController::class, 'generateInvoicePdf'])->name('panier.invoice-pdf');
     
     // AI Management (Admin only)
     Route::prefix('ai')->name('ai.')->group(function () {

@@ -179,6 +179,15 @@
                                             <i class="fas fa-eye"></i>
                                         </a>
                                         
+                                        @if($panier->status === 'ordered')
+                                            <a href="{{ route('admin.panier.invoice-pdf', $panier) }}" 
+                                               class="btn btn-sm btn-info" 
+                                               title="Télécharger Facture PDF"
+                                               target="_blank">
+                                                <i class="fas fa-file-pdf"></i>
+                                            </a>
+                                        @endif
+                                        
                                         @if($panier->status === 'pending')
                                             <form action="{{ route('admin.panier.update-status', $panier) }}" 
                                                   method="POST" 

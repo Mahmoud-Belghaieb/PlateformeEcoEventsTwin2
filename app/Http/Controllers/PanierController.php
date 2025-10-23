@@ -6,6 +6,7 @@ use App\Models\Panier;
 use App\Models\Produit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PanierController extends Controller
 {
@@ -229,5 +230,81 @@ class PanierController extends Controller
         ];
 
         return view('panier.orders', compact('orders', 'stats'));
+    }
+
+    // Generate PDF invoice for a specific cart order (admin)
+    public function generateInvoicePdf(Panier $panier)
+    {
+        // Ensure we have a valid order
+        if ($panier->status !== 'ordered') {
+            return back()->with('error', 'Facture disponible uniquement pour les commandes validées.');
+        }
+
+        // Prepare invoice data
+        $invoiceData = [
+            'panier' => $panier->load(['user', 'produit']),
+            'invoice_number' => 'INV-' . str_pad($panier->id, 6, '0', STR_PAD_LEFT),
+            'invoice_date' => $panier->updated_at->format('d/m/Y'),
+            'company' => [
+                'name' => 'EcoEvents Platform',
+                'address' => 'Tunis, Tunisie',
+                'phone' => '+216 XX XXX XXX',
+                'email' => 'contact@ecoevents.tn',
+                'website' => 'www.ecoevents.tn'
+            ]
+        ];
+
+        // Generate PDF
+        $pdf = Pdf::loadView('admin.panier.invoice-pdf', $invoiceData);
+        
+        // Set PDF options
+        $pdf->setPaper('A4', 'portrait');
+        $pdf->setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isPhpEnabled' => true,
+            'isRemoteEnabled' => true,
+        ]);
+
+        // Return PDF download
+        $filename = 'facture-' . $invoiceData['invoice_number'] . '.pdf';
+        return $pdf->download($filename);
+    }
+
+    // Generate PDF invoice for user's order (public)
+    public function generateUserInvoicePdf(Panier $panier)
+    {
+        // Verify user owns this order
+        if ($panier->user_id !== Auth::id()) {
+            abort(403, 'Accès non autorisé.');
+        }
+
+        // Ensure we have a valid order
+        if ($panier->status !== 'ordered') {
+            return back()->with('error', 'Facture disponible uniquement pour les commandes validées.');
+        }
+
+        // Prepare invoice data
+        $invoiceData = [
+            'panier' => $panier->load(['user', 'produit']),
+            'invoice_number' => 'INV-' . str_pad($panier->id, 6, '0', STR_PAD_LEFT),
+            'invoice_date' => $panier->updated_at->format('d/m/Y'),
+            'company' => [
+                'name' => 'EcoEvents Platform',
+                'address' => 'Tunis, Tunisie',
+                'phone' => '+216 XX XXX XXX',
+                'email' => 'contact@ecoevents.tn',
+                'website' => 'www.ecoevents.tn'
+            ]
+        ];
+
+        // Generate PDF
+        $pdf = Pdf::loadView('admin.panier.invoice-pdf', $invoiceData);
+        
+        // Set PDF options
+        $pdf->setPaper('A4', 'portrait');
+        
+        // Return PDF download
+        $filename = 'facture-' . $invoiceData['invoice_number'] . '.pdf';
+        return $pdf->download($filename);
     }
 }

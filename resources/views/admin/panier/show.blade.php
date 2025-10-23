@@ -196,6 +196,17 @@
                         </button>
                     </form>
 
+                    @if($panier->status === 'ordered')
+                        <hr>
+                        
+                        <!-- Generate Invoice PDF -->
+                        <a href="{{ route('admin.panier.invoice-pdf', $panier) }}" 
+                           class="btn btn-info btn-block w-100 mb-2"
+                           target="_blank">
+                            <i class="fas fa-file-pdf me-2"></i>Télécharger Facture PDF
+                        </a>
+                    @endif
+
                     <hr>
 
                     <!-- Delete Form -->

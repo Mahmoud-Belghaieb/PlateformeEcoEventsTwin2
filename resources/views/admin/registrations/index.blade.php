@@ -13,6 +13,12 @@
                         Event Registrations Management
                     </h5>
                     <div class="d-flex gap-2">
+                        <a href="{{ route('admin.registrations.export-csv', request()->query()) }}" 
+                           class="btn btn-light btn-sm"
+                           title="Exporter en CSV">
+                            <i class="fas fa-file-csv me-1"></i>
+                            Export CSV
+                        </a>
                         <select class="form-select form-select-sm text-dark" id="headerStatusFilter" style="width: auto;">
                             <option value="">All Statuses</option>
                             <option value="pending" {{ request('status')==='pending' ? 'selected' : '' }}>Pending</option>

@@ -210,4 +210,120 @@ class RegistrationController extends Controller
         return redirect()->back()
             ->with('success', 'Inscription annulée avec succès.');
     }
+
+    /**
+     * Export all registrations to CSV
+     */
+    public function exportCsv(Request $request)
+    {
+        $query = Registration::with(['user', 'event.venue', 'event.category', 'position']);
+
+        // Apply same filters as index method
+        if ($request->filled('event')) {
+            $query->where('event_id', $request->event);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('position')) {
+            $query->where('position_id', $request->position);
+        }
+
+        if ($request->filled('date')) {
+            $query->whereHas('event', function($q) use ($request) {
+                $q->whereDate('start_date', $request->date);
+            });
+        }
+
+        if ($request->filled('search')) {
+            $query->whereHas('user', function($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
+                  ->orWhere('email', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $registrations = $query->orderBy('created_at', 'desc')->get();
+
+        // Generate CSV filename with timestamp
+        $filename = 'registrations_export_' . now()->format('Y-m-d_H-i-s') . '.csv';
+
+        // Set headers for CSV download
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0'
+        ];
+
+        // Create CSV content
+        $callback = function() use ($registrations) {
+            $file = fopen('php://output', 'w');
+            
+            // Add BOM for UTF-8 encoding (for Excel compatibility)
+            fwrite($file, "\xEF\xBB\xBF");
+
+            // CSV Headers
+            $headers = [
+                'ID Inscription',
+                'Nom Complet',
+                'Email',
+                'Téléphone',
+                'Rôle Utilisateur',
+                'Nom Événement',
+                'Type Événement',
+                'Date Événement',
+                'Lieu',
+                'Ville',
+                'Type Inscription',
+                'Position/Poste',
+                'Statut',
+                'Date Inscription',
+                'Date Approbation',
+                'Approuvé par',
+                'Motivation',
+                'Raison de Rejet',
+                'A Participé',
+                'Note (1-5)',
+                'Commentaire'
+            ];
+
+            fputcsv($file, $headers, ';');
+
+            // CSV Data
+            foreach ($registrations as $registration) {
+                $row = [
+                    $registration->id,
+                    $registration->user->name ?? 'N/A',
+                    $registration->user->email ?? 'N/A',
+                    $registration->user->phone ?? 'N/A',
+                    $registration->user->role ?? 'N/A',
+                    $registration->event->title ?? 'N/A',
+                    $registration->event->category->name ?? 'N/A',
+                    $registration->event->start_date ? $registration->event->start_date->format('d/m/Y H:i') : 'N/A',
+                    $registration->event->venue->name ?? 'N/A',
+                    $registration->event->venue->city ?? 'N/A',
+                    $registration->type ?? 'N/A',
+                    $registration->position->name ?? 'N/A',
+                    $registration->status ?? 'N/A',
+                    $registration->registered_at ? $registration->registered_at->format('d/m/Y H:i') : ($registration->created_at ? $registration->created_at->format('d/m/Y H:i') : 'N/A'),
+                    $registration->approved_at ? $registration->approved_at->format('d/m/Y H:i') : 'N/A',
+                    $registration->approved_by ? User::find($registration->approved_by)->name ?? 'N/A' : 'N/A',
+                    $registration->motivation ?? 'N/A',
+                    $registration->rejection_reason ?? 'N/A',
+                    $registration->attended ? 'Oui' : 'Non',
+                    $registration->rating ?? 'N/A',
+                    $registration->feedback ?? 'N/A'
+                ];
+
+                fputcsv($file, $row, ';');
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
 }

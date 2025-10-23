@@ -149,11 +149,22 @@
                                         <small class="text-muted fst-italic">{{ $order->updated_at->diffForHumans() }}</small>
                                     </td>
                                     <td class="pe-4">
-                                        <a href="{{ route('produits.show', $order->produit) }}" 
-                                           class="btn btn-sm btn-outline-primary" 
-                                           title="Voir le produit">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
+                                        <div class="d-flex gap-1">
+                                            <a href="{{ route('produits.show', $order->produit) }}" 
+                                               class="btn btn-sm btn-outline-primary" 
+                                               title="Voir le produit">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            
+                                            @if($order->status === 'ordered')
+                                                <a href="{{ route('panier.user.invoice', $order) }}" 
+                                                   class="btn btn-sm btn-outline-info" 
+                                                   title="Télécharger Facture PDF"
+                                                   target="_blank">
+                                                    <i class="fas fa-file-pdf"></i>
+                                                </a>
+                                            @endif
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach

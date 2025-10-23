@@ -86,7 +86,29 @@ class SocialShareController extends Controller
     }
 
     /**
-     * Share event via Email
+     * Share event on Instagram (via web intent)
+     */
+    public function shareOnInstagram(Event $event)
+    {
+        // Instagram doesn't have a direct web share URL like other platforms
+        // We'll redirect to a page with instructions or fallback to copying the link
+        $eventUrl = config('app.url') . '/events/' . $event->slug;
+        
+        // Since Instagram requires the mobile app, we'll create a web share intent
+        // that will prompt users to copy the link for Instagram
+        $shareText = "Découvrez cet événement: " . $event->title . " " . $eventUrl;
+        
+        // Use navigator.share API if available, otherwise copy to clipboard
+        return redirect()->back()->with([
+            'instagram_share' => true,
+            'share_text' => $shareText,
+            'event_url' => $eventUrl,
+            'message' => 'Copiez ce lien pour le partager sur Instagram!'
+        ]);
+    }
+
+    /**
+     * Share event via email
      */
     public function shareViaEmail(Event $event)
     {
