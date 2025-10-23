@@ -527,6 +527,75 @@
             cursor: not-allowed;
         }
 
+        /* Social Media Share Styles */
+        .event-share {
+            padding: 1rem 2rem 1.5rem;
+            border-top: 1px solid rgba(16, 185, 129, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .share-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--light-text);
+            font-weight: 600;
+        }
+
+        .share-label i {
+            color: var(--primary-green);
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .share-form {
+            display: inline-block;
+        }
+
+        .share-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .facebook-btn {
+            background: linear-gradient(135deg, #1877f2, #42a5f5);
+            color: white;
+        }
+
+        .facebook-btn:hover {
+            background: linear-gradient(135deg, #166fe5, #1976d2);
+        }
+
+        .instagram-btn {
+            background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            color: white;
+        }
+
+        .instagram-btn:hover {
+            background: linear-gradient(135deg, #d97706, #dc2626, #b91c1c, #be185d, #a21caf);
+        }
+
         .no-events {
             text-align: center;
             padding: 6rem 2rem;
@@ -700,14 +769,15 @@
                 EcoEvents
             </a>
             <div class="nav-links">
-                <a href="{{ route('home') }}#features" class="nav-link">Fonctionnalités</a>
+                <a href="{{ route('home') }}" class="nav-link">Accueil</a>
                 <a href="{{ route('events.index') }}" class="nav-link active">Événements</a>
-                <a href="#" class="nav-link">Communauté</a>
+                <a href="{{ route('produits.index') }}" class="nav-link">Produits</a>
+                <a href="{{ route('sponsors.index') }}" class="nav-link">Sponsors</a>
                 @auth
                     @if(Auth::user()->isAdmin())
                         <a href="{{ route('admin.users.index') }}" class="nav-link">Administration</a>
                     @endif
-                    <a href="#" class="nav-link">Dashboard</a>
+                    <a href="{{ route('panier.index') }}" class="nav-link">Mes Paniers</a>
                 @endauth
             </div>
             <div class="user-menu">
@@ -926,6 +996,28 @@
                                     <i class="fas fa-info-circle"></i>
                                     Détails
                                 </a>
+                            </div>
+
+                            <!-- Social Media Share Buttons -->
+                            <div class="event-share">
+                                <div class="share-label">
+                                    <i class="fas fa-share-alt"></i>
+                                    Partager:
+                                </div>
+                                <div class="share-buttons">
+                                    <form action="{{ route('events.share.social', [$event, 'facebook']) }}" method="POST" class="share-form">
+                                        @csrf
+                                        <button type="submit" class="share-btn facebook-btn" title="Partager sur Facebook">
+                                            <i class="fab fa-facebook-f"></i>
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('events.share.social', [$event, 'instagram']) }}" method="POST" class="share-form">
+                                        @csrf
+                                        <button type="submit" class="share-btn instagram-btn" title="Partager sur Instagram">
+                                            <i class="fab fa-instagram"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     @endforeach

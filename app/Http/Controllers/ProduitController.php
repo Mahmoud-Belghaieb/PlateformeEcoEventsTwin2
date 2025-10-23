@@ -6,22 +6,44 @@ use App\Models\Produit;
 use App\Models\Sponsor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class ProduitController extends Controller
 {
     // Admin: List all products
-    public function index()
+    public function index(Request $request)
     {
-        $produits = Produit::with('sponsor')->paginate(10);
+        $query = Produit::with('sponsor');
 
-        return view('admin.produits.index', compact('produits'));
+        // Search filter
+        if ($request->has('search') && $request->search) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        // Category filter
+        if ($request->has('category') && $request->category) {
+            $query->where('category', $request->category);
+        }
+
+        // Stock status filter
+        if ($request->has('stock_status') && $request->stock_status) {
+            if ($request->stock_status === 'in_stock') {
+                $query->where('stock', '>', 0);
+            } elseif ($request->stock_status === 'out_of_stock') {
+                $query->where('stock', '=', 0);
+            }
+        }
+
+        $produits = $query->paginate(10)->withQueryString();
+        $categories = Produit::select('category')->distinct()->pluck('category');
+        
+        return view('admin.produits.index', compact('produits', 'categories'));
     }
 
     // Admin: Show create form
     public function create()
     {
         $sponsors = Sponsor::where('is_active', true)->get();
-
         return view('admin.produits.create', compact('sponsors'));
     }
 
@@ -36,7 +58,7 @@ class ProduitController extends Controller
             'category' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'sponsor_id' => 'nullable|exists:sponsors,id',
-            'is_available' => 'boolean',
+            'is_available' => 'boolean'
         ]);
 
         if ($request->hasFile('image')) {
@@ -52,7 +74,6 @@ class ProduitController extends Controller
     public function show(Produit $produit)
     {
         $produit->load('sponsor');
-
         return view('admin.produits.show', compact('produit'));
     }
 
@@ -60,7 +81,6 @@ class ProduitController extends Controller
     public function edit(Produit $produit)
     {
         $sponsors = Sponsor::where('is_active', true)->get();
-
         return view('admin.produits.edit', compact('produit', 'sponsors'));
     }
 
@@ -75,7 +95,7 @@ class ProduitController extends Controller
             'category' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'sponsor_id' => 'nullable|exists:sponsors,id',
-            'is_available' => 'boolean',
+            'is_available' => 'boolean'
         ]);
 
         if ($request->hasFile('image')) {
@@ -97,7 +117,7 @@ class ProduitController extends Controller
         if ($produit->image) {
             Storage::disk('public')->delete($produit->image);
         }
-
+        
         $produit->delete();
 
         return redirect()->route('admin.produits.index')->with('success', 'Produit supprimé avec succès!');
@@ -110,7 +130,7 @@ class ProduitController extends Controller
 
         // Search
         if ($request->has('search')) {
-            $query->where('name', 'like', '%'.$request->search.'%');
+            $query->where('name', 'like', '%' . $request->search . '%');
         }
 
         // Filter by category

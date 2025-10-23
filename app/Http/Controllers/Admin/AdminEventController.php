@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
 use App\Models\Event;
-use App\Models\Position;
+use App\Models\Category;
 use App\Models\Venue;
+use App\Models\Position;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -15,20 +15,56 @@ class AdminEventController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Eager load relations and precompute approved registrations count per event
-        $events = Event::with(['category', 'venue'])
+        // Build base query with eager loading and counts
+        $query = Event::with(['category', 'venue'])
             ->withCount([
                 'registrations',
-                'registrations as approved_registrations_count' => function ($query) {
-                    $query->where('status', 'approved');
-                },
-            ])
-            ->latest('start_date')
-            ->paginate(15);
+                'registrations as approved_registrations_count' => function ($q) {
+                    $q->where('status', 'approved');
+                }
+            ]);
 
-        // Summary totals for dashboard cards (computed here to avoid queries in the blade)
+        // Search by title or description
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by exact status (draft, pending, published, etc.)
+        if ($request->filled('status') && in_array($request->input('status'), ['draft','pending','published','rejected','cancelled','completed'])) {
+            $query->where('status', $request->input('status'));
+        }
+
+        // Time-based filter: upcoming / past / today
+        if ($request->filled('time')) {
+            $time = $request->input('time');
+            if ($time === 'upcoming') {
+                $query->where('start_date', '>', now());
+            } elseif ($time === 'past') {
+                $query->where('start_date', '<', now());
+            } elseif ($time === 'today') {
+                $query->whereDate('start_date', now()->toDateString());
+            }
+        }
+
+        // Category and venue filters
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->input('category_id'));
+        }
+
+        if ($request->filled('venue_id')) {
+            $query->where('venue_id', $request->input('venue_id'));
+        }
+
+        // Paginate and preserve query string
+        $events = $query->latest('start_date')->paginate(15)->appends($request->query());
+
+        // Summary totals for dashboard cards (kept global)
         $totals = [
             'total_events' => Event::count(),
             'pending' => Event::where('status', 'pending')->count(),
@@ -47,7 +83,6 @@ class AdminEventController extends Controller
         $categories = Category::all();
         $venues = Venue::all();
         $positions = Position::all();
-
         return view('admin.events.create', compact('categories', 'venues', 'positions'));
     }
 
@@ -71,21 +106,21 @@ class AdminEventController extends Controller
         ]);
 
         $eventData = $request->except(['positions', 'image', 'action', 'capacity']);
-        $eventData['slug'] = Str::slug($request->title.'-'.uniqid());
+        $eventData['slug'] = Str::slug($request->title . '-' . uniqid());
         $eventData['created_by'] = auth()->id();
-
+        
         // Set end_date to start_date + 2 hours if not provided
-        if (! isset($eventData['end_date'])) {
+        if (!isset($eventData['end_date'])) {
             $startDate = new \DateTime($request->start_date);
             $startDate->add(new \DateInterval('PT2H')); // Add 2 hours
             $eventData['end_date'] = $startDate->format('Y-m-d H:i:s');
         }
-
+        
         // Map capacity to max_participants
         if ($request->has('capacity') && $request->capacity) {
             $eventData['max_participants'] = $request->capacity;
         }
-
+        
         // Set status based on action if provided
         if ($request->has('action')) {
             $eventData['status'] = $request->action === 'draft' ? 'draft' : 'published';
@@ -99,10 +134,8 @@ class AdminEventController extends Controller
 
         $event = Event::create($eventData);
 
-        // Attach positions if provided
-        if ($request->has('positions')) {
-            $event->positions()->attach($request->positions);
-        }
+        // Note: event_positions pivot table was removed in this deployment.
+        // If you reintroduce event_positions, re-enable attaching positions here.
 
         return redirect()->route('admin.events.index')
             ->with('success', 'Event created successfully.');
@@ -113,8 +146,8 @@ class AdminEventController extends Controller
      */
     public function show(Event $event)
     {
-        $event->load(['category', 'venue', 'positions', 'registrations.user']);
-
+        // 'positions' relation/pivot table removed — load only existing relations
+        $event->load(['category', 'venue', 'registrations.user']);
         return view('admin.events.show', compact('event'));
     }
 
@@ -126,8 +159,7 @@ class AdminEventController extends Controller
         $categories = Category::all();
         $venues = Venue::all();
         $positions = Position::all();
-        $event->load('positions');
-
+        // Do not load positions relation here — pivot table removed
         return view('admin.events.edit', compact('event', 'categories', 'venues', 'positions'));
     }
 
@@ -151,15 +183,15 @@ class AdminEventController extends Controller
         ]);
 
         $eventData = $request->except(['positions', 'image', 'action', 'capacity']);
-
+        
         // Map capacity to max_participants
         if ($request->has('capacity') && $request->capacity) {
             $eventData['max_participants'] = $request->capacity;
         }
-
+        
         // Update slug if title changed
         if ($event->title !== $request->title) {
-            $eventData['slug'] = Str::slug($request->title.'-'.uniqid());
+            $eventData['slug'] = Str::slug($request->title . '-' . uniqid());
         }
 
         // Handle image upload
@@ -216,7 +248,7 @@ class AdminEventController extends Controller
             'status' => 'published',
             'approved_by' => auth()->id(),
             'approved_at' => now(),
-            'rejection_reason' => null,
+            'rejection_reason' => null
         ]);
 
         return redirect()->back()
@@ -229,14 +261,14 @@ class AdminEventController extends Controller
     public function reject(Request $request, Event $event)
     {
         $request->validate([
-            'rejection_reason' => 'nullable|string|max:1000',
+            'rejection_reason' => 'nullable|string|max:1000'
         ]);
 
         $event->update([
             'status' => 'rejected',
             'approved_by' => auth()->id(),
             'approved_at' => now(),
-            'rejection_reason' => $request->rejection_reason,
+            'rejection_reason' => $request->rejection_reason
         ]);
 
         return redirect()->back()
@@ -252,7 +284,7 @@ class AdminEventController extends Controller
             'status' => 'pending',
             'approved_by' => null,
             'approved_at' => null,
-            'rejection_reason' => null,
+            'rejection_reason' => null
         ]);
 
         return redirect()->back()

@@ -7,10 +7,10 @@
     <div class="row">
         <div class="col-12">
             <div class="card shadow-sm">
-                <div class="card-header bg-warning text-dark">
+                        <div class="card-header bg-warning text-dark">
                     <h5 class="mb-0">
                         <i class="fas fa-edit me-2"></i>
-                        Edit Position: {{ $position->name }}
+                        Edit Position: {{ $position->title }}
                     </h5>
                 </div>
                 <div class="card-body">
@@ -23,7 +23,7 @@
                                 <a href="{{ route('admin.positions.index') }}">Positions</a>
                             </li>
                             <li class="breadcrumb-item">
-                                <a href="{{ route('admin.positions.show', $position) }}">{{ $position->name }}</a>
+                                <a href="{{ route('admin.positions.show', $position) }}">{{ $position->title }}</a>
                             </li>
                             <li class="breadcrumb-item active">Edit</li>
                         </ol>
@@ -36,14 +36,14 @@
                         <div class="row">
                             <div class="col-md-8">
                                 <div class="mb-3">
-                                    <label for="name" class="form-label">Position Name *</label>
+                                    <label for="title" class="form-label">Position Title *</label>
                                     <input type="text" 
-                                           class="form-control @error('name') is-invalid @enderror" 
-                                           id="name" 
-                                           name="name" 
-                                           value="{{ old('name', $position->name) }}" 
+                                           class="form-control @error('title') is-invalid @enderror" 
+                                           id="title" 
+                                           name="title" 
+                                           value="{{ old('title', $position->title) }}" 
                                            required>
-                                    @error('name')
+                                    @error('title')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -121,7 +121,7 @@
                                         <div class="row text-center">
                                             <div class="col-6">
                                                 <div class="border-end">
-                                                    <h4 class="text-primary-green mb-0">{{ $position->events()->count() }}</h4>
+                                                    <h4 class="text-primary-green mb-0">{{ $position->registrations()->distinct('event_id')->count('event_id') }}</h4>
                                                     <small class="text-muted">Events</small>
                                                 </div>
                                             </div>
@@ -140,7 +140,7 @@
                                     </div>
                                 </div>
 
-                                @if($position->events()->count() > 0)
+                                @if($position->registrations()->distinct('event_id')->count('event_id') > 0)
                                 <div class="card bg-info bg-opacity-10 mt-3">
                                     <div class="card-body">
                                         <h6 class="card-title text-info">
@@ -148,7 +148,7 @@
                                             Notice
                                         </h6>
                                         <p class="card-text small mb-0">
-                                            This position is used in {{ $position->events()->count() }} events. 
+                                            This position is used in {{ $position->registrations()->distinct('event_id')->count('event_id') }} events. 
                                             Changes will affect all related events.
                                         </p>
                                     </div>

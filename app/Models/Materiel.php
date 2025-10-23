@@ -52,6 +52,15 @@ class Materiel extends Model
     // Accessors
     public function getFormattedValueAttribute()
     {
-        return number_format($this->value, 2).' DT';
+        return number_format($this->value, 2) . ' DT';
+    }
+
+    /**
+     * Compatibility accessor: some views expect a `category` attribute.
+     * Map `category` to the `type` column so existing templates don't break.
+     */
+    public function getCategoryAttribute()
+    {
+        return $this->type;
     }
 }

@@ -148,13 +148,6 @@ php artisan serve
 - **Migrations** - Versioning de la base de données
 - **Seeders** - Données de test
 
-### 🔍 Qualité du Code & CI/CD
-- **GitHub Actions** - Pipeline CI/CD automatisé
-- **SonarQube** - Analyse statique du code
-- **Laravel Pint** - Formatage du code PSR-12
-- **PHPUnit** - Tests unitaires et fonctionnels
-- **Code Coverage** - Couverture de tests
-
 ## 📁 Structure du Projet
 
 ```
@@ -201,51 +194,7 @@ ecoEvents/
 - Filtrage et recherche avancés
 - Design moderne et responsive
 
-## � Configuration SonarQube
-
-### Prérequis
-- Compte SonarQube (SonarCloud ou instance SonarQube locale)
-- Token d'authentification SonarQube
-
-### Configuration GitHub Secrets
-
-Pour activer l'analyse SonarQube dans votre CI/CD, ajoutez ces secrets dans votre repository GitHub :
-
-1. Allez dans **Settings** → **Secrets and variables** → **Actions**
-2. Ajoutez les secrets suivants :
-
-```bash
-SONAR_TOKEN=votre_token_sonarqube
-SONAR_HOST_URL=https://sonarcloud.io  # ou votre URL SonarQube
-```
-
-### Fichiers de Configuration
-
-Le projet inclut :
-- `sonar-project.properties` - Configuration SonarQube
-- `.github/workflows/ci.yml` - Pipeline avec analyse SonarQube
-
-### Métriques Analysées
-- **Quality Gate** - Validation automatique de la qualité
-- **Code Coverage** - Couverture des tests (>80% recommandée)
-- **Duplications** - Détection du code dupliqué
-- **Maintainability** - Indice de maintenabilité
-- **Reliability** - Détection des bugs
-- **Security** - Analyse des vulnérabilités
-
-### Commandes Locales
-```bash
-# Génération du rapport de couverture
-php artisan test --coverage --coverage-clover=coverage.xml
-
-# Vérification du style de code
-./vendor/bin/pint --test
-
-# Tests avec métrics détaillées
-php artisan test --coverage --coverage-html=coverage-html
-```
-
-## �🚧 Développement Futur
+## 🚧 Développement Futur
 
 ### Fonctionnalités Prévues
 - [ ] API REST pour applications mobiles
@@ -287,6 +236,3 @@ Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 <p align="center">
     <strong>🌍 Ensemble pour un avenir plus vert ! 🌱</strong>
 </p>
-
-# PlateformeEcoEventsTwin2
-Plateforme EcoEvents Un point de rencontre en ligne pour organiser et promouvoir des événements autour de l’écologie et du développement durable. La plateforme soutient les initiatives citoyennes et associatives en facilitant la participation collective à des actions qui sensibilisent et mobilisent autour de la protection de l’environnement

@@ -18,12 +18,12 @@ class Commentaire extends Model
         'content',
         'is_approved',
         'approved_at',
-        'approved_by',
+        'approved_by'
     ];
 
     protected $casts = [
         'is_approved' => 'boolean',
-        'approved_at' => 'datetime',
+        'approved_at' => 'datetime'
     ];
 
     /**
@@ -104,6 +104,6 @@ class Commentaire extends Model
      */
     public function estReponse(): bool
     {
-        return ! is_null($this->parent_id);
+        return !is_null($this->parent_id);
     }
 }

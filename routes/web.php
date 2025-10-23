@@ -1,28 +1,48 @@
 <?php
 
-use App\Http\Controllers\HomeController as PublicHomeController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+
+use App\Http\Controllers\HomeController as PublicHomeController;
 
 // Public homepage route (shared for guests and authenticated users)
-Route::get('/', [PublicHomeController::class, 'index'])->name('home');
+Route::get('/', function (Request $request) {
+    // Handle OAuth callback parameters that might come to root URL
+    if ($request->has(['code', 'state']) && $request->has('scope')) {
+        // Redirect Google OAuth parameters to proper callback
+        if (str_contains($request->get('scope', ''), 'google')) {
+            return redirect()->route('auth.google.callback', $request->query());
+        }
+        // Redirect Facebook OAuth parameters to proper callback
+        if (str_contains($request->get('scope', ''), 'facebook')) {
+            return redirect()->route('auth.facebook.callback', $request->query());
+        }
+        // Redirect other OAuth providers as needed
+    }
+    
+    return app(PublicHomeController::class)->index($request);
+})->name('home');
 
 // Authentication routes
-use App\Http\Controllers\Admin\AdminEventController;
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\PositionController;
-use App\Http\Controllers\Admin\RegistrationController;
-use App\Http\Controllers\Admin\UserManagementController;
-use App\Http\Controllers\Admin\VenueController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\VenueController;
+use App\Http\Controllers\Admin\PositionController;
+use App\Http\Controllers\Admin\AdminEventController;
+use App\Http\Controllers\Admin\RegistrationController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\SocialShareController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\AvisController;
 use App\Http\Controllers\CommentaireController;
-use App\Http\Controllers\EventController;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\MaterielController;
 use App\Http\Controllers\PanierController;
-use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\SponsorController;
+use App\Http\Controllers\SocialMediaController;
 
 // Guest routes (only accessible when not logged in)
 Route::middleware('guest')->group(function () {
@@ -30,7 +50,40 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
-
+    
+    // Google OAuth routes
+    Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
+    Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
+    
+    // Facebook OAuth routes
+    Route::get('/auth/facebook', [AuthController::class, 'redirectToFacebook'])->name('auth.facebook');
+    Route::get('/auth/facebook/callback', [AuthController::class, 'handleFacebookCallback'])->name('auth.facebook.callback');
+    
+    // Twitter OAuth routes
+    Route::get('/auth/twitter', [AuthController::class, 'redirectToTwitter'])->name('auth.twitter');
+    Route::get('/auth/twitter/callback', [AuthController::class, 'handleTwitterCallback'])->name('auth.twitter.callback');
+    
+    // LinkedIn OAuth routes
+    Route::get('/auth/linkedin', [AuthController::class, 'redirectToLinkedIn'])->name('auth.linkedin');
+    Route::get('/auth/linkedin/callback', [AuthController::class, 'handleLinkedInCallback'])->name('auth.linkedin.callback');
+    
+    // GitHub OAuth routes
+    Route::get('/auth/github', [AuthController::class, 'redirectToGitHub'])->name('auth.github');
+    Route::get('/auth/github/callback', [AuthController::class, 'handleGitHubCallback'])->name('auth.github.callback');
+    
+    // OAuth Role Selection
+    Route::get('/auth/role-selection/{user}', [AuthController::class, 'showOAuthRoleSelection'])->name('auth.oauth-role-selection');
+    Route::post('/auth/complete-registration', [AuthController::class, 'completeOAuthRegistration'])->name('auth.complete-oauth-registration');
+    
+    // Email verification routes
+    Route::get('/login/verify', [AuthController::class, 'showVerifyCode'])->name('login.verify');
+    // form submission for verification code (from verify-code view)
+    Route::post('/login/verify', [AuthController::class, 'verifyLoginCode'])->name('login.verify.submit');
+    // legacy/alternate name kept for backward compatibility
+    Route::post('/login/verify/code', [AuthController::class, 'verifyLoginCode'])->name('login.verify.code');
+    // resend verification code
+    Route::post('/login/verify/resend', [AuthController::class, 'resendVerifyCode'])->name('login.verify.resend');
+    
     // Password reset routes
     Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('password.request');
     Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
@@ -38,18 +91,26 @@ Route::middleware('guest')->group(function () {
     Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 });
 
+// Public registration routes (accessible even if already authenticated)
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'register']);
+
 // Authenticated routes
 Route::middleware('auth')->group(function () {
-    // Note: '/home' route intentionally removed to keep homepage at '/'
-    // Route::get('/home', [HomeController::class, 'index'])->name('home');
+    // Home route for authenticated users
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
+    
+    // Profile routes
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::post('/profile/update-role', [ProfileController::class, 'updateRole'])->name('profile.update-role');
+    
     // My events
     Route::get('/my-events', [EventController::class, 'myEvents'])->name('my-events');
-
+    
     // Event registration
     Route::post('/events/{event}/register', [EventController::class, 'register'])->name('events.register');
-
+    
     // Avis routes
     Route::get('/events/{event}/avis', [AvisController::class, 'index'])->name('avis.index');
     Route::get('/events/{event}/avis/create', [AvisController::class, 'create'])->name('avis.create');
@@ -57,14 +118,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/avis/{avis}/edit', [AvisController::class, 'edit'])->name('avis.edit');
     Route::put('/avis/{avis}', [AvisController::class, 'update'])->name('avis.update');
     Route::delete('/avis/{avis}', [AvisController::class, 'destroy'])->name('avis.destroy');
-
+    
     // Commentaires routes
     Route::post('/avis/{avis}/commentaires', [CommentaireController::class, 'store'])->name('commentaires.store');
     Route::get('/commentaires/{commentaire}/edit', [CommentaireController::class, 'edit'])->name('commentaires.edit');
     Route::put('/commentaires/{commentaire}', [CommentaireController::class, 'update'])->name('commentaires.update');
     Route::delete('/commentaires/{commentaire}', [CommentaireController::class, 'destroy'])->name('commentaires.destroy');
     Route::post('/commentaires/{commentaire}/reply', [CommentaireController::class, 'reply'])->name('commentaires.reply');
-
+    
     // Panier routes (authenticated users only)
     Route::get('/panier', [PanierController::class, 'index'])->name('panier.index');
     Route::post('/panier', [PanierController::class, 'store'])->name('panier.store');
@@ -73,11 +134,26 @@ Route::middleware('auth')->group(function () {
     Route::post('/panier/clear', [PanierController::class, 'clear'])->name('panier.clear');
     Route::post('/panier/checkout', [PanierController::class, 'checkout'])->name('panier.checkout');
     Route::get('/mes-commandes', [PanierController::class, 'orders'])->name('panier.orders');
+    
+    // Social Media Sharing
+    Route::post('/events/{event}/share/{platform}', [SocialMediaController::class, 'shareToSocialMedia'])->name('events.share.social');
 });
 
 // Public event routes
 Route::get('/events', [EventController::class, 'index'])->name('events.index');
 Route::get('/events/{event:slug}', [EventController::class, 'show'])->name('events.show');
+
+// Social Sharing Routes
+Route::prefix('events/{event:slug}/share')->name('events.share.')->group(function () {
+    Route::get('/urls', [SocialShareController::class, 'getShareUrls'])->name('urls');
+    Route::get('/facebook', [SocialShareController::class, 'shareOnFacebook'])->name('facebook');
+    Route::get('/twitter', [SocialShareController::class, 'shareOnTwitter'])->name('twitter');
+    Route::get('/linkedin', [SocialShareController::class, 'shareOnLinkedIn'])->name('linkedin');
+    Route::get('/whatsapp', [SocialShareController::class, 'shareOnWhatsApp'])->name('whatsapp');
+    Route::get('/email', [SocialShareController::class, 'shareViaEmail'])->name('email');
+    Route::get('/embed', [SocialShareController::class, 'getEmbedCode'])->name('embed');
+    Route::post('/track', [SocialShareController::class, 'trackShare'])->name('track');
+});
 
 // Public avis routes (standalone)
 Route::get('/avis', [AvisController::class, 'indexAll'])->name('avis.index.all');
@@ -100,60 +176,60 @@ Route::get('/test-relations', [EventController::class, 'testRelations'])->name('
 Route::middleware(['auth', App\Http\Middleware\RoleMiddleware::class.':admin'])->prefix('admin')->name('admin.')->group(function () {
     // Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-
+    
     // User Management
     Route::resource('users', UserManagementController::class);
     Route::post('users/{user}/toggle-status', [UserManagementController::class, 'toggleStatus'])->name('users.toggle-status');
     Route::get('users/{user}/registrations', [UserManagementController::class, 'showRegistrations'])->name('users.registrations');
-
+    
     // Category Management
     Route::resource('categories', CategoryController::class);
-
+    
     // Venue Management
     Route::resource('venues', VenueController::class);
-
+    
     // Position Management
     Route::resource('positions', PositionController::class);
-
+    
     // Event Management (Admin)
     Route::resource('events', AdminEventController::class);
     Route::post('events/{event}/approve', [AdminEventController::class, 'approve'])->name('events.approve');
     Route::post('events/{event}/reject', [AdminEventController::class, 'reject'])->name('events.reject');
     Route::post('events/{event}/pending', [AdminEventController::class, 'setPending'])->name('events.pending');
-
+    
     // Registration Management
     Route::resource('registrations', RegistrationController::class);
     Route::post('registrations/{registration}/approve', [RegistrationController::class, 'approve'])->name('registrations.approve');
     Route::post('registrations/{registration}/reject', [RegistrationController::class, 'reject'])->name('registrations.reject');
     Route::post('registrations/{registration}/cancel', [RegistrationController::class, 'cancel'])->name('registrations.cancel');
-
+    
     // Avis Management (Admin)
     Route::resource('avis', \App\Http\Controllers\Admin\AvisController::class)->only(['index', 'show', 'destroy']);
     Route::patch('avis/{avis}/approve', [\App\Http\Controllers\Admin\AvisController::class, 'approve'])->name('avis.approve');
     Route::delete('avis/{avis}/reject', [\App\Http\Controllers\Admin\AvisController::class, 'reject'])->name('avis.reject');
     Route::post('avis/bulk-approve', [\App\Http\Controllers\Admin\AvisController::class, 'bulkApprove'])->name('avis.bulk-approve');
     Route::post('avis/bulk-delete', [\App\Http\Controllers\Admin\AvisController::class, 'bulkDelete'])->name('avis.bulk-delete');
-
+    
     // Commentaires Management (Admin)
     Route::resource('commentaires', \App\Http\Controllers\Admin\CommentaireController::class)->only(['index', 'show', 'destroy']);
     Route::patch('commentaires/{commentaire}/approve', [\App\Http\Controllers\Admin\CommentaireController::class, 'approve'])->name('commentaires.approve');
     Route::delete('commentaires/{commentaire}/reject', [\App\Http\Controllers\Admin\CommentaireController::class, 'reject'])->name('commentaires.reject');
     Route::post('commentaires/bulk-approve', [\App\Http\Controllers\Admin\CommentaireController::class, 'bulkApprove'])->name('commentaires.bulk-approve');
     Route::post('commentaires/bulk-delete', [\App\Http\Controllers\Admin\CommentaireController::class, 'bulkDelete'])->name('commentaires.bulk-delete');
-
+    
     // Email Logs Management
     Route::get('email-logs', [\App\Http\Controllers\Admin\EmailLogController::class, 'index'])->name('email-logs');
     Route::post('email-logs/clear', [\App\Http\Controllers\Admin\EmailLogController::class, 'clear'])->name('email-logs.clear');
-
+    
     // Sponsors Management
     Route::resource('sponsors', SponsorController::class);
-
+    
     // Produits Management
     Route::resource('produits', ProduitController::class);
-
+    
     // Materiels Management
     Route::resource('materiels', MaterielController::class);
-
+    
     // Panier (Cart Orders) Management
     Route::get('panier', [PanierController::class, 'adminIndex'])->name('panier.index');
     Route::get('panier/{panier}', [PanierController::class, 'adminShow'])->name('panier.show');

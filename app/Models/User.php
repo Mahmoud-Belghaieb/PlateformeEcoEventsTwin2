@@ -24,6 +24,12 @@ class User extends Authenticatable
         'role',
         'is_active',
         'last_login_at',
+        'google_id',
+        'facebook_id',
+        'twitter_id',
+        'linkedin_id',
+        'github_id',
+        'avatar',
     ];
 
     /**
@@ -56,10 +62,10 @@ class User extends Authenticatable
     public function events()
     {
         return $this->belongsToMany(Event::class, 'registrations')
-            ->withPivot('type', 'position_id', 'status', 'motivation', 'additional_info',
-                'registered_at', 'approved_at', 'approved_by', 'rejection_reason',
-                'attended', 'rating', 'feedback')
-            ->withTimestamps();
+                    ->withPivot('type', 'position_id', 'status', 'motivation', 'additional_info',
+                               'registered_at', 'approved_at', 'approved_by', 'rejection_reason',
+                               'attended', 'rating', 'feedback')
+                    ->withTimestamps();
     }
 
     /**
@@ -76,9 +82,9 @@ class User extends Authenticatable
     public function participatedEvents()
     {
         return $this->belongsToMany(Event::class, 'registrations')
-            ->wherePivot('type', 'participant')
-            ->withPivot('status', 'registered_at', 'attended', 'rating', 'feedback')
-            ->withTimestamps();
+                    ->wherePivot('type', 'participant')
+                    ->withPivot('status', 'registered_at', 'attended', 'rating', 'feedback')
+                    ->withTimestamps();
     }
 
     /**
@@ -87,9 +93,9 @@ class User extends Authenticatable
     public function volunteeredEvents()
     {
         return $this->belongsToMany(Event::class, 'registrations')
-            ->wherePivot('type', 'volunteer')
-            ->withPivot('position_id', 'status', 'motivation', 'registered_at')
-            ->withTimestamps();
+                    ->wherePivot('type', 'volunteer')
+                    ->withPivot('position_id', 'status', 'motivation', 'registered_at')
+                    ->withTimestamps();
     }
 
     /**
@@ -203,7 +209,7 @@ class User extends Authenticatable
      */
     public function getRoleDisplayName(): string
     {
-        return match ($this->role) {
+        return match($this->role) {
             'admin' => 'Administrateur',
             'participant' => 'Participant',
             'volunteer' => 'Bénévole',

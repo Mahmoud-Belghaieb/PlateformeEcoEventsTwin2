@@ -29,7 +29,7 @@ class PanierController extends Controller
     {
         $validated = $request->validate([
             'produit_id' => 'required|exists:produits,id',
-            'quantity' => 'required|integer|min:1',
+            'quantity' => 'required|integer|min:1'
         ]);
 
         $produit = Produit::findOrFail($validated['produit_id']);
@@ -48,14 +48,14 @@ class PanierController extends Controller
         if ($existingItem) {
             // Update quantity
             $newQuantity = $existingItem->quantity + $validated['quantity'];
-
+            
             if ($produit->stock < $newQuantity) {
                 return back()->with('error', 'Stock insuffisant pour cette quantité.');
             }
 
             $existingItem->update([
                 'quantity' => $newQuantity,
-                'price' => $produit->price,
+                'price' => $produit->price
             ]);
         } else {
             // Create new cart item
@@ -64,7 +64,7 @@ class PanierController extends Controller
                 'produit_id' => $validated['produit_id'],
                 'quantity' => $validated['quantity'],
                 'price' => $produit->price,
-                'status' => 'pending',
+                'status' => 'pending'
             ]);
         }
 
@@ -80,7 +80,7 @@ class PanierController extends Controller
         }
 
         $validated = $request->validate([
-            'quantity' => 'required|integer|min:1',
+            'quantity' => 'required|integer|min:1'
         ]);
 
         // Check stock availability
@@ -90,7 +90,7 @@ class PanierController extends Controller
 
         $panier->update([
             'quantity' => $validated['quantity'],
-            'price' => $panier->produit->price,
+            'price' => $panier->produit->price
         ]);
 
         return back()->with('success', 'Quantité mise à jour!');
@@ -139,7 +139,7 @@ class PanierController extends Controller
 
             // Decrease stock
             $item->produit->decrement('stock', $item->quantity);
-
+            
             // Mark as ordered
             $item->update(['status' => 'ordered']);
         }
@@ -148,7 +148,7 @@ class PanierController extends Controller
     }
 
     // Admin Methods
-
+    
     // Display all cart orders (admin)
     public function adminIndex()
     {
@@ -160,7 +160,7 @@ class PanierController extends Controller
             'total_orders' => Panier::where('status', 'ordered')->count(),
             'pending_carts' => Panier::where('status', 'pending')->count(),
             'total_revenue' => Panier::where('status', 'ordered')->get()->sum('subtotal'),
-            'total_items' => Panier::sum('quantity'),
+            'total_items' => Panier::sum('quantity')
         ];
 
         return view('admin.panier.index', compact('paniers', 'stats'));
@@ -170,7 +170,6 @@ class PanierController extends Controller
     public function adminShow(Panier $panier)
     {
         $panier->load(['user', 'produit']);
-
         return view('admin.panier.show', compact('panier'));
     }
 
@@ -178,7 +177,7 @@ class PanierController extends Controller
     public function updateStatus(Request $request, Panier $panier)
     {
         $validated = $request->validate([
-            'status' => 'required|in:pending,ordered,cancelled',
+            'status' => 'required|in:pending,ordered,cancelled'
         ]);
 
         $oldStatus = $panier->status;

@@ -6,6 +6,7 @@
     <title>{{ $event->title }} - EcoEvents</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <style>
         :root {
             --primary-green: #059669;
@@ -107,6 +108,70 @@
 
         .reponse-item {
             border-left: 2px solid var(--accent-orange);
+        }
+
+        /* Social Media Sharing Styles */
+        .social-share-btn {
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            height: 40px;
+        }
+
+        .social-share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .api-share-form {
+            margin: 0;
+        }
+
+        .api-share-form button {
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            font-weight: 500;
+            border: none;
+            width: 100%;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+        }
+
+        .api-share-form button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .api-share-form button:active {
+            transform: translateY(0);
+        }
+
+        .btn-facebook {
+            background: linear-gradient(135deg, #1877f2, #42a5f5);
+            color: white;
+        }
+
+        .btn-facebook:hover {
+            background: linear-gradient(135deg, #166fe5, #1976d2);
+            color: white;
+        }
+
+        .btn-instagram {
+            background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            color: white;
+        }
+
+        .btn-instagram:hover {
+            background: linear-gradient(135deg, #d6822f 0%, #c85a35 25%, #c0243a 50%, #b0225f 75%, #a11881 100%);
+            color: white;
         }
     </style>
 </head>
@@ -520,19 +585,119 @@
                     @endauth
                 </div>
 
-                <!-- Contact Info -->
+                <!-- Social Sharing -->
                 <div class="info-item">
                     <h6 class="mb-3">
-                        <i class="fas fa-envelope me-2" style="color: var(--accent-orange);"></i>
-                        Contact organisateur
+                        <i class="fas fa-share-alt me-2" style="color: var(--primary-green);"></i>
+                        Partager cet événement
                     </h6>
-                    <p class="mb-1"><strong>Email :</strong> contact@ecoevents.com</p>
-                    <p class="mb-1"><strong>Téléphone :</strong> +216 71 123 456</p>
-                    <p class="mb-0"><strong>Site web :</strong> www.ecoevents.com</p>
+
+                    <!-- API-based Social Media Posting (for authenticated users) -->
+                    @auth
+                        <div class="mb-3">
+                            <small class="text-muted d-block mb-2">Publier directement sur les réseaux sociaux :</small>
+                            <div class="d-flex gap-2 mb-2">
+                                <form action="{{ route('events.share.social', [$event, 'facebook']) }}" method="POST" class="flex-fill api-share-form">
+                                    @csrf
+                                    <button type="submit" class="btn btn-facebook" title="Publier sur Facebook">
+                                        <i class="fab fa-facebook-f me-1"></i>Facebook
+                                    </button>
+                                </form>
+                                <form action="{{ route('events.share.social', [$event, 'instagram']) }}" method="POST" class="flex-fill api-share-form">
+                                    @csrf
+                                    <button type="submit" class="btn btn-instagram" title="Publier sur Instagram">
+                                        <i class="fab fa-instagram me-1"></i>Instagram
+                                    </button>
+                                </form>
+                            </div>
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Publication directe sur votre page/compte professionnel
+                            </small>
+                        </div>
+                        <hr class="my-3">
+                    @endauth
+
+                    <!-- URL-based Social Sharing Links -->
+                    <div class="mb-2">
+                        <small class="text-muted d-block mb-2">Partager le lien sur les réseaux sociaux :</small>
+                        <div class="d-flex flex-wrap gap-2">
+                            <!-- Facebook Share -->
+                            <a href="{{ route('events.share.facebook', $event->slug) }}"
+                               target="_blank"
+                               class="social-share-btn btn-outline-primary"
+                               title="Partager sur Facebook"
+                               onclick="trackShare('facebook')">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+
+                            <!-- Twitter Share -->
+                            <a href="{{ route('events.share.twitter', $event->slug) }}"
+                               target="_blank"
+                               class="social-share-btn btn-outline-info"
+                               title="Partager sur Twitter"
+                               onclick="trackShare('twitter')">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+
+                            <!-- LinkedIn Share -->
+                            <a href="{{ route('events.share.linkedin', $event->slug) }}"
+                               target="_blank"
+                               class="social-share-btn btn-outline-primary"
+                               title="Partager sur LinkedIn"
+                               onclick="trackShare('linkedin')">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+
+                            <!-- WhatsApp Share -->
+                            <a href="{{ route('events.share.whatsapp', $event->slug) }}"
+                               target="_blank"
+                               class="social-share-btn btn-outline-success"
+                               title="Partager sur WhatsApp"
+                               onclick="trackShare('whatsapp')">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+
+                            <!-- Email Share -->
+                            <a href="{{ route('events.share.email', $event->slug) }}"
+                               class="social-share-btn btn-outline-secondary"
+                               title="Partager par email"
+                               onclick="trackShare('email')">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+
+                            <!-- Copy Link -->
+                            <button type="button"
+                                    class="social-share-btn btn-outline-dark"
+                                    title="Copier le lien"
+                                    onclick="copyEventLink()">
+                                <i class="fas fa-link"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Copy Link Feedback -->
+                    <div id="copy-feedback" class="alert alert-success py-2 px-3 mb-0 d-none" role="alert">
+                        <small><i class="fas fa-check me-1"></i>Lien copié dans le presse-papiers !</small>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Venue Location Map -->
+    @if($event->venue && $event->venue->latitude && $event->venue->longitude)
+    <div class="container mt-4">
+        <div class="venue-map-section">
+            <h3 class="map-title">
+                <i class="fas fa-map-marked-alt me-2"></i>
+                Localisation du Lieu
+            </h3>
+            <p class="map-subtitle">{{ $event->venue->name ?? 'Venue de l\'événement' }} - {{ $event->venue->city ?? '' }}</p>
+            <div id="venueMap"></div>
+        </div>
+    </div>
+    @endif
 
     <!-- Success/Error Messages -->
     @if(session('success'))
@@ -646,6 +811,66 @@
                 });
             }
         });
+
+        // Social Sharing Functions
+        function trackShare(platform) {
+            // Send tracking request to backend
+            fetch(`{{ route("events.share.track", $event->slug) }}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    platform: platform
+                })
+            }).catch(error => {
+                console.log('Share tracking failed:', error);
+            });
+        }
+
+        function copyEventLink() {
+            const eventUrl = '{{ url("/events/" . $event->slug) }}';
+
+            if (navigator.clipboard && window.isSecureContext) {
+                // Use the Clipboard API when available and in secure context
+                navigator.clipboard.writeText(eventUrl).then(() => {
+                    showCopyFeedback();
+                });
+            } else {
+                // Fallback for older browsers or non-secure contexts
+                const textArea = document.createElement('textarea');
+                textArea.value = eventUrl;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+
+                try {
+                    document.execCommand('copy');
+                    showCopyFeedback();
+                } catch (err) {
+                    console.error('Fallback: Oops, unable to copy', err);
+                }
+
+                textArea.remove();
+            }
+
+            // Track the copy action
+            trackShare('copy_link');
+        }
+
+        function showCopyFeedback() {
+            const feedback = document.getElementById('copy-feedback');
+            feedback.classList.remove('d-none');
+
+            // Hide after 3 seconds
+            setTimeout(() => {
+                feedback.classList.add('d-none');
+            }, 3000);
+        }
     </script>
 </body>
 </html>

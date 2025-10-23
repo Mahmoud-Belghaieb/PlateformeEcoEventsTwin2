@@ -11,8 +11,8 @@ class Venue extends Model
 
     protected $fillable = [
         'name', 'description', 'address', 'city', 'postal_code', 'country',
-        'latitude', 'longitude', 'capacity', 'facilities', 'contact_email',
-        'contact_phone', 'website', 'is_active',
+        'latitude', 'longitude', 'capacity', 'facilities', 'email',
+        'phone', 'website', 'is_active'
     ];
 
     protected $casts = [
@@ -41,7 +41,7 @@ class Venue extends Model
             $this->address,
             $this->city,
             $this->postal_code,
-            $this->country,
+            $this->country
         ]));
     }
 }
