@@ -11,7 +11,7 @@ class Category extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'slug', 'description', 'color', 'icon', 'is_active'
+        'name', 'slug', 'description', 'color', 'icon', 'is_active',
     ];
 
     protected $casts = [
@@ -39,7 +39,7 @@ class Category extends Model
 
         static::creating(function ($category) {
             if (empty($category->slug)) {
-                $category->slug = Str::slug($category->name . '-' . uniqid());
+                $category->slug = Str::slug($category->name.'-'.uniqid());
             }
         });
     }

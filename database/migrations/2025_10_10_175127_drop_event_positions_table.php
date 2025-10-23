@@ -31,7 +31,7 @@ return new class extends Migration
             $table->datetime('application_deadline')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
-            
+
             $table->unique(['event_id', 'position_id']);
         });
     }

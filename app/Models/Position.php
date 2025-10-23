@@ -11,7 +11,7 @@ class Position extends Model
 
     protected $fillable = [
         'title', 'description', 'responsibilities', 'requirements', 'type',
-        'required_count', 'hourly_rate', 'requires_training', 'is_active'
+        'required_count', 'hourly_rate', 'requires_training', 'is_active',
     ];
 
     protected $casts = [
@@ -29,7 +29,7 @@ class Position extends Model
     public function events()
     {
         return $this->belongsToMany(Event::class, 'registrations')
-                    ->distinct();
+            ->distinct();
     }
 
     // Scopes

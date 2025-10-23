@@ -14,6 +14,7 @@ class VenueController extends Controller
     public function index()
     {
         $venues = Venue::withCount('events')->paginate(15);
+
         return view('admin.venues.index', compact('venues'));
     }
 
@@ -32,7 +33,7 @@ class VenueController extends Controller
     {
         // Debug: voir ce qui est envoyé
         // dd($request->all());
-        
+
         $request->validate([
             'name' => 'required|string|max:255',
             'address' => 'required|string|max:500',

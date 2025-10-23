@@ -20,7 +20,7 @@ class UserManagementController extends Controller
         if ($search = request('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
@@ -57,9 +57,9 @@ class UserManagementController extends Controller
         $roles = [
             'admin' => 'Administrateur',
             'participant' => 'Participant',
-            'volunteer' => 'Bénévole'
+            'volunteer' => 'Bénévole',
         ];
-        
+
         return view('admin.users.create', compact('roles'));
     }
 
@@ -73,7 +73,7 @@ class UserManagementController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
             'role' => 'required|in:admin,participant,volunteer',
-            'is_active' => 'boolean'
+            'is_active' => 'boolean',
         ]);
 
         User::create([
@@ -95,7 +95,7 @@ class UserManagementController extends Controller
     {
         // Load user relationships
         $user->load(['registrations.event.category', 'registrations.event.venue']);
-        
+
         // Get user statistics
         $stats = [
             'total_registrations' => $user->registrations->count(),
@@ -103,9 +103,9 @@ class UserManagementController extends Controller
             'pending_registrations' => $user->registrations->where('status', 'pending')->count(),
             'rejected_registrations' => $user->registrations->where('status', 'rejected')->count(),
             'member_since' => $user->created_at->diffForHumans(),
-            'last_login' => $user->last_login_at ? $user->last_login_at->diffForHumans() : 'Jamais connecté'
+            'last_login' => $user->last_login_at ? $user->last_login_at->diffForHumans() : 'Jamais connecté',
         ];
-        
+
         return view('admin.users.show', compact('user', 'stats'));
     }
 
@@ -117,9 +117,9 @@ class UserManagementController extends Controller
         $roles = [
             'admin' => 'Administrateur',
             'participant' => 'Participant',
-            'volunteer' => 'Bénévole'
+            'volunteer' => 'Bénévole',
         ];
-        
+
         return view('admin.users.edit', compact('user', 'roles'));
     }
 
@@ -130,13 +130,13 @@ class UserManagementController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
             'role' => 'required|in:admin,participant,volunteer',
-            'is_active' => 'boolean'
+            'is_active' => 'boolean',
         ]);
 
         $user->update($request->only(['name', 'email', 'role']) + [
-            'is_active' => $request->boolean('is_active', false)
+            'is_active' => $request->boolean('is_active', false),
         ]);
 
         return redirect()->route('admin.users.index')
@@ -177,9 +177,10 @@ class UserManagementController extends Controller
                 ->with('error', 'Vous ne pouvez pas désactiver votre propre compte.');
         }
 
-        $user->update(['is_active' => !$user->is_active]);
-        
+        $user->update(['is_active' => ! $user->is_active]);
+
         $status = $user->is_active ? 'activé' : 'désactivé';
+
         return redirect()->back()->with('success', "Utilisateur {$status} avec succès.");
     }
 

@@ -12,7 +12,7 @@ class Registration extends Model
     protected $fillable = [
         'event_id', 'user_id', 'type', 'position_id', 'status', 'motivation',
         'additional_info', 'registered_at', 'approved_at', 'approved_by',
-        'rejection_reason', 'attended', 'rating', 'feedback'
+        'rejection_reason', 'attended', 'rating', 'feedback',
     ];
 
     protected $casts = [

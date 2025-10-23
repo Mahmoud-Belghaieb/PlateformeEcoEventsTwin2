@@ -15,6 +15,7 @@ class PositionController extends Controller
     {
         // On compte le nombre d'inscriptions pour chaque position
         $positions = Position::withCount('registrations')->paginate(15);
+
         return view('admin.positions.index', compact('positions'));
     }
 
@@ -42,7 +43,7 @@ class PositionController extends Controller
 
         $data = $request->all();
         // Ensure responsibilities is set (DB column is non-nullable)
-        if (!isset($data['responsibilities'])) {
+        if (! isset($data['responsibilities'])) {
             $data['responsibilities'] = '';
         }
 

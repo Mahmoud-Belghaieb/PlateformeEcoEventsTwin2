@@ -28,7 +28,7 @@ return new class extends Migration
             $table->integer('rating')->nullable(); // 1-5 stars
             $table->text('feedback')->nullable();
             $table->timestamps();
-            
+
             // Un utilisateur ne peut s'inscrire qu'une fois par événement
             $table->unique(['event_id', 'user_id']);
         });

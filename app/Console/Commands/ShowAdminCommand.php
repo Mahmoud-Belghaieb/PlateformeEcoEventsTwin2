@@ -2,20 +2,22 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\User;
+use Illuminate\Console\Command;
 
 class ShowAdminCommand extends Command
 {
     protected $signature = 'admin:show';
+
     protected $description = 'Afficher les informations de l\'administrateur';
 
     public function handle()
     {
         $admin = User::where('role', 'admin')->first();
 
-        if (!$admin) {
+        if (! $admin) {
             $this->error('Aucun administrateur trouvé dans la base de données !');
+
             return 1;
         }
 
@@ -27,7 +29,7 @@ class ShowAdminCommand extends Command
                 $admin->name,
                 $admin->email,
                 $admin->role,
-                $admin->is_active ? 'Oui' : 'Non'
+                $admin->is_active ? 'Oui' : 'Non',
             ]]
         );
 

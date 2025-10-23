@@ -28,7 +28,7 @@ class ProfileController extends Controller
         $user = Auth::user();
 
         // Prevent admin role changes through this method
-        if ($request->role === 'admin' && !$user->isAdmin()) {
+        if ($request->role === 'admin' && ! $user->isAdmin()) {
             return back()->withErrors(['role' => 'Vous ne pouvez pas changer votre rôle vers administrateur.']);
         }
 
@@ -39,7 +39,7 @@ class ProfileController extends Controller
         Log::info('User role updated', [
             'user_id' => $user->id,
             'old_role' => $oldRole,
-            'new_role' => $request->role
+            'new_role' => $request->role,
         ]);
 
         return back()->with('success', 'Votre rôle a été mis à jour avec succès.');

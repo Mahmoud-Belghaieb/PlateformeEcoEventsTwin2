@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Avis;
+use App\Models\Category;
+use App\Models\Event;
+use App\Models\Registration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Event;
-use App\Models\Category;
-use App\Models\Registration;
-use App\Models\Avis;
-use App\Http\Controllers\SocialMediaController;
 
 class EventController extends Controller
 {
@@ -19,10 +18,10 @@ class EventController extends Controller
             ->where('status', 'published')
             ->orderBy('start_date', 'asc')
             ->get();
-        
+
         // Récupérer toutes les catégories pour le filtrage
         $categories = Category::where('is_active', true)->get();
-        
+
         return view('events.index', compact('events', 'categories'));
     }
 
@@ -33,59 +32,59 @@ class EventController extends Controller
             ->where('slug', $slug)
             ->where('status', 'published')
             ->firstOrFail();
-        
+
         $isRegistered = false;
         if (Auth::check()) {
             $isRegistered = $event->isUserRegistered(Auth::id());
         }
-        
+
         // Récupérer les avis approuvés avec pagination
         $avis = $event->avisApprouves()
-            ->with(['user', 'commentaires' => function($query) {
+            ->with(['user', 'commentaires' => function ($query) {
                 $query->where('is_approved', true)->with('user');
             }])
             ->orderBy('created_at', 'desc')
             ->paginate(5);
-        
+
         // Calculer les statistiques des avis
         $avisStats = [
             'total' => $event->nombreAvis(),
             'moyenne' => round($event->noteMoyenne(), 1),
-            'repartition' => $event->repartitionNotes()
+            'repartition' => $event->repartitionNotes(),
         ];
-        
+
         return view('events.show', compact('event', 'isRegistered', 'avis', 'avisStats'));
     }
 
     public function myEvents()
     {
         // Vérifier que l'utilisateur est connecté
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return redirect()->route('login');
         }
 
         $userId = Auth::id();
-        
+
         // Récupérer les événements où l'utilisateur est participant
-        $participatedEvents = Event::whereHas('registrations', function($query) use ($userId) {
+        $participatedEvents = Event::whereHas('registrations', function ($query) use ($userId) {
             $query->where('user_id', $userId)
-                  ->where('type', 'participant')
-                  ->where('status', 'approved');
+                ->where('type', 'participant')
+                ->where('status', 'approved');
         })->with(['category', 'venue'])->get();
 
         // Récupérer les événements où l'utilisateur est bénévole
-        $volunteeredEvents = Event::whereHas('registrations', function($query) use ($userId) {
+        $volunteeredEvents = Event::whereHas('registrations', function ($query) use ($userId) {
             $query->where('user_id', $userId)
-                  ->where('type', 'volunteer')
-                  ->where('status', 'approved');
+                ->where('type', 'volunteer')
+                ->where('status', 'approved');
         })->with(['category', 'venue', 'positions'])->get();
-        
+
         return view('events.my-events', compact('participatedEvents', 'volunteeredEvents'));
     }
 
     public function register(Request $request, $eventId)
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return redirect()->route('login')->with('error', 'Vous devez être connecté pour vous inscrire.');
         }
 
@@ -113,7 +112,7 @@ class EventController extends Controller
             'motivation' => $request->input('motivation'),
             'registered_at' => now(),
             'approved_at' => null,
-            'approved_by' => null
+            'approved_by' => null,
         ]);
 
         return back()->with('success', 'Votre inscription a été soumise avec succès ! Elle est en attente d\'approbation par l\'administrateur.');
@@ -130,14 +129,14 @@ class EventController extends Controller
             'volunteers' => Registration::where('type', 'volunteer')->count(),
             'categories' => Category::count(),
             'venues' => \App\Models\Venue::count(),
-            'positions' => \App\Models\Position::count()
+            'positions' => \App\Models\Position::count(),
         ];
 
         // Exemples de relations Many-to-Many
         $examples = [];
-        
+
         // Récupérer quelques événements avec leurs utilisateurs
-        $eventsWithUsers = Event::with(['users' => function($query) {
+        $eventsWithUsers = Event::with(['users' => function ($query) {
             $query->take(3); // Limiter à 3 utilisateurs par événement
         }])->take(2)->get();
 
@@ -145,7 +144,7 @@ class EventController extends Controller
             $examples[] = [
                 'event' => $event->title,
                 'registered_users' => $event->users->count(),
-                'users_sample' => $event->users->pluck('name')->toArray()
+                'users_sample' => $event->users->pluck('name')->toArray(),
             ];
         }
 
@@ -156,11 +155,11 @@ class EventController extends Controller
             'relation_examples' => $examples,
             'tables_status' => [
                 'categories' => 'Active',
-                'venues' => 'Active', 
+                'venues' => 'Active',
                 'positions' => 'Active',
                 'events' => 'Active',
-                'registrations' => 'Active - Many-to-Many principale'
-            ]
+                'registrations' => 'Active - Many-to-Many principale',
+            ],
         ]);
     }
 
@@ -171,7 +170,7 @@ class EventController extends Controller
     public function shareToSocialMediaExample(Event $event, $platform)
     {
         // Create an instance of the SocialMediaController
-        $socialMediaController = new SocialMediaController();
+        $socialMediaController = new SocialMediaController;
 
         // Call the shareToSocialMedia method
         $result = $socialMediaController->shareToSocialMedia($event, $platform);

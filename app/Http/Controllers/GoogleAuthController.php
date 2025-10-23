@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 
 class GoogleAuthController extends Controller
 {
@@ -31,7 +31,7 @@ class GoogleAuthController extends Controller
             'prompt' => 'consent',
         ]);
 
-        return redirect('https://accounts.google.com/o/oauth2/v2/auth?' . $params);
+        return redirect('https://accounts.google.com/o/oauth2/v2/auth?'.$params);
     }
 
     public function callback(Request $request)
@@ -44,7 +44,7 @@ class GoogleAuthController extends Controller
         }
 
         $code = $request->query('code');
-        if (!$code) {
+        if (! $code) {
             return redirect()->route('login')->withErrors(['email' => 'Code OAuth manquant.']);
         }
 
@@ -56,8 +56,9 @@ class GoogleAuthController extends Controller
             'grant_type' => 'authorization_code',
         ]);
 
-        if (!$tokenResponse->ok()) {
+        if (! $tokenResponse->ok()) {
             Log::error('Google token exchange failed', ['body' => $tokenResponse->body()]);
+
             return redirect()->route('login')->withErrors(['email' => 'Echec de connexion Google.']);
         }
 
@@ -66,8 +67,9 @@ class GoogleAuthController extends Controller
         $userInfoResp = Http::withToken($accessToken)
             ->get('https://www.googleapis.com/oauth2/v3/userinfo');
 
-        if (!$userInfoResp->ok()) {
+        if (! $userInfoResp->ok()) {
             Log::error('Google userinfo failed', ['body' => $userInfoResp->body()]);
+
             return redirect()->route('login')->withErrors(['email' => 'Impossible de récupérer le profil Google.']);
         }
 
@@ -75,13 +77,13 @@ class GoogleAuthController extends Controller
         $email = $google->email ?? null;
         $name = $google->name ?? ($google->given_name ?? 'Utilisateur');
 
-        if (!$email) {
+        if (! $email) {
             return redirect()->route('login')->withErrors(['email' => 'Le compte Google ne fournit pas d\'email.']);
         }
 
         // Find or create user
         $user = User::where('email', $email)->first();
-        if (!$user) {
+        if (! $user) {
             $user = User::create([
                 'name' => $name,
                 'email' => $email,
@@ -105,6 +107,7 @@ class GoogleAuthController extends Controller
                 return redirect()->to('http://127.0.0.1:8000/admin');
             }
         }
+
         return redirect()->intended(route('home'));
     }
 }

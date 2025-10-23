@@ -7,14 +7,14 @@ $app = require_once 'bootstrap/app.php';
 $app->make('Illuminate\Contracts\Console\Kernel')->bootstrap();
 
 use App\Models\Avis;
-use App\Models\User;
 use App\Models\Event;
+use App\Models\User;
 
 // Récupérer le premier utilisateur et le premier événement
 $user = User::first();
 $event = Event::first();
 
-if (!$user || !$event) {
+if (! $user || ! $event) {
     echo "❌ Vous devez avoir au moins un utilisateur et un événement en base.\n";
     exit(1);
 }
@@ -28,7 +28,7 @@ $avis = Avis::create([
     'content' => 'J\'ai adoré participer à cet événement. L\'organisation était parfaite, l\'ambiance géniale et j\'ai appris beaucoup de choses. Je recommande vivement !',
     'is_approved' => true,
     'approved_at' => now(),
-    'approved_by' => $user->id
+    'approved_by' => $user->id,
 ]);
 
 echo "✅ Avis créé avec succès !\n";

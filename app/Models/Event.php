@@ -12,10 +12,10 @@ class Event extends Model
 
     protected $fillable = [
         'title', 'slug', 'description', 'short_description', 'category_id', 'venue_id',
-        'created_by', 'approved_by', 'start_date', 'end_date', 'registration_start', 
-        'registration_end', 'max_participants', 'price', 'status', 'requirements', 
+        'created_by', 'approved_by', 'start_date', 'end_date', 'registration_start',
+        'registration_end', 'max_participants', 'price', 'status', 'requirements',
         'featured_image', 'gallery', 'is_featured', 'requires_approval', 'cancellation_policy',
-        'approved_at', 'rejection_reason'
+        'approved_at', 'rejection_reason',
     ];
 
     protected $casts = [
@@ -32,17 +32,17 @@ class Event extends Model
     ];
 
     // ====== RELATION MANY-TO-MANY AVEC USERS VIA REGISTRATIONS ======
-    
+
     /**
      * Relation Many-to-Many avec Users via la table registrations
      */
     public function users()
     {
         return $this->belongsToMany(User::class, 'registrations')
-                    ->withPivot('type', 'position_id', 'status', 'motivation', 'additional_info',
-                               'registered_at', 'approved_at', 'approved_by', 'rejection_reason',
-                               'attended', 'rating', 'feedback')
-                    ->withTimestamps();
+            ->withPivot('type', 'position_id', 'status', 'motivation', 'additional_info',
+                'registered_at', 'approved_at', 'approved_by', 'rejection_reason',
+                'attended', 'rating', 'feedback')
+            ->withTimestamps();
     }
 
     /**
@@ -59,9 +59,9 @@ class Event extends Model
     public function participants()
     {
         return $this->belongsToMany(User::class, 'registrations')
-                    ->wherePivot('type', 'participant')
-                    ->withPivot('status', 'registered_at', 'attended', 'rating', 'feedback')
-                    ->withTimestamps();
+            ->wherePivot('type', 'participant')
+            ->withPivot('status', 'registered_at', 'attended', 'rating', 'feedback')
+            ->withTimestamps();
     }
 
     /**
@@ -70,9 +70,9 @@ class Event extends Model
     public function volunteers()
     {
         return $this->belongsToMany(User::class, 'registrations')
-                    ->wherePivot('type', 'volunteer')
-                    ->withPivot('position_id', 'status', 'motivation', 'registered_at')
-                    ->withTimestamps();
+            ->wherePivot('type', 'volunteer')
+            ->withPivot('position_id', 'status', 'motivation', 'registered_at')
+            ->withTimestamps();
     }
 
     // ====== AUTRES RELATIONS ======
@@ -127,7 +127,7 @@ class Event extends Model
     public function positions()
     {
         return $this->belongsToMany(Position::class, 'registrations', 'event_id', 'position_id')
-                    ->withTimestamps();
+            ->withTimestamps();
     }
 
     // ====== MÉTHODES UTILES ======
@@ -200,13 +200,13 @@ class Event extends Model
     }
 
     // ====== AUTO-GÉNÉRATION DU SLUG ======
-    
+
     protected static function boot()
     {
         parent::boot();
 
         static::creating(function ($event) {
-            if (!$event->slug) {
+            if (! $event->slug) {
                 $event->slug = Str::slug($event->title);
             }
         });

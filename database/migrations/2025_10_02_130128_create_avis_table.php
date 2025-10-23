@@ -22,10 +22,10 @@ return new class extends Migration
             $table->timestamp('approved_at')->nullable();
             $table->foreignId('approved_by')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamps();
-            
+
             // Un utilisateur ne peut donner qu'un seul avis par événement
             $table->unique(['user_id', 'event_id']);
-            
+
             // Index pour les requêtes fréquentes
             $table->index(['event_id', 'is_approved']);
             $table->index(['user_id']);

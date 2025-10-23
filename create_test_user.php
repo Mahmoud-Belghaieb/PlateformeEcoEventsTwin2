@@ -2,14 +2,12 @@
 
 require 'vendor/autoload.php';
 
-use Illuminate\Foundation\Application;
-
 $app = require 'bootstrap/app.php';
 $app->boot();
 
 // Créer un utilisateur de test
 $user = \App\Models\User::firstOrCreate([
-    'email' => 'test@example.com'
+    'email' => 'test@example.com',
 ], [
     'name' => 'Utilisateur Test',
     'password' => bcrypt('password'),

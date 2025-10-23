@@ -6,15 +6,15 @@ require_once 'vendor/autoload.php';
 $app = require_once 'bootstrap/app.php';
 $app->make('Illuminate\Contracts\Console\Kernel')->bootstrap();
 
-use App\Models\Commentaire;
 use App\Models\Avis;
+use App\Models\Commentaire;
 use App\Models\User;
 
 // Récupérer le premier utilisateur et le premier avis
 $user = User::first();
 $avis = Avis::first();
 
-if (!$user || !$avis) {
+if (! $user || ! $avis) {
     echo "❌ Vous devez avoir au moins un utilisateur et un avis en base.\n";
     echo "💡 Créez d'abord un avis avec: php create_test_avis.php\n";
     exit(1);
@@ -28,7 +28,7 @@ $commentaire = Commentaire::create([
     'content' => 'Merci pour ce partage ! Je suis tout à fait d\'accord avec votre avis.',
     'is_approved' => true,
     'approved_at' => now(),
-    'approved_by' => $user->id
+    'approved_by' => $user->id,
 ]);
 
 echo "✅ Commentaire créé avec succès !\n";

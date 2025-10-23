@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('events', function (Blueprint $table) {
             // Changer les statuts possibles pour inclure l'approbation
             $table->enum('status', ['draft', 'pending', 'published', 'rejected', 'cancelled', 'completed'])->default('draft')->change();
-            
+
             // Ajouter les champs d'approbation admin
             $table->foreignId('approved_by')->nullable()->constrained('users')->onDelete('set null')->after('created_by');
             $table->datetime('approved_at')->nullable()->after('approved_by');

@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Event;
 use App\Models\Category;
-use App\Models\Venue;
+use App\Models\Event;
 use App\Models\Position;
+use App\Models\Venue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -23,7 +23,7 @@ class AdminEventController extends Controller
                 'registrations',
                 'registrations as approved_registrations_count' => function ($q) {
                     $q->where('status', 'approved');
-                }
+                },
             ]);
 
         // Search by title or description
@@ -31,12 +31,12 @@ class AdminEventController extends Controller
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
+                    ->orWhere('description', 'like', "%{$search}%");
             });
         }
 
         // Filter by exact status (draft, pending, published, etc.)
-        if ($request->filled('status') && in_array($request->input('status'), ['draft','pending','published','rejected','cancelled','completed'])) {
+        if ($request->filled('status') && in_array($request->input('status'), ['draft', 'pending', 'published', 'rejected', 'cancelled', 'completed'])) {
             $query->where('status', $request->input('status'));
         }
 
@@ -83,6 +83,7 @@ class AdminEventController extends Controller
         $categories = Category::all();
         $venues = Venue::all();
         $positions = Position::all();
+
         return view('admin.events.create', compact('categories', 'venues', 'positions'));
     }
 
@@ -106,21 +107,21 @@ class AdminEventController extends Controller
         ]);
 
         $eventData = $request->except(['positions', 'image', 'action', 'capacity']);
-        $eventData['slug'] = Str::slug($request->title . '-' . uniqid());
+        $eventData['slug'] = Str::slug($request->title.'-'.uniqid());
         $eventData['created_by'] = auth()->id();
-        
+
         // Set end_date to start_date + 2 hours if not provided
-        if (!isset($eventData['end_date'])) {
+        if (! isset($eventData['end_date'])) {
             $startDate = new \DateTime($request->start_date);
             $startDate->add(new \DateInterval('PT2H')); // Add 2 hours
             $eventData['end_date'] = $startDate->format('Y-m-d H:i:s');
         }
-        
+
         // Map capacity to max_participants
         if ($request->has('capacity') && $request->capacity) {
             $eventData['max_participants'] = $request->capacity;
         }
-        
+
         // Set status based on action if provided
         if ($request->has('action')) {
             $eventData['status'] = $request->action === 'draft' ? 'draft' : 'published';
@@ -148,6 +149,7 @@ class AdminEventController extends Controller
     {
         // 'positions' relation/pivot table removed — load only existing relations
         $event->load(['category', 'venue', 'registrations.user']);
+
         return view('admin.events.show', compact('event'));
     }
 
@@ -159,6 +161,7 @@ class AdminEventController extends Controller
         $categories = Category::all();
         $venues = Venue::all();
         $positions = Position::all();
+
         // Do not load positions relation here — pivot table removed
         return view('admin.events.edit', compact('event', 'categories', 'venues', 'positions'));
     }
@@ -183,15 +186,15 @@ class AdminEventController extends Controller
         ]);
 
         $eventData = $request->except(['positions', 'image', 'action', 'capacity']);
-        
+
         // Map capacity to max_participants
         if ($request->has('capacity') && $request->capacity) {
             $eventData['max_participants'] = $request->capacity;
         }
-        
+
         // Update slug if title changed
         if ($event->title !== $request->title) {
-            $eventData['slug'] = Str::slug($request->title . '-' . uniqid());
+            $eventData['slug'] = Str::slug($request->title.'-'.uniqid());
         }
 
         // Handle image upload
@@ -248,7 +251,7 @@ class AdminEventController extends Controller
             'status' => 'published',
             'approved_by' => auth()->id(),
             'approved_at' => now(),
-            'rejection_reason' => null
+            'rejection_reason' => null,
         ]);
 
         return redirect()->back()
@@ -261,14 +264,14 @@ class AdminEventController extends Controller
     public function reject(Request $request, Event $event)
     {
         $request->validate([
-            'rejection_reason' => 'nullable|string|max:1000'
+            'rejection_reason' => 'nullable|string|max:1000',
         ]);
 
         $event->update([
             'status' => 'rejected',
             'approved_by' => auth()->id(),
             'approved_at' => now(),
-            'rejection_reason' => $request->rejection_reason
+            'rejection_reason' => $request->rejection_reason,
         ]);
 
         return redirect()->back()
@@ -284,7 +287,7 @@ class AdminEventController extends Controller
             'status' => 'pending',
             'approved_by' => null,
             'approved_at' => null,
-            'rejection_reason' => null
+            'rejection_reason' => null,
         ]);
 
         return redirect()->back()

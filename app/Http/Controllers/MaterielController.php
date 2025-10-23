@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Materiel;
 use App\Models\Event;
+use App\Models\Materiel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -15,7 +15,7 @@ class MaterielController extends Controller
         $query = Materiel::with('event');
 
         if ($request->has('search') && $request->search) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $query->where('name', 'like', '%'.$request->search.'%');
         }
 
         if ($request->has('category') && $request->category) {
@@ -37,6 +37,7 @@ class MaterielController extends Controller
     public function create()
     {
         $events = Event::all();
+
         return view('admin.materiels.create', compact('events'));
     }
 
@@ -52,7 +53,7 @@ class MaterielController extends Controller
             'value' => 'required|numeric|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'event_id' => 'nullable|exists:events,id',
-            'is_available' => 'boolean'
+            'is_available' => 'boolean',
         ]);
 
         if ($request->hasFile('image')) {
@@ -68,6 +69,7 @@ class MaterielController extends Controller
     public function show(Materiel $materiel)
     {
         $materiel->load('event');
+
         return view('admin.materiels.show', compact('materiel'));
     }
 
@@ -75,6 +77,7 @@ class MaterielController extends Controller
     public function edit(Materiel $materiel)
     {
         $events = Event::all();
+
         return view('admin.materiels.edit', compact('materiel', 'events'));
     }
 
@@ -90,7 +93,7 @@ class MaterielController extends Controller
             'value' => 'required|numeric|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'event_id' => 'nullable|exists:events,id',
-            'is_available' => 'boolean'
+            'is_available' => 'boolean',
         ]);
 
         if ($request->hasFile('image')) {
@@ -112,7 +115,7 @@ class MaterielController extends Controller
         if ($materiel->image) {
             Storage::disk('public')->delete($materiel->image);
         }
-        
+
         $materiel->delete();
 
         return redirect()->route('admin.materiels.index')->with('success', 'Matériel supprimé avec succès!');
@@ -127,7 +130,7 @@ class MaterielController extends Controller
 
         // Only show available by default
         if ($request->has('is_available') && $request->is_available !== '') {
-            $query->where('is_available', (int)$request->is_available);
+            $query->where('is_available', (int) $request->is_available);
         }
 
         if ($request->has('category') && $request->category) {
@@ -136,12 +139,12 @@ class MaterielController extends Controller
         }
 
         if ($request->has('search') && $request->search) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $query->where('name', 'like', '%'.$request->search.'%');
         }
 
         $materiels = $query->latest()->paginate(12)->withQueryString();
-    // Get distinct types from the DB to populate the category select in the UI
-    $categories = Materiel::distinct()->pluck('type');
+        // Get distinct types from the DB to populate the category select in the UI
+        $categories = Materiel::distinct()->pluck('type');
 
         return view('materiels.index', compact('materiels', 'categories'));
     }

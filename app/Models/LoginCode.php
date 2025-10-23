@@ -10,7 +10,7 @@ class LoginCode extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'code', 'expires_at', 'consumed_at'
+        'user_id', 'code', 'expires_at', 'consumed_at',
     ];
 
     protected $casts = [

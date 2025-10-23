@@ -16,7 +16,7 @@ class SponsorController extends Controller
         $query = Sponsor::query();
 
         if ($request->has('search') && $request->search) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $query->where('name', 'like', '%'.$request->search.'%');
         }
 
         if ($request->has('level') && $request->level) {
@@ -74,6 +74,7 @@ class SponsorController extends Controller
     public function show(Sponsor $sponsor)
     {
         $sponsor->load('produits');
+
         return view('admin.sponsors.show', compact('sponsor'));
     }
 
@@ -137,6 +138,7 @@ class SponsorController extends Controller
     public function publicIndex()
     {
         $sponsors = Sponsor::active()->get();
+
         return view('sponsors.index', compact('sponsors'));
     }
 }

@@ -15,7 +15,7 @@ class AvisController extends Controller
     public function index($eventId)
     {
         $event = Event::with(['avisApprouves.user', 'avisApprouves.commentairesApprouves.user'])->findOrFail($eventId);
-        
+
         $avis = $event->avisApprouves()
             ->with(['user', 'commentairesApprouves.user', 'commentairesApprouves.reponsesApprouvees.user'])
             ->orderBy('created_at', 'desc')
@@ -43,10 +43,10 @@ class AvisController extends Controller
         }
 
         return view('avis.index', compact(
-            'event', 
-            'avis', 
-            'noteMoyenne', 
-            'nombreAvis', 
+            'event',
+            'avis',
+            'noteMoyenne',
+            'nombreAvis',
             'repartitionNotes',
             'userAvis',
             'hasParticipated'
@@ -59,7 +59,7 @@ class AvisController extends Controller
     public function create($eventId)
     {
         $event = Event::findOrFail($eventId);
-        
+
         // Vérifier si l'utilisateur a déjà donné un avis
         $existingAvis = Avis::where('user_id', Auth::id())
             ->where('event_id', $eventId)
@@ -76,7 +76,7 @@ class AvisController extends Controller
             ->where('status', 'approved')
             ->exists();
 
-        if (!$hasParticipated) {
+        if (! $hasParticipated) {
             return redirect()->route('avis.index', $eventId)
                 ->with('error', 'Vous devez avoir participé à cet événement pour donner un avis.');
         }
@@ -91,11 +91,11 @@ class AvisController extends Controller
     {
         // Debug: Voir ce qui est envoyé
         // dd($request->all());
-        
+
         $request->validate([
             'rating' => 'required|integer|min:1|max:5',
             'title' => 'nullable|string|max:255',
-            'content' => 'required|string|min:10|max:1000'
+            'content' => 'required|string|min:10|max:1000',
         ]);
 
         $event = Event::findOrFail($eventId);
@@ -131,7 +131,7 @@ class AvisController extends Controller
             'content' => $request->content,
             'is_approved' => true, // Auto-approuvé pour les tests - changer en false pour la production
             'approved_at' => now(),
-            'approved_by' => Auth::id()
+            'approved_by' => Auth::id(),
         ]);
 
         return redirect()->route('avis.index', $eventId)->with('success', 'Votre avis a été publié avec succès !');
@@ -157,7 +157,7 @@ class AvisController extends Controller
         $request->validate([
             'rating' => 'required|integer|min:1|max:5',
             'title' => 'nullable|string|max:255',
-            'content' => 'required|string|min:10|max:1000'
+            'content' => 'required|string|min:10|max:1000',
         ]);
 
         $avis = Avis::where('id', $id)
@@ -168,7 +168,7 @@ class AvisController extends Controller
             'rating' => $request->rating,
             'title' => $request->title,
             'content' => $request->content,
-            'is_approved' => false // Nécessite une nouvelle approbation après modification
+            'is_approved' => false, // Nécessite une nouvelle approbation après modification
         ]);
 
         return redirect()->route('avis.index', $avis->event_id)

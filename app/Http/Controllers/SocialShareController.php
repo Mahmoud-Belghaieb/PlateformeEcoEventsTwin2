@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class SocialShareController extends Controller
 {
@@ -14,18 +14,18 @@ class SocialShareController extends Controller
     public function getShareUrls(Event $event): JsonResponse
     {
         $baseUrl = config('app.url');
-        $eventUrl = $baseUrl . '/events/' . $event->slug;
-        $shareText = "Découvrez cet événement: " . $event->title;
-        $shareTextEn = "Discover this event: " . $event->title;
+        $eventUrl = $baseUrl.'/events/'.$event->slug;
+        $shareText = 'Découvrez cet événement: '.$event->title;
+        $shareTextEn = 'Discover this event: '.$event->title;
 
         $shareUrls = [
-            'facebook' => "https://www.facebook.com/sharer/sharer.php?u=" . urlencode($eventUrl),
-            'twitter' => "https://twitter.com/intent/tweet?text=" . urlencode($shareText) . "&url=" . urlencode($eventUrl),
-            'linkedin' => "https://www.linkedin.com/sharing/share-offsite/?url=" . urlencode($eventUrl),
-            'whatsapp' => "https://wa.me/?text=" . urlencode($shareText . " " . $eventUrl),
-            'telegram' => "https://t.me/share/url?url=" . urlencode($eventUrl) . "&text=" . urlencode($shareText),
-            'email' => "mailto:?subject=" . urlencode($event->title) . "&body=" . urlencode($shareText . "\n\n" . $eventUrl),
-            'copy_link' => $eventUrl
+            'facebook' => 'https://www.facebook.com/sharer/sharer.php?u='.urlencode($eventUrl),
+            'twitter' => 'https://twitter.com/intent/tweet?text='.urlencode($shareText).'&url='.urlencode($eventUrl),
+            'linkedin' => 'https://www.linkedin.com/sharing/share-offsite/?url='.urlencode($eventUrl),
+            'whatsapp' => 'https://wa.me/?text='.urlencode($shareText.' '.$eventUrl),
+            'telegram' => 'https://t.me/share/url?url='.urlencode($eventUrl).'&text='.urlencode($shareText),
+            'email' => 'mailto:?subject='.urlencode($event->title).'&body='.urlencode($shareText."\n\n".$eventUrl),
+            'copy_link' => $eventUrl,
         ];
 
         return response()->json([
@@ -33,9 +33,9 @@ class SocialShareController extends Controller
                 'id' => $event->id,
                 'title' => $event->title,
                 'slug' => $event->slug,
-                'url' => $eventUrl
+                'url' => $eventUrl,
             ],
-            'share_urls' => $shareUrls
+            'share_urls' => $shareUrls,
         ]);
     }
 
@@ -44,8 +44,8 @@ class SocialShareController extends Controller
      */
     public function shareOnFacebook(Event $event)
     {
-        $eventUrl = config('app.url') . '/events/' . $event->slug;
-        $shareUrl = "https://www.facebook.com/sharer/sharer.php?u=" . urlencode($eventUrl);
+        $eventUrl = config('app.url').'/events/'.$event->slug;
+        $shareUrl = 'https://www.facebook.com/sharer/sharer.php?u='.urlencode($eventUrl);
 
         return redirect($shareUrl);
     }
@@ -55,9 +55,9 @@ class SocialShareController extends Controller
      */
     public function shareOnTwitter(Event $event)
     {
-        $eventUrl = config('app.url') . '/events/' . $event->slug;
-        $shareText = "Découvrez cet événement: " . $event->title;
-        $shareUrl = "https://twitter.com/intent/tweet?text=" . urlencode($shareText) . "&url=" . urlencode($eventUrl);
+        $eventUrl = config('app.url').'/events/'.$event->slug;
+        $shareText = 'Découvrez cet événement: '.$event->title;
+        $shareUrl = 'https://twitter.com/intent/tweet?text='.urlencode($shareText).'&url='.urlencode($eventUrl);
 
         return redirect($shareUrl);
     }
@@ -67,8 +67,8 @@ class SocialShareController extends Controller
      */
     public function shareOnLinkedIn(Event $event)
     {
-        $eventUrl = config('app.url') . '/events/' . $event->slug;
-        $shareUrl = "https://www.linkedin.com/sharing/share-offsite/?url=" . urlencode($eventUrl);
+        $eventUrl = config('app.url').'/events/'.$event->slug;
+        $shareUrl = 'https://www.linkedin.com/sharing/share-offsite/?url='.urlencode($eventUrl);
 
         return redirect($shareUrl);
     }
@@ -78,9 +78,9 @@ class SocialShareController extends Controller
      */
     public function shareOnWhatsApp(Event $event)
     {
-        $eventUrl = config('app.url') . '/events/' . $event->slug;
-        $shareText = "Découvrez cet événement: " . $event->title;
-        $shareUrl = "https://wa.me/?text=" . urlencode($shareText . " " . $eventUrl);
+        $eventUrl = config('app.url').'/events/'.$event->slug;
+        $shareText = 'Découvrez cet événement: '.$event->title;
+        $shareUrl = 'https://wa.me/?text='.urlencode($shareText.' '.$eventUrl);
 
         return redirect($shareUrl);
     }
@@ -90,10 +90,10 @@ class SocialShareController extends Controller
      */
     public function shareViaEmail(Event $event)
     {
-        $eventUrl = config('app.url') . '/events/' . $event->slug;
+        $eventUrl = config('app.url').'/events/'.$event->slug;
         $subject = $event->title;
-        $body = "Découvrez cet événement: " . $event->title . "\n\n" . $eventUrl;
-        $shareUrl = "mailto:?subject=" . urlencode($subject) . "&body=" . urlencode($body);
+        $body = 'Découvrez cet événement: '.$event->title."\n\n".$eventUrl;
+        $shareUrl = 'mailto:?subject='.urlencode($subject).'&body='.urlencode($body);
 
         return redirect($shareUrl);
     }
@@ -103,13 +103,13 @@ class SocialShareController extends Controller
      */
     public function getEmbedCode(Event $event): JsonResponse
     {
-        $eventUrl = config('app.url') . '/events/' . $event->slug;
+        $eventUrl = config('app.url').'/events/'.$event->slug;
 
-        $embedCode = '<iframe src="' . $eventUrl . '/embed" width="600" height="400" frameborder="0" allowfullscreen></iframe>';
+        $embedCode = '<iframe src="'.$eventUrl.'/embed" width="600" height="400" frameborder="0" allowfullscreen></iframe>';
 
         return response()->json([
             'embed_code' => $embedCode,
-            'event_url' => $eventUrl
+            'event_url' => $eventUrl,
         ]);
     }
 
@@ -119,7 +119,7 @@ class SocialShareController extends Controller
     public function trackShare(Request $request, Event $event): JsonResponse
     {
         $request->validate([
-            'platform' => 'required|string|in:facebook,twitter,linkedin,whatsapp,email,copy_link'
+            'platform' => 'required|string|in:facebook,twitter,linkedin,whatsapp,email,copy_link',
         ]);
 
         // Here you could log the share event to a database table for analytics
@@ -130,13 +130,13 @@ class SocialShareController extends Controller
             'platform' => $request->platform,
             'user_id' => auth()->id(),
             'ip' => $request->ip(),
-            'user_agent' => $request->userAgent()
+            'user_agent' => $request->userAgent(),
         ]);
 
         return response()->json([
             'success' => true,
             'message' => 'Share tracked successfully',
-            'platform' => $request->platform
+            'platform' => $request->platform,
         ]);
     }
 }
