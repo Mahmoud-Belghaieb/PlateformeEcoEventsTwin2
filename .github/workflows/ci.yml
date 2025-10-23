@@ -118,7 +118,7 @@ jobs:
     name: Build & Push Docker Image
     runs-on: ubuntu-latest
     needs: test  # Only run if tests pass
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'  # Only on main branch
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/mahmoud')  # Run on main or mahmoud branch
     
     steps:
     # Step 1: Checkout code
