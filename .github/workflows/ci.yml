@@ -113,6 +113,24 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       continue-on-error: true  # Don't fail CI if SonarQube has issues
 
+    # Step 14: Collect CI/CD Metrics
+    - name: Collect Pipeline Metrics
+      run: |
+        echo "# CI/CD Pipeline Metrics" > ci_metrics.txt
+        echo "pipeline_duration_seconds $(date +%s)" >> ci_metrics.txt
+        echo "pipeline_success 1" >> ci_metrics.txt
+        echo "tests_passed $(php artisan test --count 2>/dev/null | grep -o '[0-9]\+ tests' | grep -o '[0-9]\+' || echo 0)" >> ci_metrics.txt
+        echo "build_timestamp $(date +%s)" >> ci_metrics.txt
+      continue-on-error: true
+
+    # Step 15: Upload metrics (optional - you can send to monitoring system)
+    - name: Archive Metrics
+      uses: actions/upload-artifact@v4
+      with:
+        name: pipeline-metrics
+        path: ci_metrics.txt
+      continue-on-error: true
+
   # Docker Build Job (runs after tests pass)
   docker-build:
     name: Build & Push Docker Image

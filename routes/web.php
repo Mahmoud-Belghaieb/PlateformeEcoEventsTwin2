@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController as PublicHomeController;
+use App\Http\Controllers\MetricsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +22,9 @@ Route::get('/', function (Request $request) {
 
     return app(PublicHomeController::class)->index($request);
 })->name('home');
+
+// Prometheus metrics endpoint (no authentication required)
+Route::get('/metrics', [MetricsController::class, 'index'])->name('metrics');
 
 // Authentication routes
 use App\Http\Controllers\Admin\AdminEventController;
