@@ -8,7 +8,7 @@ services:
     container_name: plateformeecoevents_app
     restart: unless-stopped
     ports:
-      - "8080:80"
+      - "8081:80"
     volumes:
       - ./storage:/var/www/html/storage
       - ./bootstrap/cache:/var/www/html/bootstrap/cache
@@ -144,13 +144,13 @@ services:
 
   # MySQL Exporter (Database Metrics)
   mysql-exporter:
-    image: prom/mysqld-exporter:latest
+    image: prom/mysqld-exporter:v0.15.1
     container_name: plateformeecoevents_mysql_exporter
     restart: unless-stopped
     ports:
       - "9104:9104"
     environment:
-      - DATA_SOURCE_NAME=laravel:secret@(mysql:3306)/plateformeecoevents
+      - DATA_SOURCE_NAME=exporter:exporter_password@tcp(mysql:3306)/
     depends_on:
       mysql:
         condition: service_healthy

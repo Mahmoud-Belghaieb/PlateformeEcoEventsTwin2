@@ -98,7 +98,7 @@ jobs:
         DB_PASSWORD: password
       run: php artisan test --coverage --coverage-clover=coverage.xml
       
-    # Step 12: Setup Java (required for SonarQube Scanner)
+    # Step 12: Setup Java
     - name: Setup Java
       uses: actions/setup-java@v4
       with:
