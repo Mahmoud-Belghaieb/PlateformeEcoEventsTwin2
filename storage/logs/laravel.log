@@ -2084,3 +2084,28 @@ Did you mean one of these?
 #65 {main}"} 
 [2025-10-23 01:42:54] local.INFO: Password Reset URL: http://127.0.0.1:8000/reset-password/YJBlZP9fPItVrXcjPvsSUT5KRfNWQnfeNyaSDcpV3zr0v16DmWM9oHJTsXk1vzVP?email=anisbenmehrez108%40gmail.com  
 [2025-10-23 01:43:57] local.INFO: Tentative de connexion pour: anisbenmehrez108@gmail.com  
+[2025-10-23 11:50:11] production.ERROR: Class "DOMDocument" not found {"exception":"[object] (Error(code: 0): Class \"DOMDocument\" not found at /var/www/html/vendor/nunomaduro/termwind/src/HtmlRenderer.php:32)
+[stacktrace]
+#0 /var/www/html/vendor/nunomaduro/termwind/src/HtmlRenderer.php(24): Termwind\\HtmlRenderer->parse()
+#1 /var/www/html/vendor/nunomaduro/termwind/src/Functions.php(41): Termwind\\HtmlRenderer->render()
+#2 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/View/Components/Component.php(51): Termwind\\render()
+#3 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/View/Components/Alert.php(24): Illuminate\\Console\\View\\Components\\Component->renderView()
+#4 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/View/Components/Factory.php(59): Illuminate\\Console\\View\\Components\\Alert->render()
+#5 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/ConfirmableTrait.php(29): Illuminate\\Console\\View\\Components\\Factory->__call()
+#6 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(83): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->confirmToProceed()
+#7 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#8 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#9 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(96): Illuminate\\Container\\Util::unwrapIfClosure()
+#10 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#11 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/Container.php(836): Illuminate\\Container\\BoundMethod::call()
+#12 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call()
+#13 /var/www/html/vendor/symfony/console/Command/Command.php(318): Illuminate\\Console\\Command->execute()
+#14 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run()
+#15 /var/www/html/vendor/symfony/console/Application.php(1110): Illuminate\\Console\\Command->run()
+#16 /var/www/html/vendor/symfony/console/Application.php(359): Symfony\\Component\\Console\\Application->doRunCommand()
+#17 /var/www/html/vendor/symfony/console/Application.php(194): Symfony\\Component\\Console\\Application->doRun()
+#18 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(197): Symfony\\Component\\Console\\Application->run()
+#19 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate\\Foundation\\Console\\Kernel->handle()
+#20 /var/www/html/artisan(16): Illuminate\\Foundation\\Application->handleCommand()
+#21 {main}
+"} 
